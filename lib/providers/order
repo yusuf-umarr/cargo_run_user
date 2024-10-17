@@ -1,0 +1,100 @@
+{
+  "success": true,
+  "msg": "Order successfully fetched",
+  "data": [
+ 
+  
+    {
+      "addressDetails": {
+        "houseNumber": 23,
+        "landMark": "Pomeranian Voivodeship, Poland",
+        "contactNumber": "8108668848",
+        "lng": 6.5244,
+        "lat": 6.5244
+      },
+      "receiverDetails": {
+        "name": "hhhgh",
+        "phone": "08060661013",
+        "address": "Germany ",
+        "lng": 6.5244,
+        "lat": 6.5244
+      },
+      "_id": "670d2d4390a747daeb10c209",
+      "orderId": "12452",
+      "trackingId": "MZu7W2HWg",
+      "amount": 0,
+      "userId": {
+        "_id": "670cee1e90a747daeb10c16c",
+        "fullName": "olamide",
+        "phone": "+2348105003893",
+        "wallet": 0,
+        "password": "$2b$10$Gw0OiUuxl/c8ROVttQ2txOd9shJI74ssrV58ZWwbtiFUqTdbK97nS",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-14T08:01:14.054Z",
+        "createdAt": "2024-10-14T10:10:38.340Z",
+        "updatedAt": "2024-10-14T10:11:07.090Z",
+        "__v": 0,
+        "email": "lamidelanrewaju@gmail.com",
+        "verificationOtp": ""
+      },
+      "status": "pending",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 0,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-14T14:40:03.040Z",
+      "updatedAt": "2024-10-14T14:40:03.040Z",
+      "__v": 0
+    },
+    {
+      "addressDetails": {
+        "houseNumber": 25,
+        "landMark": "Ajegunel, Idanre, Ondo State, Nigeria",
+        "contactNumber": "07036456047",
+        "lng": 6.5244,
+        "lat": 6.5244
+      },
+      "receiverDetails": {
+        "name": "umar",
+        "phone": "07036456047",
+        "address": "ikeja lagos",
+        "lng": 6.5244,
+        "lat": 6.5244
+      },
+      "_id": "6710fc3db4b968e44fceb522",
+      "orderId": "18694",
+      "trackingId": "f5gxiI1OS",
+      "amount": 0,
+      "userId": {
+        "_id": "6710f297b4b968e44fceb517",
+        "fullName": "umar",
+        "phone": "+2347036456041",
+        "wallet": 0,
+        "password": "$2b$10$qGvrVIcohW80qL7HWN3JcuxsenDedOluXPDXrNKkxbjyPrvNTDpHC",
+        "isDelete": false,
+        "isVerified": true,
+        "verified": "2024-10-17T09:18:46.632Z",
+        "createdAt": "2024-10-17T11:18:47.475Z",
+        "updatedAt": "2024-10-17T11:21:08.261Z",
+        "__v": 0,
+        "email": "omarjbt@gmail.com",
+        "verificationOtp": ""
+      },
+      "status": "pending",
+      "paymentStatus": "pending",
+      "deliveryService": "standard",
+      "deliveryOption": "express",
+      "averageRating": 0,
+      "deliveryFee": 0,
+      "isDelete": false,
+      "ratings": [],
+      "createdAt": "2024-10-17T11:59:57.749Z",
+      "updatedAt": "2024-10-17T11:59:57.749Z",
+      "__v": 0
+    }
+  ]
+}
