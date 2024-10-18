@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cargo_run/models/place_model.dart';
 import 'package:cargo_run/utils/shared_prefs.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
@@ -110,7 +111,7 @@ class OrdersImpl implements OrdersService {
 
   @override
   Future<Either<ErrorResponse, ApiResponse>> getOrders() async {
-    var url = Uri.parse('${Env.endpointUrl}/order?_id=${sharedPrefs.userId}');
+    var url = Uri.parse('${Env.endpointUrl}/order');
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ${sharedPrefs.token}',
@@ -123,7 +124,7 @@ class OrdersImpl implements OrdersService {
         url,
         headers: headers,
       );
-      log(response.body);
+      // log(response.body);
       var jsonResponse = jsonDecode(response.body);
       if (jsonResponse['success'] == true) {
         return Right(ApiResponse.fromJson(jsonResponse));
@@ -134,4 +135,54 @@ class OrdersImpl implements OrdersService {
       return Left(ErrorResponse(message: 'Error: $e'));
     }
   }
+
+    @override
+  Future<ApiResp<dynamic>> getAutocomplete(searchTerm) async {
+    try {
+        var url = Uri.parse('https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$searchTerm&key=$googleApiKey');
+      // var url =
+      //     'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$searchTerm&key=$googleApiKey';
+
+      final response = await http.get(
+      url
+      );
+
+       var jsonResponse = jsonDecode(response.body);
+
+      var jsonResults = jsonResponse['predictions'] as List;
+      var places =
+          jsonResults.map((place) => PlaceSearch.fromJson(place)).toList();
+
+      // log("places:${places[0].description}");
+
+      return ApiResp<dynamic>(
+        success: true,
+        data: places,
+        // data: jsonResults.map((place) => PlaceSearch.fromJson(place)).toList(),
+        message: " successfull",
+      );
+    } catch (e) {
+         return ApiResp(
+            success: false,
+            message: "A server error occurred",
+            data: '',
+          );
+    }
+  }
 }
+
+
+
+class ApiResp<T> {
+  final bool success;
+  final T? data;
+  final String message;
+  ApiResp({
+    required this.success,
+     this.data,
+    required this.message,
+  });
+}
+
+
+const String googleApiKey = "AIzaSyAec2eFqVYW4pqBNakXG9eLE6xId1TXFK8";

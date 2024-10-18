@@ -1,8 +1,9 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:cargo_run/utils/util.dart';
 import 'package:flutter/material.dart';
-import 'package:location_picker_text_field/open_street_location_picker.dart';
+// import 'package:location_picker_text_field/open_street_location_picker.dart';
 import 'package:provider/provider.dart';
 // import 'package:cargo_run/providers/order_provider.dart';
 import '../../../../styles/app_colors.dart';
@@ -30,6 +31,13 @@ class _RequestRiderState extends State<RequestRider> {
       TextEditingController();
   final TextEditingController _contactNumberController =
       TextEditingController(text: "+234");
+
+        double pickUpAdrrLong = 0;
+  double pickUpAdrrLat = 0;
+  double dropOffAdrrLong = 0;
+  double dropOffAdrrLat = 0;
+
+  bool isTypingPickUp = false;
 
   @override
   void dispose() {
@@ -80,17 +88,19 @@ class _RequestRiderState extends State<RequestRider> {
                     fontSize: 17,
                   ),
                 ),
-                LocationPicker(
-                  label: "From",
-                  controller: _pickupAddressController,
-                  onSelect: (data) {
-                    _pickupAddressController.text = data.displayname;
-                    _latController.text = data.latitude.toString();
-                    _longController.text = data.longitude.toString();
-                    log("longitude:${data.longitude}");
-                    log("latitude:${data.latitude}");
-                  },
-                ),
+
+                pickUpAddressTextField(),
+                // LocationPicker(
+                //   label: "From",
+                //   controller: _pickupAddressController,
+                //   onSelect: (data) {
+                //     _pickupAddressController.text = data.displayname;
+                //     _latController.text = data.latitude.toString();
+                //     _longController.text = data.longitude.toString();
+                //     log("longitude:${data.longitude}");
+                //     log("latitude:${data.latitude}");
+                //   },
+                // ),
                 const SizedBox(height: 20.0),
 
                 AppTextField(
@@ -170,4 +180,58 @@ class _RequestRiderState extends State<RequestRider> {
       ),
     );
   }
+
+    Consumer pickUpAddressTextField() {
+    return Consumer<OrderProvider>(builder: (context, otherVM, _) {
+      final List searchedPlaces = otherVM.dSearchResults!;
+      return Column(
+        children: [
+          isTypingPickUp
+              ? Card(
+                  child: Column(
+                    children: searchedPlaces.map<Widget>((x) {
+                      return ListTile(
+                        onTap: () async {
+                          _pickupAddressController.text = x.description;
+
+                          isTypingPickUp = false;
+
+                          setState(() {});
+                        },
+                        title: Text(
+                          x.description,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodySmall!
+                              .copyWith(color: Colors.black),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                )
+              : const SizedBox(),
+          Util.inputField2(
+            externalText: "Pick up address",
+            hint: "enter address",
+            controller: _pickupAddressController,
+            // validator: Util.validateName,
+            onChanged: (query) {
+              if (query != "") {
+                setState(() {
+                  isTypingPickUp = true;
+                });
+              } else {
+                setState(() {
+                  isTypingPickUp = false;
+                });
+              }
+              // SearchData(query);
+              otherVM.searchPlaces(query);
+            },
+          ),
+        ],
+      );
+    });
+  }
+//
 }

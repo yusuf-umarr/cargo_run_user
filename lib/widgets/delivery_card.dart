@@ -62,7 +62,7 @@ class _DeliveryCardState extends State<DeliveryCard> {
               ),
             ),
             subtitle: Text(
-              orderP.currentOrder!.receiverDetails!.address!,
+              "orderP.currentOrder!.receiverDetails!.address!",
               style: const TextStyle(
                 fontSize: 14.0,
               ),

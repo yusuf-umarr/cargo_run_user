@@ -38,6 +38,8 @@ class OrderProvider extends ChangeNotifier {
   AddressDetails? _addressDetails;
   ReceiverDetails? _receiverDetails;
 
+   List? dSearchResults;
+
   void setOrderStatus(OrderStatus status) {
     _orderStatus = status;
     sharedPrefs.orderStatus = status.toString().split('.').last;
@@ -103,6 +105,24 @@ class OrderProvider extends ChangeNotifier {
       // _currentOrder = Order.fromJson(success.data);
       notifyListeners();
     });
+  }
+  Future<void> searchPlaces(search) async {
+    var response = await _ordersService.getAutocomplete(
+      search,
+    
+    );
+
+    if (response.success) {
+      dSearchResults = response.data;
+      
+    }else{
+
+      //
+
+    }
+
+
+    notifyListeners();
   }
 
   Future<void> initiatePayment() async {

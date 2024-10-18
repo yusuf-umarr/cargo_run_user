@@ -1,11 +1,14 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/providers/order_provider.dart';
+import 'package:cargo_run/screens/dashboard/home_screens/map_screen.dart';
+import 'package:cargo_run/screens/dashboard/home_screens/trip_route_page.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/utils/app_router.gr.dart';
 import 'package:cargo_run/utils/shared_prefs.dart';
 import 'package:cargo_run/widgets/page_widgets/delivery_card.dart';
 import 'package:cargo_run/widgets/page_widgets/tracking_card.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
@@ -56,13 +59,34 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Row(
                   children: [
-                    const CircleAvatar(
-                      radius: 30,
-                      backgroundColor: primaryColor2,
-                      child: Center(
-                        child: Text(
-                          'EO',
-                          style: TextStyle(color: Colors.white, fontSize: 25),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const 
+                            
+                            TripRoutePage(
+                              dropOffLocation: LatLng(8.500000, 4.550000),
+                              pickUpLocation: LatLng(8.4813, 4.6115),
+                              riderLocation: LatLng(8.4751, 4.6289),
+                              pickUpAddr: 'pickUpAddr',
+                              dropOffAddr: 'dropOffAddr',
+                              itemName: 'itemName',
+                              itemImage: 'itemImage',
+                              pickUpTime: '',
+                            ),
+                          ),
+                        );
+                      },
+                      child: const CircleAvatar(
+                        radius: 30,
+                        backgroundColor: primaryColor2,
+                        child: Center(
+                          child: Text(
+                            'EO',
+                            style: TextStyle(color: Colors.white, fontSize: 25),
+                          ),
                         ),
                       ),
                     ),
