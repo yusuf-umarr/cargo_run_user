@@ -1,8 +1,7 @@
 import 'dart:developer';
-
 import 'package:cargo_run/models/order.dart';
 import 'package:flutter/material.dart';
-
+import 'package:socket_io_client/socket_io_client.dart' as io;
 import '/services/service_locator.dart';
 import '/services/orders/orders_abstract.dart';
 import '/utils/shared_prefs.dart';
@@ -39,9 +38,20 @@ class OrderProvider extends ChangeNotifier {
   List<Order?> get orders => _orders;
 
   AddressDetails? _addressDetails;
+
+  AddressDetails? get addressDetails => _addressDetails;
+
   ReceiverDetails? _receiverDetails;
+  ReceiverDetails? get receiverDetails => _receiverDetails;
 
   List dSearchResults = [];
+
+    io.Socket? _socket;
+
+  setSocketIo(socket) {
+    _socket = socket;
+
+  }
 
   void setOrderStatus(OrderStatus status) {
     _orderStatus = status;

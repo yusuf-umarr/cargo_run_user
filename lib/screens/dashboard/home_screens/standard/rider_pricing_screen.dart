@@ -113,7 +113,6 @@ class _RiderPricingScreenState extends State<RiderPricingScreen> {
   }) {
     int pricePerMile = 1000;
     double subTotal = 0.0;
-    log("isExpressDelivery:$isExpressDelivery");
 
     double total = pricePerMile * double.parse(removeMiSuffix(distanceInMiles));
 
@@ -126,16 +125,24 @@ class _RiderPricingScreenState extends State<RiderPricingScreen> {
     return subTotal.toStringAsFixed(2);
   }
 
+  String getTotalPrice({
+    required String distanceInMiles,
+    bool isExpressDelivery = false,
+  }) {
+    int pricePerMile = 1000;
+
+    double total = pricePerMile * double.parse(removeMiSuffix(distanceInMiles));
+
+    return total.toStringAsFixed(2);
+  }
+
   String getTenPercent({
     required String distanceInMiles,
   }) {
     int pricePerMile = 1000; //#1000 per mile
     double subTotal = 0.0;
-
     double total = pricePerMile * double.parse(removeMiSuffix(distanceInMiles));
-
     subTotal = total * (10 / 100);
-
     return subTotal.toStringAsFixed(2);
   }
 
@@ -158,6 +165,13 @@ class _RiderPricingScreenState extends State<RiderPricingScreen> {
             ),
           ),
           const SizedBox(height: 20),
+          rowItem(
+              title: 'Total',
+              value: '₦ ${getTotalPrice(
+                distanceInMiles: order.distancePrice,
+                isExpressDelivery: widget.isExpressDelivery,
+              )}'),
+          const SizedBox(height: 10),
           widget.isExpressDelivery
               ? rowItem(
                   title: 'Express Delivery\nCharge(10%)',
@@ -215,10 +229,10 @@ class _RiderPricingScreenState extends State<RiderPricingScreen> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          title,
+          "$title :",
           style: const TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.w500,
+            fontSize: 15.0,
+            fontWeight: FontWeight.w400,
           ),
         ),
         Text(

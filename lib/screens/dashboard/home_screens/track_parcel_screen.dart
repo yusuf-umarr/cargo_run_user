@@ -2,9 +2,10 @@ import 'package:another_stepper/another_stepper.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
-
 import '../../../models/order.dart';
 import '../../../styles/app_colors.dart';
+
+int activeStep = 0;
 
 @RoutePage()
 class TrackParcelScreen extends StatefulWidget {
@@ -28,16 +29,16 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
       ),
       subtitle: StepperText(
         "Rider is on his way to pickup point.",
-        textStyle: const TextStyle(
-          color: greyText,
+        textStyle: TextStyle(
+          color: activeStep >= 1 ? primaryColor1 : greyText,
           fontSize: 16,
         ),
       ),
       iconWidget: Container(
         padding: const EdgeInsets.all(8),
-        decoration: const BoxDecoration(
-          color: primaryColor1,
-          borderRadius: BorderRadius.all(
+        decoration: BoxDecoration(
+          color: activeStep >= 1 ? primaryColor1 : greyText,
+          borderRadius: const BorderRadius.all(
             Radius.circular(30),
           ),
         ),
@@ -54,16 +55,16 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
       ),
       subtitle: StepperText(
         "Your parcel has been picked up.",
-        textStyle: const TextStyle(
-          color: greyText,
+        textStyle: TextStyle(
+          color: activeStep >= 2 ? primaryColor1 : greyText,
           fontSize: 16,
         ),
       ),
       iconWidget: Container(
         padding: const EdgeInsets.all(8),
-        decoration: const BoxDecoration(
-          color: greyText,
-          borderRadius: BorderRadius.all(
+        decoration: BoxDecoration(
+          color: activeStep >= 2 ? primaryColor1 : greyText,
+          borderRadius: const BorderRadius.all(
             Radius.circular(30),
           ),
         ),
@@ -80,16 +81,16 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
       ),
       subtitle: StepperText(
         "Rider is outside to deliver your parcel.",
-        textStyle: const TextStyle(
-          color: greyText,
+        textStyle: TextStyle(
+          color: activeStep >= 3 ? primaryColor1 : greyText,
           fontSize: 16,
         ),
       ),
       iconWidget: Container(
         padding: const EdgeInsets.all(8),
-        decoration: const BoxDecoration(
-          color: greyText,
-          borderRadius: BorderRadius.all(
+        decoration: BoxDecoration(
+          color: activeStep >= 3 ? primaryColor1 : greyText,
+          borderRadius: const BorderRadius.all(
             Radius.circular(30),
           ),
         ),
@@ -106,16 +107,16 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
       ),
       subtitle: StepperText(
         "Your parcel has been delivered successfully.",
-        textStyle: const TextStyle(
-          color: greyText,
+        textStyle: TextStyle(
+          color: activeStep >= 4 ? primaryColor1 : greyText,
           fontSize: 16,
         ),
       ),
       iconWidget: Container(
         padding: const EdgeInsets.all(8),
-        decoration: const BoxDecoration(
-          color: greyText,
-          borderRadius: BorderRadius.all(
+        decoration: BoxDecoration(
+          color: activeStep >= 4 ? primaryColor1 : greyText,
+          borderRadius: const BorderRadius.all(
             Radius.circular(30),
           ),
         ),

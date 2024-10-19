@@ -2,6 +2,7 @@
 
 import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/providers/order_provider.dart';
+import 'package:cargo_run/screens/dashboard/home_screens/standard/delivery_summary.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/standard/rider_pricing_screen.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/utils/app_router.gr.dart';
@@ -58,7 +59,7 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => RiderPricingScreen(
+        builder: (context) => DeliverySummary(
           isExpressDelivery: expressDelivery,
         ),
       ),
@@ -91,9 +92,9 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
               children: [
                 const SizedBox(height: 40.0),
                 const Text(
-                  'Delivery Option',
+                  'Select delivery option',
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: 18.0,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -320,7 +321,9 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                                   locations[0].longitude.toString();
 
                               setState(() {});
-                              FocusScope.of(context).unfocus();
+                              if (mounted) {
+                                FocusScope.of(context).unfocus();
+                              }
                             },
                             title: Text(
                               x.description,

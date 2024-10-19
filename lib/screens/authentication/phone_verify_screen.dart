@@ -31,7 +31,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => const SuccessScreen(
-          isRegistered: false,
+         successRedirectRoute: SuccessRedirectRoute.verifyPage,
         ),
       ),
     );

@@ -4,6 +4,7 @@ import 'package:cargo_run/utils/app_router.gr.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart' as io;
 
 import '../../providers/order_provider.dart';
 
@@ -17,6 +18,9 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   late OrderStatus _orderStatus;
+
+    io.Socket? _socket;
+
   @override
   void initState() {
     _orderStatus = OrderStatus.loading;
@@ -88,5 +92,61 @@ class _DashboardPageState extends State<DashboardPage> {
         );
       },
     );
+  }
+
+    void connectSocket() async {
+    final chatVM = context.read<OrderProvider>();
+    try {
+      //http://192.168.43.39:8080
+      //https://same-faith-api.onrender.com
+      _socket = io.io('https://same-faith-api.onrender.com', <String, dynamic>{
+        "transports": ["websocket"],
+        "autoConnect": false,
+        'forceNew': true,
+        // 'Connection', 'upgrade'
+      });
+
+      _socket!.connect();
+      _socket!.onConnect((da) {
+        _socket!.emit('join', {"name": "currentUserId", "type": "Users"});
+        _socket!.on('join', (data) {
+          // log("joined=====:$data");
+        });
+        chatVM.setSocketIo(_socket);
+
+        // _socket!.on('broadcastMessage', (data) async {
+        //   String userId = await chatVM.localCache.read(key: "userId") ?? "";
+
+        //   // Check if the incoming message is intended for the current user
+        //   if (userId == data['recipientId']) {
+        //     if (data['chatId'] == chatVM.chatId) {
+            
+
+        //       // chatVM.setIncomingMessage(mssg);
+        //     }
+        //   }
+        // });
+      });
+
+      _socket!.onAny(
+        (event, data) {
+          // print(
+          //   "event:$event, data:$data",
+          // );
+          // log(
+          //   "event:$event, data:$data",
+          // );
+        },
+      );
+    } catch (e) {
+      debugPrint("socket error:${e.toString()}");
+    }
+  }
+
+  @override
+  void dispose() {
+    _socket?.disconnect();
+    _socket?.dispose();
+    super.dispose();
   }
 }

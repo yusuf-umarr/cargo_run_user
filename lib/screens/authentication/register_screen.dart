@@ -33,7 +33,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => const SuccessScreen(
-          isRegistered: true,
+          successRedirectRoute: SuccessRedirectRoute.registeredPage,
         ),
       ),
     );
