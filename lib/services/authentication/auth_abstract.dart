@@ -4,6 +4,7 @@ import '/models/api_response.dart';
 
 abstract class AuthService {
   Future<Either<ErrorResponse, ApiResponse>> registerUser({
+    required String email,
     required String fullName,
     required String password,
     required String phone,

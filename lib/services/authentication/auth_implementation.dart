@@ -12,6 +12,7 @@ import 'auth_abstract.dart';
 class AuthImpl implements AuthService {
   @override
   Future<Either<ErrorResponse, ApiResponse>> registerUser({
+    required String email,
     required String fullName,
     required String password,
     required String phone,
@@ -19,6 +20,7 @@ class AuthImpl implements AuthService {
     var url = Uri.parse('${Env.endpointUrl}/user');
     debugPrint('URL: $url');
     var body = {
+      'email': email,
       'fullName': fullName,
       'password': password,
       'phone': phone,
@@ -31,12 +33,14 @@ class AuthImpl implements AuthService {
         body: jsonEncode(body),
       );
       var jsonResponse = jsonDecode(response.body);
-      debugPrint('Response: $jsonResponse');
+
+      log('Response: ${jsonResponse['data']}');
       if (jsonResponse['success'] == true) {
-        sharedPrefs.token = jsonResponse['data']['token'];
+        // sharedPrefs.token = jsonResponse['data']['token'];
         sharedPrefs.userId = jsonResponse['data']['_id'];
         sharedPrefs.fullName = fullName;
         sharedPrefs.phone = phone;
+        sharedPrefs.email = email;
         return Right(ApiResponse.fromJson(jsonResponse));
       } else {
         return Left(ErrorResponse(message: jsonResponse['errors']['msg']));
@@ -72,7 +76,7 @@ class AuthImpl implements AuthService {
         sharedPrefs.email = email;
         return Right(ApiResponse.fromJson(jsonResponse));
       } else {
-        log("log response:${jsonResponse}");
+        // log("log response:${jsonResponse}");
         return Left(ErrorResponse(message: jsonResponse['errors']['msg']));
       }
     } catch (e) {

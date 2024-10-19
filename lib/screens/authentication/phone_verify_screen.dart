@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cargo_run/screens/alerts/account_creation_success.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_field.dart';
@@ -26,7 +27,14 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
   String otp = '';
 
   void navigate() {
-    context.router.push(const SuccessRoute());
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SuccessScreen(
+          isRegistered: false,
+        ),
+      ),
+    );
   }
 
   void showSnackBar(String message, {Color? color}) {

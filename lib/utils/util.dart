@@ -1,14 +1,11 @@
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:flutter/material.dart';
 
-class Util{
-
-   static Widget inputField2({
+class Util {
+  static Widget inputField2({
     String? hint,
     IconData? icon,
     IconData? prefixIcon,
-    bool isIcon = false,
-    bool isPrefix = false,
     bool isExternalLabel = true,
     bool readOnly = false,
     bool enable = true,
@@ -18,7 +15,6 @@ class Util{
     TextEditingController? controller,
     TextInputType inputType = TextInputType.text,
     double borderRadius = 5,
-    bool isPassword = false,
     double marginLeft = 5,
     double paddingLeft = 10,
     double paddingRight = 15,
@@ -42,11 +38,9 @@ class Util{
     double elevation = 0,
     Color bgColor = Colors.white,
     Color externalTextColor = Colors.black,
-    bool isCompulsory = false,
     String compulsoryText = "*",
     Color compulsoryColor = Colors.red,
     double compulsoryFontSize = 16,
-    bool isDropDown = false,
     List<String> dropDownList = const ['Select'],
     Color readOnlyTextColor = Colors.black54,
     FontWeight readOnlyFontWeight = FontWeight.w400,
@@ -78,21 +72,13 @@ class Util{
                           fit: BoxFit.scaleDown,
                           child: Text(
                             useExternalText ? externalText : hint!,
-                            style: TextStyle(
-                              color: externalTextColor,
-                              fontSize: fontSizeExternal,
+                            style: const TextStyle(
+                              fontSize: 17.0,
+                              fontWeight: FontWeight.w500,
+                              color: blackText,
                             ),
                           )),
                     ),
-                    isCompulsory
-                        ? Text(
-                            compulsoryText,
-                            style: TextStyle(
-                              color: compulsoryColor,
-                              fontSize: compulsoryFontSize,
-                            ),
-                          )
-                        : const SizedBox(height: 0, width: 0)
                   ],
                 ),
               )
@@ -100,122 +86,36 @@ class Util{
                 height: 0,
                 width: 0,
               ),
-        isExternalLabel
-            ? SizedBox(
-                height: externalTextBottomMargin,
-              )
-            : const SizedBox(
-                height: 0,
-                width: 0,
-              ),
-        Container(
-          decoration: hasBorder
-              ? BoxDecoration(
-                  border: Border.all(color: borderColor, width: 0.3),
-                  borderRadius: BorderRadius.circular(borderRadius),
-                  color: bgColor,
-                )
-              : const BoxDecoration(),
-          child: Padding(
-            padding: EdgeInsets.all(inputFieldPadding),
-            child: Material(
-              elevation: elevation,
-              borderRadius: BorderRadius.circular(borderRadius),
-              color: bgColor,
-              child: Row(
-                children: [
-                  isPrefix
-                      ? InkWell(
-                          onTap: onClick,
-                          child: Container(
-                            margin: const EdgeInsets.only(
-                              left: 10,
-                            ),
-                            //color: bgColor,
-                            child: InkWell(
-                              onTap: onClick,
-                              child: Icon(
-                                prefixIcon,
-                                color: prefixIconColor,
-                                size: prefixIconSize,
-                              ),
-                            ),
-                          ),
-                        )
-                      : const SizedBox(
-                          width: 5,
-                        ),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: onTap,
-                      child: Container(
-                        padding: EdgeInsets.only(
-                            left: paddingLeft, right: paddingRight),
-                        decoration: BoxDecoration(
-                          // border: Border.all(width: 1, color: AppColors.primaryColor),
-                          borderRadius: BorderRadius.circular(borderRadius),
-                          //color: bgColor,
-                        ),
-                        child: SizedBox(
-                          width: size,
-                          child: TextFormField(
-                            // onTap: onTap,
-                            enabled: enable,
-                            obscureText: isPassword,
-                            controller: controller,
-                            keyboardType: inputType,
-                            textAlign: textAlign,
-                            readOnly: readOnly,
-                            onChanged: onChanged,
-                            validator: validator,
-                            maxLines: max,
-                            style: TextStyle(
-                                fontSize: fontSize, color: Colors.black87),
-                            decoration: InputDecoration(
-                              hintText: isExternalLabel
-                                  ? useExternalText
-                                      ? hint
-                                      : ""
-                                  : hint,
-                              hintStyle: TextStyle(
-                                color: hintColor,
-                                fontWeight: hintFont,
-                                fontSize: hintFontSize,
-                              ),
-                              suffixIconConstraints: isIcon
-                                  ? const BoxConstraints(
-                                      maxWidth: 50,
-                                    )
-                                  : const BoxConstraints(maxWidth: 26),
-                              suffixIcon: InkWell(
-                                onTap: onSuffixIconClick,
-                                child: isIcon
-                                    ? Icon(
-                                        icon,
-                                        color: suffixIconColor,
-                                        size: suffixIconSize,
-                                      )
-                                    : const SizedBox(
-                                        width: 0,
-                                        height: 0,
-                                      ),
-                              ),
-                              border: InputBorder.none,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: onTap,
-                    child: suffixWidget ??
-                        const SizedBox(
-                          width: 0,
-                          height: 0,
-                        ),
-                  )
-                ],
+        GestureDetector(
+          onTap: onTap,
+          child: SizedBox(
+            width: size,
+            child: TextFormField(
+              // onTap: onTap,
+              enabled: enable,
+              controller: controller,
+              keyboardType: inputType,
+              textAlign: textAlign,
+              readOnly: readOnly,
+              onChanged: onChanged,
+              validator: validator,
+              maxLines: max,
+              style: TextStyle(fontSize: fontSize, color: Colors.black87),
+              decoration: InputDecoration(
+                hintText: isExternalLabel
+                    ? useExternalText
+                        ? hint
+                        : ""
+                    : hint,
+                hintStyle: TextStyle(
+                  color: hintColor,
+                  fontWeight: hintFont,
+                  fontSize: hintFontSize,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: const BorderSide(color: greyText),
+                ),
               ),
             ),
           ),

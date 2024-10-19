@@ -38,7 +38,7 @@ class OrderProvider extends ChangeNotifier {
   AddressDetails? _addressDetails;
   ReceiverDetails? _receiverDetails;
 
-   List? dSearchResults;
+  List dSearchResults = [];
 
   void setOrderStatus(OrderStatus status) {
     _orderStatus = status;
@@ -106,21 +106,17 @@ class OrderProvider extends ChangeNotifier {
       notifyListeners();
     });
   }
+
   Future<void> searchPlaces(search) async {
     var response = await _ordersService.getAutocomplete(
       search,
-    
     );
 
     if (response.success) {
       dSearchResults = response.data;
-      
-    }else{
-
+    } else {
       //
-
     }
-
 
     notifyListeners();
   }

@@ -1,13 +1,12 @@
-
 import 'dart:async';
 import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/utils/app_router.gr.dart';
-import 'package:cargo_run/utils/shared_prefs.dart';
 import 'package:flutter/material.dart';
 
 @RoutePage()
 class SuccessScreen extends StatefulWidget {
-  const SuccessScreen({super.key});
+  final bool isRegistered;
+  const SuccessScreen({super.key, this.isRegistered = false});
 
   @override
   State<SuccessScreen> createState() => _SuccessScreenState();
@@ -16,9 +15,15 @@ class SuccessScreen extends StatefulWidget {
 class _SuccessScreenState extends State<SuccessScreen> {
   @override
   void initState() {
-    setState(() => sharedPrefs.isLoggedIn = true);
-    Timer(const Duration(milliseconds: 500), () {
-      context.router.replaceAll([const DashboardRoute()]);
+    // setState(() => sharedPrefs.isLoggedIn = true);
+    Timer(const Duration(seconds: 3), () {
+      if (widget.isRegistered) {
+        context.router.push(const PhoneVerifyRoute());
+      } else {
+        context.router.replace(const LoginRoute());
+      }
+
+      // context.router.replaceAll([const DashboardRoute()]);
     });
     super.initState();
   }
@@ -36,17 +41,21 @@ class _SuccessScreenState extends State<SuccessScreen> {
               'assets/images/success.png',
               height: 200.0,
             ),
-            const Text(
-              'Account Creation Successful',
-              style: TextStyle(
+            Text(
+              widget.isRegistered
+                  ? 'Account Creation Successful'
+                  : "Account Verified Successful",
+              style: const TextStyle(
                 fontSize: 25.0,
                 fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(height: 20.0),
-            const Text(
-              'There are many variations of passages of Lorem Ispum available. But the majority have suffered alteration in some form by injected humour or randomised words.',
-              style: TextStyle(
+            Text(
+              widget.isRegistered
+                  ? 'Otp verification code has been sent to your registered email.'
+                  : "You can now log into your account",
+              style: const TextStyle(
                 fontSize: 17.0,
                 color: Colors.grey,
                 fontWeight: FontWeight.w500,

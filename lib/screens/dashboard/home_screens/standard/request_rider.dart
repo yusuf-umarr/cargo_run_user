@@ -30,9 +30,9 @@ class _RequestRiderState extends State<RequestRider> {
   final TextEditingController _pickupAddressController =
       TextEditingController();
   final TextEditingController _contactNumberController =
-      TextEditingController(text: "+234");
+      TextEditingController();
 
-        double pickUpAdrrLong = 0;
+  double pickUpAdrrLong = 0;
   double pickUpAdrrLat = 0;
   double dropOffAdrrLong = 0;
   double dropOffAdrrLat = 0;
@@ -78,29 +78,11 @@ class _RequestRiderState extends State<RequestRider> {
                   hintText: 'House No.',
                   keyboardType: TextInputType.number,
                   controller: _houseNoController,
-                  
                 ),
                 const SizedBox(height: 20.0),
-                const Text(
-                  "Address ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    fontSize: 17,
-                  ),
-                ),
 
                 pickUpAddressTextField(),
-                // LocationPicker(
-                //   label: "From",
-                //   controller: _pickupAddressController,
-                //   onSelect: (data) {
-                //     _pickupAddressController.text = data.displayname;
-                //     _latController.text = data.latitude.toString();
-                //     _longController.text = data.longitude.toString();
-                //     log("longitude:${data.longitude}");
-                //     log("latitude:${data.latitude}");
-                //   },
-                // ),
+
                 const SizedBox(height: 20.0),
 
                 AppTextField(
@@ -112,6 +94,7 @@ class _RequestRiderState extends State<RequestRider> {
                   controller: _contactNumberController,
                 ),
                 // const Spacer(),
+                const SizedBox(height: 50.0),
                 Consumer<OrderProvider>(builder: (context, watch, _) {
                   return AppButton(
                     text: 'Next',
@@ -181,34 +164,39 @@ class _RequestRiderState extends State<RequestRider> {
     );
   }
 
-    Consumer pickUpAddressTextField() {
+  Consumer pickUpAddressTextField() {
     return Consumer<OrderProvider>(builder: (context, otherVM, _) {
-      final List searchedPlaces = otherVM.dSearchResults!;
+      // final List searchedPlaces = otherVM.dSearchResults!;
       return Column(
         children: [
           isTypingPickUp
-              ? Card(
-                  child: Column(
-                    children: searchedPlaces.map<Widget>((x) {
-                      return ListTile(
-                        onTap: () async {
-                          _pickupAddressController.text = x.description;
+              ? Builder(builder: (context) {
+                  if (otherVM.dSearchResults.isNotEmpty) {
+                    return Card(
+                      child: Column(
+                        children: otherVM.dSearchResults.map<Widget>((x) {
+                          return ListTile(
+                            onTap: () async {
+                              _pickupAddressController.text = x.description;
 
-                          isTypingPickUp = false;
+                              isTypingPickUp = false;
 
-                          setState(() {});
-                        },
-                        title: Text(
-                          x.description,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall!
-                              .copyWith(color: Colors.black),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                )
+                              setState(() {});
+                            },
+                            title: Text(
+                              x.description,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(color: Colors.black),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                })
               : const SizedBox(),
           Util.inputField2(
             externalText: "Pick up address",

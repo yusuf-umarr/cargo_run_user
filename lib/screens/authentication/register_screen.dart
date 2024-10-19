@@ -1,4 +1,5 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cargo_run/screens/alerts/account_creation_success.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/providers/auth_provider.dart';
 import 'package:cargo_run/utils/app_router.gr.dart';
@@ -6,7 +7,6 @@ import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/app_textfields.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '/widgets/page_widgets/appbar_widget.dart';
 
@@ -20,13 +20,23 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _phoneController =
-      TextEditingController(text: "+234");
+  final TextEditingController _phoneController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  // void navigate() {
+  //   context.router.push(const InputPhoneRoute());
+  // }
   void navigate() {
-    context.router.push(const InputPhoneRoute());
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SuccessScreen(
+          isRegistered: true,
+        ),
+      ),
+    );
   }
 
   void showSnackBar(String message) {
@@ -36,6 +46,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
         backgroundColor: Colors.red,
       ),
     );
+  }
+
+  @override
+  dispose() {
+    _emailController.dispose();
+    _fullNameController.dispose();
+    _phoneController.dispose();
+    _passwordController.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -60,7 +80,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 20.0),
                         const Text(
                           'Hello,',
                           style: TextStyle(
@@ -76,11 +95,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-                        const SizedBox(height: 60.0),
+                        const SizedBox(height: 30.0),
                         AppTextField(
                           labelText: 'Full Name',
                           isPassword: false,
                           controller: _fullNameController,
+                        ),
+                        AppTextField(
+                          labelText: 'Email ',
+                          isPassword: false,
+                          controller: _emailController,
                         ),
                         AppTextField(
                             labelText: 'Phone',
@@ -114,6 +138,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             if (_formKey.currentState!.validate()) {
                               try {
                                 await watch.registerUser(
+                                  email: _emailController.text,
                                   fullName: _fullNameController.text,
                                   password: _passwordController.text,
                                   phone: _phoneController.text,

@@ -117,7 +117,6 @@ class OrdersImpl implements OrdersService {
       'Authorization': 'Bearer ${sharedPrefs.token}',
     };
 
-    log("sharedPrefs.userId:${sharedPrefs.userId}");
 
     try {
       final response = await http.get(
@@ -126,6 +125,7 @@ class OrdersImpl implements OrdersService {
       );
       // log(response.body);
       var jsonResponse = jsonDecode(response.body);
+
       if (jsonResponse['success'] == true) {
         return Right(ApiResponse.fromJson(jsonResponse));
       } else {

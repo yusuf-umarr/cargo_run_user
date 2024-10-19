@@ -25,12 +25,14 @@ class AuthProvider extends ChangeNotifier {
   }
 
   Future<void> registerUser({
+    required String email,
     required String fullName,
     required String password,
     required String phone,
   }) async {
     setLoadingState(LoadingState.loading);
     var response = await _authService.registerUser(
+      email: email,
       fullName: fullName,
       password: password,
       phone: phone,
