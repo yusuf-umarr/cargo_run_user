@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/utils/util.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 // import 'package:location_picker_text_field/open_street_location_picker.dart';
 import 'package:provider/provider.dart';
 // import 'package:cargo_run/providers/order_provider.dart';
@@ -53,7 +54,7 @@ class _RequestRiderState extends State<RequestRider> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarWidget(context, title: 'Pickup Details'),
+      appBar: appBarWidget(context, title: 'Pickup details'),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -64,22 +65,22 @@ class _RequestRiderState extends State<RequestRider> {
               children: [
                 const SizedBox(height: 40.0),
                 const Text(
-                  'Address Details',
+                  'Complete the below fields ',
                   style: TextStyle(
                     fontSize: 20.0,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                const SizedBox(height: 10.0),
+                const SizedBox(height: 30.0),
 
-                AppTextField(
-                  noLabel: false,
-                  labelText: 'House No',
-                  hintText: 'House No.',
-                  keyboardType: TextInputType.number,
-                  controller: _houseNoController,
-                ),
-                const SizedBox(height: 20.0),
+                // AppTextField(
+                //   noLabel: false,
+                //   labelText: 'House No',
+                //   hintText: 'House No.',
+                //   keyboardType: TextInputType.number,
+                //   controller: _houseNoController,
+                // ),
+                // const SizedBox(height: 20.0),
 
                 pickUpAddressTextField(),
 
@@ -87,8 +88,8 @@ class _RequestRiderState extends State<RequestRider> {
 
                 AppTextField(
                   noLabel: false,
-                  labelText: 'Contact Number',
-                  hintText: 'Contact Number',
+                  labelText: 'Phone No',
+                  hintText: 'Phone No',
                   isPhone: false,
                   keyboardType: TextInputType.phone,
                   controller: _contactNumberController,
@@ -127,46 +128,8 @@ class _RequestRiderState extends State<RequestRider> {
     );
   }
 
-  Widget textField(String hint,
-      {bool? isPhone, TextEditingController? controller}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10.0),
-        border: Border.all(color: Colors.grey),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextFormField(
-              controller: controller,
-              style: const TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.w500,
-              ),
-              keyboardType:
-                  (isPhone == true) ? TextInputType.number : TextInputType.text,
-              decoration: InputDecoration(
-                hintText: hint,
-                hintStyle: const TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500,
-                ),
-                border: InputBorder.none,
-              ),
-              validator: (value) =>
-                  value!.isEmpty ? '*Field cannot be empty' : null,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Consumer pickUpAddressTextField() {
     return Consumer<OrderProvider>(builder: (context, otherVM, _) {
-      // final List searchedPlaces = otherVM.dSearchResults!;
       return Column(
         children: [
           isTypingPickUp
@@ -180,6 +143,14 @@ class _RequestRiderState extends State<RequestRider> {
                               _pickupAddressController.text = x.description;
 
                               isTypingPickUp = false;
+
+                              List<Location> locations =
+                                  await locationFromAddress("${x.description}");
+
+                              _latController.text =
+                                  locations[0].latitude.toString();
+                              _longController.text =
+                                  locations[0].longitude.toString();
 
                               setState(() {});
                             },
@@ -200,9 +171,9 @@ class _RequestRiderState extends State<RequestRider> {
               : const SizedBox(),
           Util.inputField2(
             externalText: "Pick up address",
-            hint: "enter address",
+            hint: "Enter address",
             controller: _pickupAddressController,
-            // validator: Util.validateName,
+            validator: (value) => value!.isEmpty ? '*Field is required' : null,
             onChanged: (query) {
               if (query != "") {
                 setState(() {
@@ -213,7 +184,6 @@ class _RequestRiderState extends State<RequestRider> {
                   isTypingPickUp = false;
                 });
               }
-              // SearchData(query);
               otherVM.searchPlaces(query);
             },
           ),
@@ -221,5 +191,4 @@ class _RequestRiderState extends State<RequestRider> {
       );
     });
   }
-//
 }

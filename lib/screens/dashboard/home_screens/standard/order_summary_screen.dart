@@ -26,7 +26,7 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
     final orderProvider = Provider.of<OrderProvider>(context);
     List<StepperData> stepperData = [
       StepperData(
-        title: StepperText(
+        title: StepperText( 
           "Pickup",
           textStyle: const TextStyle(
             fontSize: 18,

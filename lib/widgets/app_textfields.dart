@@ -57,9 +57,9 @@ class _AppTextFieldState extends State<AppTextField> {
             decoration: InputDecoration(
               hintText: widget.hintText,
               hintStyle: const TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.w500,
-              ),
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.grey),
               fillColor: Colors.white,
               filled: true,
               border: OutlineInputBorder(

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:cargo_run/config/config.dart';
 import 'package:cargo_run/models/place_model.dart';
 import 'package:cargo_run/utils/shared_prefs.dart';
 import 'package:dartz/dartz.dart';
@@ -117,7 +118,6 @@ class OrdersImpl implements OrdersService {
       'Authorization': 'Bearer ${sharedPrefs.token}',
     };
 
-
     try {
       final response = await http.get(
         url,
@@ -136,24 +136,23 @@ class OrdersImpl implements OrdersService {
     }
   }
 
-    @override
+  @override
   Future<ApiResp<dynamic>> getAutocomplete(searchTerm) async {
     try {
-        var url = Uri.parse('https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$searchTerm&key=$googleApiKey');
+      var url = Uri.parse(
+          'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$searchTerm&key=$googleApiKey');
       // var url =
       //     'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$searchTerm&key=$googleApiKey';
 
-      final response = await http.get(
-      url
-      );
+      final response = await http.get(url);
 
-       var jsonResponse = jsonDecode(response.body);
+      var jsonResponse = jsonDecode(response.body);
 
       var jsonResults = jsonResponse['predictions'] as List;
       var places =
           jsonResults.map((place) => PlaceSearch.fromJson(place)).toList();
 
-      // log("places:${places[0].description}");
+      // log("places:${jsonResults}");
 
       return ApiResp<dynamic>(
         success: true,
@@ -162,16 +161,42 @@ class OrdersImpl implements OrdersService {
         message: " successfull",
       );
     } catch (e) {
-         return ApiResp(
-            success: false,
-            message: "A server error occurred",
-            data: '',
-          );
+      return ApiResp(
+        success: false,
+        message: "A server error occurred",
+        data: '',
+      );
+    }
+  }
+
+  @override
+  Future<ApiResp<dynamic>> getDistancePrice(source, destination) async {
+
+    try {
+      var url = Uri.parse(
+        "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$destination&origins=$source&units=imperial&key=$googleApiKey",
+      );
+      final response = await http.get(
+        url
+      );
+
+      var jsonResponse = jsonDecode(response.body);
+
+      return ApiResp<dynamic>(
+        success: true,
+        data: jsonResponse,
+        message: " successfull",
+      );
+    } catch (e) {
+      log("distance ======erro $e");
+      return ApiResp<dynamic>(
+        success: true,
+        data: "",
+        message: " error",
+      );
     }
   }
 }
-
-
 
 class ApiResp<T> {
   final bool success;
@@ -179,10 +204,11 @@ class ApiResp<T> {
   final String message;
   ApiResp({
     required this.success,
-     this.data,
+    this.data,
     required this.message,
   });
 }
 
 
-const String googleApiKey = "AIzaSyAec2eFqVYW4pqBNakXG9eLE6xId1TXFK8";
+
+//AIzaSyAec2eFqVYW4pqBNakXG9eLE6xId1TXFK8

@@ -1,16 +1,21 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/providers/order_provider.dart';
+import 'package:cargo_run/screens/dashboard/home_screens/standard/rider_pricing_screen.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/utils/app_router.gr.dart';
+import 'package:cargo_run/utils/util.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/app_textfields.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:group_button/group_button.dart';
 import 'package:provider/provider.dart';
 
 @RoutePage()
-class DeliveryDetailsScreen extends StatefulWidget { 
+class DeliveryDetailsScreen extends StatefulWidget {
   const DeliveryDetailsScreen({super.key});
 
   @override
@@ -23,18 +28,42 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
   final TextEditingController _recipientsNameController =
       TextEditingController();
   final TextEditingController _recipientsPhoneController =
-      TextEditingController(text: "+234");
+      TextEditingController();
   final TextEditingController _recipientsAddressController =
       TextEditingController();
   final TextEditingController _packageCategoryController =
       TextEditingController();
   final TextEditingController _deliveryOption = TextEditingController();
+  final TextEditingController _latController = TextEditingController();
+  final TextEditingController _longController = TextEditingController();
 
   bool expressDelivery = false;
   bool normalDelivery = false;
 
+  bool isTypingPickUp = false;
+
+  @override
+  void dispose() {
+    _latController.dispose();
+    _longController.dispose();
+    _recipientsNameController.dispose();
+    _recipientsPhoneController.dispose();
+    _recipientsAddressController.dispose();
+    _packageCategoryController.dispose();
+    _deliveryOption.dispose();
+    super.dispose();
+  }
+
   void navigate() {
-    context.router.push(const RiderPricingRoute());
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RiderPricingScreen(
+          isExpressDelivery: expressDelivery,
+        ),
+      ),
+    );
+    context.read<OrderProvider>().getDistancePrice();
   }
 
   void showSnackBar(String message) {
@@ -51,7 +80,7 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xffF3F3F3),
-      appBar: appBarWidget(context, title: 'Delivery Details'),
+      appBar: appBarWidget(context, title: "Reciever's details"),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -72,19 +101,19 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
+                    deliveryOption(normalDelivery,
+                        title: 'Normal', width: size.width * 0.42, onTap: () {
+                      setState(() {
+                        normalDelivery = true;
+                        expressDelivery = false;
+                      });
+                    }),
                     deliveryOption(expressDelivery,
                         title: 'Express', width: size.width * 0.42, onTap: () {
                       setState(() {
                         expressDelivery = true;
                         normalDelivery = false;
                         _deliveryOption.text = 'Express ';
-                      });
-                    }),
-                    deliveryOption(normalDelivery,
-                        title: 'Normal', width: size.width * 0.42, onTap: () {
-                      setState(() {
-                        normalDelivery = true;
-                        expressDelivery = false;
                       });
                     }),
                   ],
@@ -97,37 +126,31 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                     color: greyText,
                   ),
                 ),
-                const SizedBox(height: 30.0),
-                const Text(
-                  "Reciever's Details",
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
+
                 const SizedBox(height: 20.0),
                 AppTextField(
-                  labelText: 'Recipients Name',
-                  hintText: 'Recipients Name',
+                  labelText: 'Recipients name',
+                  hintText: 'Enter name',
                   controller: _recipientsNameController,
-                  noLabel: true,
+                  noLabel: false,
                 ),
                 const SizedBox(height: 20.0),
                 AppTextField(
-                  labelText: 'Recipients Phone Number',
-                  hintText: 'Phone Number',
+                  labelText: 'Recipients phone number',
+                  hintText: 'Enter number',
                   controller: _recipientsPhoneController,
                   isNumber: true,
                   keyboardType: TextInputType.phone,
-                  noLabel: true,
+                  noLabel: false,
                 ),
                 const SizedBox(height: 20.0),
-                AppTextField(
-                  labelText: 'Recipients Address',
-                  hintText: 'Address',
-                  controller: _recipientsAddressController,
-                  noLabel: true,
-                ),
+                recipientAddressTextField(),
+                // AppTextField(
+                //   labelText: 'Recipients Address',
+                //   hintText: 'Address',
+                //   controller: _recipientsAddressController,
+                //   noLabel: true,
+                // ),
                 const SizedBox(height: 30.0),
                 const Text(
                   "Package Category",
@@ -195,6 +218,11 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                             textColor: Colors.white,
                             backgroundColor: primaryColor1,
                             onPressed: () async {
+                              if (!expressDelivery && !normalDelivery) {
+                                showSnackBar("Please select a delivery option");
+
+                                return;
+                              }
                               if (_formKey.currentState!.validate()) {
                                 watch.addRecipientDetails(
                                   _recipientsNameController.text,
@@ -202,14 +230,18 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                                   _recipientsAddressController.text,
                                   _packageCategoryController.text,
                                   _deliveryOption.text,
+                                  _latController.text,
+                                  _longController.text,
                                 );
-                                await watch.placeOrder().then((value) => {
-                                      if (watch.orderStatus ==
-                                          OrderStatus.pending)
-                                        {navigate()}
-                                      else
-                                        {showSnackBar(watch.errorMessage)}
-                                    });
+
+                                navigate();
+                                // await watch.placeOrder().then((value) => {
+                                //       if (watch.orderStatus ==
+                                //           OrderStatus.pending)
+                                //         {navigate()}
+                                //       else
+                                //         {showSnackBar(watch.errorMessage)}
+                                //     });
                               }
                             },
                           );
@@ -224,8 +256,12 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
     );
   }
 
-  Widget deliveryOption(bool picked,
-      {required String title, required double width, VoidCallback? onTap}) {
+  Widget deliveryOption(
+    bool picked, {
+    required String title,
+    required double width,
+    VoidCallback? onTap,
+  }) {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
@@ -257,4 +293,71 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
       ),
     );
   }
+
+  Consumer recipientAddressTextField() {
+    return Consumer<OrderProvider>(builder: (context, otherVM, _) {
+      // final List searchedPlaces = otherVM.dSearchResults!;
+      return Column(
+        children: [
+          isTypingPickUp
+              ? Builder(builder: (context) {
+                  if (otherVM.dSearchResults.isNotEmpty) {
+                    return Card(
+                      child: Column(
+                        children: otherVM.dSearchResults.map<Widget>((x) {
+                          return ListTile(
+                            onTap: () async {
+                              _recipientsAddressController.text = x.description;
+
+                              isTypingPickUp = false;
+
+                              List<Location> locations =
+                                  await locationFromAddress("${x.description}");
+
+                              _latController.text =
+                                  locations[0].latitude.toString();
+                              _longController.text =
+                                  locations[0].longitude.toString();
+
+                              setState(() {});
+                              FocusScope.of(context).unfocus();
+                            },
+                            title: Text(
+                              x.description,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(color: Colors.black),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                })
+              : const SizedBox(),
+          Util.inputField2(
+            externalText: "Recipients address",
+            hint: "Enter address",
+            controller: _recipientsAddressController,
+            validator: (value) => value!.isEmpty ? '*Field is required' : null,
+            onChanged: (query) {
+              if (query != "") {
+                setState(() {
+                  isTypingPickUp = true;
+                });
+              } else {
+                setState(() {
+                  isTypingPickUp = false;
+                });
+              }
+              otherVM.searchPlaces(query);
+            },
+          ),
+        ],
+      );
+    });
+  }
+//
 }

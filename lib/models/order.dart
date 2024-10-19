@@ -92,7 +92,7 @@ class Order {
 
 class AddressDetails {
   AddressDetails({
-    required this.houseNumber,
+     this.houseNumber,
     required this.landMark,
     required this.contactNumber,
     required this.lng,

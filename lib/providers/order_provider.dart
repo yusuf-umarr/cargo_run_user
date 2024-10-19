@@ -22,13 +22,16 @@ class OrderProvider extends ChangeNotifier {
   Order? _currentOrder;
   List<Order?> _orders = [];
 
+  String _distancePrice = '';
   String _category = '';
   String _url = '';
   String _deliveryOption = '';
   String _errorMessage = '';
 
   String get category => _category;
+  String get distancePrice => _distancePrice;
   String get deliveryOption => _deliveryOption;
+
   String get errorMessage => _errorMessage;
   String get url => _url;
   Order? get currentOrder => _currentOrder;
@@ -59,14 +62,14 @@ class OrderProvider extends ChangeNotifier {
     String long,
   ) {
     _addressDetails = AddressDetails(
-      houseNumber: int.parse(houseNo),
+      // houseNumber: int.parse(houseNo),
       landMark: pickupAddress,
       contactNumber: contactNumber,
       lat: double.parse(lat),
       lng: double.parse(long),
     );
-    log("_addressDetails:${_addressDetails}");
-    log("_addressDetails:${_addressDetails?.lat}");
+    // log("_addressDetails:${_addressDetails}");
+    // log("_addressDetails:${_addressDetails?.lat}");
     notifyListeners();
   }
 
@@ -76,13 +79,15 @@ class OrderProvider extends ChangeNotifier {
     String address,
     String category,
     String deliveryOption,
+    String lat,
+    String long,
   ) {
     _receiverDetails = ReceiverDetails(
       name: name,
       phone: phone,
       address: address,
-      lat: 6.5244,
-      lng: 6.5244,
+      lat: double.parse(lat),
+      lng: double.parse(long),
     );
     _category = category;
     _deliveryOption = deliveryOption;
@@ -114,6 +119,22 @@ class OrderProvider extends ChangeNotifier {
 
     if (response.success) {
       dSearchResults = response.data;
+    } else {
+      //
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> getDistancePrice() async {
+    var response = await _ordersService.getDistancePrice(
+        _addressDetails?.landMark!, _receiverDetails?.address);
+
+    if (response.success) {
+      _distancePrice =
+          response.data['rows'][0]['elements'][0]['distance']['text'];
+
+      log("_distancePrice:$_distancePrice");
     } else {
       //
     }

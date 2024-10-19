@@ -1,6 +1,9 @@
 # This is a generated file; do not edit or check into version control.
 flutter_native_splash=/Users/yusuf/.pub-cache/hosted/pub.dev/flutter_native_splash-2.3.9/
 flutter_plugin_android_lifecycle=/Users/yusuf/.pub-cache/hosted/pub.dev/flutter_plugin_android_lifecycle-2.0.17/
+geocoding=/Users/yusuf/.pub-cache/hosted/pub.dev/geocoding-3.0.0/
+geocoding_android=/Users/yusuf/.pub-cache/hosted/pub.dev/geocoding_android-3.3.1/
+geocoding_ios=/Users/yusuf/.pub-cache/hosted/pub.dev/geocoding_ios-3.0.1/
 geolocator=/Users/yusuf/.pub-cache/hosted/pub.dev/geolocator-10.1.0/
 geolocator_android=/Users/yusuf/.pub-cache/hosted/pub.dev/geolocator_android-4.4.0/
 geolocator_apple=/Users/yusuf/.pub-cache/hosted/pub.dev/geolocator_apple-2.3.3/

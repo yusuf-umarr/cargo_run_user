@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
@@ -13,7 +15,8 @@ import 'pay_screen.dart';
 
 @RoutePage()
 class RiderPricingScreen extends StatefulWidget {
-  const RiderPricingScreen({super.key});
+  final bool isExpressDelivery;
+  const RiderPricingScreen({super.key, this.isExpressDelivery = false});
 
   @override
   State<RiderPricingScreen> createState() => _RiderPricingScreenState();
@@ -97,6 +100,45 @@ class _RiderPricingScreenState extends State<RiderPricingScreen> {
     );
   }
 
+  String removeMiSuffix(String input) {
+    if (input.endsWith(' mi')) {
+      return input.substring(0, input.length - 3);
+    }
+    return input;
+  }
+
+  String getPrices({
+    required String distanceInMiles,
+    bool isExpressDelivery = false,
+  }) {
+    int pricePerMile = 1000;
+    double subTotal = 0.0;
+    log("isExpressDelivery:$isExpressDelivery");
+
+    double total = pricePerMile * double.parse(removeMiSuffix(distanceInMiles));
+
+    if (isExpressDelivery) {
+      subTotal = total + (total * 0.10);
+    } else {
+      subTotal = total;
+    }
+
+    return subTotal.toStringAsFixed(2);
+  }
+
+  String getTenPercent({
+    required String distanceInMiles,
+  }) {
+    int pricePerMile = 1000; //#1000 per mile
+    double subTotal = 0.0;
+
+    double total = pricePerMile * double.parse(removeMiSuffix(distanceInMiles));
+
+    subTotal = total * (10 / 100);
+
+    return subTotal.toStringAsFixed(2);
+  }
+
   Widget _paymentSummary() {
     final order = context.read<OrderProvider>();
     return Container(
@@ -116,16 +158,27 @@ class _RiderPricingScreenState extends State<RiderPricingScreen> {
             ),
           ),
           const SizedBox(height: 20),
+          widget.isExpressDelivery
+              ? rowItem(
+                  title: 'Express Delivery\nCharge(10%)',
+                  value: '₦${getTenPercent(
+                    distanceInMiles: order.distancePrice,
+                  )}')
+              : const SizedBox.shrink(),
+          const SizedBox(height: 10),
+
           rowItem(
-              title: 'Subtotal', value: '₦${order.currentOrder!.deliveryFee}'),
-          rowItem(title: 'Express Delivery Charge(10%)', value: '₦2000.00'),
+              title: 'Subtotal',
+              value: '₦ ${getPrices(
+                distanceInMiles: order.distancePrice,
+                isExpressDelivery: widget.isExpressDelivery,
+              )}'),
+
           const Divider(
             thickness: 1,
             color: Colors.grey,
           ),
-          rowItem(
-              title: 'Total',
-              value: '₦${order.currentOrder!.deliveryFee! + 2000.00}'),
+          // rowItem(title: 'Total', value: '₦${order.distancePrice + 2000.00}'),
         ],
       ),
     );

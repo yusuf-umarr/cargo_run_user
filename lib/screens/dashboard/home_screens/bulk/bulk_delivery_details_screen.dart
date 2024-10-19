@@ -2,10 +2,12 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/providers/order_provider.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/utils/app_router.gr.dart';
+import 'package:cargo_run/utils/util.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/app_textfields.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:group_button/group_button.dart';
 import 'package:provider/provider.dart';
 
@@ -30,12 +32,26 @@ class _BulkDeliveryDetailsScreenState extends State<BulkDeliveryDetailsScreen> {
   final TextEditingController _packageCategoryController =
       TextEditingController();
   final TextEditingController _deliveryOption = TextEditingController();
-
+  final TextEditingController _latController = TextEditingController();
+  final TextEditingController _longController = TextEditingController();
   bool expressDelivery = false;
   bool normalDelivery = false;
+  bool isTypingPickUp = false;
+
+  @override
+  void dispose() {
+    _latController.dispose();
+    _longController.dispose();
+    _recipientsNameController.dispose();
+    _recipientsPhoneController.dispose();
+    _recipientsAddressController.dispose();
+    _packageCategoryController.dispose();
+    _deliveryOption.dispose();
+    super.dispose();
+  }
 
   void navigate() {
-    context.router.push(const RiderPricingRoute());
+    // context.router.push(const RiderPricingRoute());
   }
 
   void showSnackBar(String message) {
@@ -222,6 +238,8 @@ class _BulkDeliveryDetailsScreenState extends State<BulkDeliveryDetailsScreen> {
                                   _recipientsAddressController.text,
                                   _packageCategoryController.text,
                                   _deliveryOption.text,
+                                  _latController.text,
+                                  _latController.text,
                                 );
                                 await watch.placeOrder().then((value) => {
                                       if (watch.orderStatus ==
@@ -282,4 +300,70 @@ class _BulkDeliveryDetailsScreenState extends State<BulkDeliveryDetailsScreen> {
       ),
     );
   }
+
+  Consumer recipientAddressTextField() {
+    return Consumer<OrderProvider>(builder: (context, otherVM, _) {
+      // final List searchedPlaces = otherVM.dSearchResults!;
+      return Column(
+        children: [
+          isTypingPickUp
+              ? Builder(builder: (context) {
+                  if (otherVM.dSearchResults.isNotEmpty) {
+                    return Card(
+                      child: Column(
+                        children: otherVM.dSearchResults.map<Widget>((x) {
+                          return ListTile(
+                            onTap: () async {
+                              _recipientsAddressController.text = x.description;
+
+                              isTypingPickUp = false;
+
+                              List<Location> locations =
+                                  await locationFromAddress("${x.description}");
+
+                              _latController.text =
+                                  locations[0].latitude.toString();
+                              _longController.text =
+                                  locations[0].longitude.toString();
+
+                              setState(() {});
+                            },
+                            title: Text(
+                              x.description,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(color: Colors.black),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                })
+              : const SizedBox(),
+          Util.inputField2(
+            externalText: "Recipients address",
+            hint: "Enter address",
+            controller: _recipientsAddressController,
+            validator: (value) => value!.isEmpty ? '*Field is required' : null,
+            onChanged: (query) {
+              if (query != "") {
+                setState(() {
+                  isTypingPickUp = true;
+                });
+              } else {
+                setState(() {
+                  isTypingPickUp = false;
+                });
+              }
+              otherVM.searchPlaces(query);
+            },
+          ),
+        ],
+      );
+    });
+  }
+//
 }

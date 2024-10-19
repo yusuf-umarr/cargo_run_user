@@ -26,5 +26,6 @@ abstract class OrdersService {
   });
 
   Future<ApiResp<dynamic>> getAutocomplete(searchTerm);
+    Future<ApiResp<dynamic>> getDistancePrice(source, destination) ;
 
 }
