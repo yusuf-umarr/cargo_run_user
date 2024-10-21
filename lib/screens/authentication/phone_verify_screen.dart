@@ -7,7 +7,6 @@ import 'package:otp_text_field/style.dart';
 import 'package:provider/provider.dart';
 
 import '../../styles/app_colors.dart';
-import '../../utils/app_router.gr.dart';
 import '../../widgets/app_buttons.dart';
 import '../../widgets/page_widgets/appbar_widget.dart';
 import '../../providers/auth_provider.dart';
@@ -144,7 +143,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
                           ..onTap = () async {
                             await context.read<AuthProvider>().getOTP(
                                   email: sharedPrefs.email,
-                                );
+                                ).then((v)=>  showSnackBar("Otp sent"));
                           },
                         text: 'Resend',
                         style: const TextStyle(

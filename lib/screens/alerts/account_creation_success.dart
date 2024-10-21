@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:auto_route/auto_route.dart';
-import 'package:cargo_run/screens/dashboard/bottom_nav.dart';
 import 'package:cargo_run/utils/app_router.gr.dart';
 import 'package:flutter/material.dart';
 
@@ -54,7 +53,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
               widget.successRedirectRoute == SuccessRedirectRoute.registeredPage
                   ? 'Account Creation Successful'
                   : widget.successRedirectRoute ==
-                          SuccessRedirectRoute.registeredPage
+                          SuccessRedirectRoute.verifyPage
                       ? "Account Verified Successful"
                       : "Order request completed",
               textAlign: TextAlign.center,
@@ -68,7 +67,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
               widget.successRedirectRoute == SuccessRedirectRoute.registeredPage
                   ? 'Otp verification code has been sent to your registered email.'
                   : widget.successRedirectRoute ==
-                          SuccessRedirectRoute.registeredPage
+                          SuccessRedirectRoute.verifyPage
                       ? "You can now log into your account"
                       : "Please wait while we process your request",
               textAlign: TextAlign.center,

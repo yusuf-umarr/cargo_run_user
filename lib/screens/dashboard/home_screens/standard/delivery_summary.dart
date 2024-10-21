@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/screens/alerts/account_creation_success.dart';
 import 'package:cargo_run/styles/app_colors.dart';
+import 'package:cargo_run/utils/shared_prefs.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
@@ -83,6 +84,7 @@ class _DeliverySummaryState extends State<DeliverySummary> {
                     detailCard(
                       size,
                       title: "Sender",
+                      name: sharedPrefs.fullName,
                       phone: "${orderVM.addressDetails!.contactNumber}",
                       address: "${orderVM.addressDetails!.landMark}",
                     ),
@@ -90,6 +92,7 @@ class _DeliverySummaryState extends State<DeliverySummary> {
                     detailCard(
                       size,
                       title: "Recipient",
+                      name: "${orderVM.receiverDetails!.name}",
                       phone: "${orderVM.receiverDetails!.phone}",
                       address: "${orderVM.receiverDetails!.address}",
                     ),
@@ -220,6 +223,7 @@ class _DeliverySummaryState extends State<DeliverySummary> {
   Widget detailCard(
     size, {
     required String title,
+    required String name,
     required String phone,
     required String address,
   }) {
@@ -245,7 +249,33 @@ class _DeliverySummaryState extends State<DeliverySummary> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Expanded(
-                flex: 2,
+                flex: 3,
+                child: Text(
+                  'Recipient name :',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ),
+              Expanded(
+                flex: 3,
+                child: Text(
+                  name,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Expanded(
+                flex: 3,
                 child: Text(
                   'Phone number :',
                   style: TextStyle(
@@ -255,6 +285,7 @@ class _DeliverySummaryState extends State<DeliverySummary> {
                 ),
               ),
               Expanded(
+                flex: 3,
                 child: Text(
                   phone,
                   style: const TextStyle(
@@ -270,7 +301,7 @@ class _DeliverySummaryState extends State<DeliverySummary> {
             // mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Expanded(
-                flex: 2,
+                flex: 3,
                 child: Text(
                   'Address :',
                   style: TextStyle(
@@ -280,6 +311,7 @@ class _DeliverySummaryState extends State<DeliverySummary> {
                 ),
               ),
               Expanded(
+                flex: 3,
                 child: Text(
                   address,
                   style: const TextStyle(
