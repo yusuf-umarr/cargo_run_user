@@ -600,7 +600,7 @@ class TrackParcelRoute extends _i26.PageRouteInfo<TrackParcelRouteArgs> {
       final args = data.argsAs<TrackParcelRouteArgs>();
       return _i24.TrackParcelScreen(
         key: args.key,
-        order: args.order,
+        order: args.order
       );
     },
   );

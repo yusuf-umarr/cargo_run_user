@@ -35,17 +35,16 @@ class PaymentSummaryCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20.0),
-          rowItem(title: 'Subtotal', value: '₦ $deliveryFee'),
+          rowItem(title: 'Delivery Fee', value: '₦ $deliveryFee'),
           const SizedBox(height: 10.0),
-          rowItem(title: 'Delivery Fee', value: '₦ 2000.00'),
+          // rowItem(title: 'Delivery Fee', value: '₦ 2000.00'),
           const Divider(
             thickness: 1,
             color: greyText,
           ),
           rowItem(
               title: 'Total',
-              value:
-                  '₦ ${(double.parse(deliveryFee) + 2000.00).toStringAsFixed(2)}'),
+              value: '₦ ${(double.parse(deliveryFee)).toStringAsFixed(2)}'),
           const SizedBox(height: 10.0),
           rowItem(
             title: 'Payment Status',

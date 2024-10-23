@@ -1,7 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-
 import '../../models/order.dart';
 import '../../styles/app_colors.dart';
 import '../../utils/app_router.gr.dart';
@@ -90,10 +90,9 @@ class ShipmentCard extends StatelessWidget {
                 const SizedBox(height: 5.0),
                 Text(
                   "₦${order.deliveryFee}",
-                  style: const TextStyle(
-                    fontSize: 15.0,
+                  style: GoogleFonts.roboto(
+                    fontSize: 15,
                     fontWeight: FontWeight.w500,
-                    color: blackText,
                   ),
                 ),
               ],

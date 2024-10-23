@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:another_stepper/another_stepper.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
@@ -5,128 +7,150 @@ import 'package:flutter/material.dart';
 import '../../../models/order.dart';
 import '../../../styles/app_colors.dart';
 
-int activeStep = 0;
-
 @RoutePage()
 class TrackParcelScreen extends StatefulWidget {
   final Order order;
-  const TrackParcelScreen({super.key, required this.order});
+  const TrackParcelScreen({
+    super.key,
+    required this.order,
+  });
 
   @override
   State<TrackParcelScreen> createState() => _TrackParcelScreenState();
 }
 
 class _TrackParcelScreenState extends State<TrackParcelScreen> {
-  List<StepperData> stepperData = [
-    StepperData(
-      title: StepperText(
-        "Request Accepted",
-        textStyle: const TextStyle(
-          color: blackText,
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
+  List<StepperData> stepperData = [];
+  int activeStep = 0;
+
+  @override
+  initState() {
+    log("widget.order.status:${widget.order.status}");
+    if (widget.order.status == "accepted") {
+      activeStep = 1;
+    } else if (widget.order.status == "pickup") {
+      activeStep = 2;
+    } else if (widget.order.status == "arrived") {
+      activeStep = 3;
+    } else if (widget.order.status == "delivered") {
+      activeStep = 4;
+    }
+
+    stepperData = [
+      StepperData(
+        title: StepperText(
+          "Request Accepted",
+          textStyle: const TextStyle(
+            color: blackText,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-      ),
-      subtitle: StepperText(
-        "Rider is on his way to pickup point.",
-        textStyle: TextStyle(
-          color: activeStep >= 1 ? primaryColor1 : greyText,
-          fontSize: 16,
+        subtitle: StepperText(
+          "Rider is on his way to pickup point.",
+          textStyle: TextStyle(
+            color: activeStep >= 1 ? primaryColor1 : greyText,
+            fontSize: 16,
+          ),
         ),
-      ),
-      iconWidget: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: activeStep >= 1 ? primaryColor1 : greyText,
-          borderRadius: const BorderRadius.all(
-            Radius.circular(30),
+        iconWidget: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: activeStep >= 1 ? primaryColor1 : greyText,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(30),
+            ),
           ),
         ),
       ),
-    ),
-    StepperData(
-      title: StepperText(
-        "On the Way",
-        textStyle: const TextStyle(
-          color: blackText,
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
+      StepperData(
+        title: StepperText(
+          "On the Way",
+          textStyle: const TextStyle(
+            color: blackText,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
         ),
-      ),
-      subtitle: StepperText(
-        "Your parcel has been picked up.",
-        textStyle: TextStyle(
-          color: activeStep >= 2 ? primaryColor1 : greyText,
-          fontSize: 16,
+        subtitle: StepperText(
+          "Your parcel has been picked up.",
+          textStyle: TextStyle(
+            color: activeStep >= 2 ? primaryColor1 : greyText,
+            fontSize: 16,
+          ),
         ),
-      ),
-      iconWidget: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: activeStep >= 2 ? primaryColor1 : greyText,
-          borderRadius: const BorderRadius.all(
-            Radius.circular(30),
+        iconWidget: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: activeStep >= 2 ? primaryColor1 : greyText,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(30),
+            ),
           ),
         ),
       ),
-    ),
-    StepperData(
-      title: StepperText(
-        "Rider has Arrived",
-        textStyle: const TextStyle(
-          color: blackText,
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
+      StepperData(
+        title: StepperText(
+          "Rider has Arrived",
+          textStyle: const TextStyle(
+            color: blackText,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-      ),
-      subtitle: StepperText(
-        "Rider is outside to deliver your parcel.",
-        textStyle: TextStyle(
-          color: activeStep >= 3 ? primaryColor1 : greyText,
-          fontSize: 16,
+        subtitle: StepperText(
+          "Rider is outside to deliver your parcel.",
+          textStyle: TextStyle(
+            color: activeStep >= 3 ? primaryColor1 : greyText,
+            fontSize: 16,
+          ),
         ),
-      ),
-      iconWidget: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: activeStep >= 3 ? primaryColor1 : greyText,
-          borderRadius: const BorderRadius.all(
-            Radius.circular(30),
+        iconWidget: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: activeStep >= 3 ? primaryColor1 : greyText,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(30),
+            ),
           ),
         ),
       ),
-    ),
-    StepperData(
-      title: StepperText(
-        "Parcel Delivered",
-        textStyle: const TextStyle(
-          color: blackText,
-          fontWeight: FontWeight.bold,
-          fontSize: 16,
+      StepperData(
+        title: StepperText(
+          "Parcel Delivered",
+          textStyle: const TextStyle(
+            color: blackText,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
         ),
-      ),
-      subtitle: StepperText(
-        "Your parcel has been delivered successfully.",
-        textStyle: TextStyle(
-          color: activeStep >= 4 ? primaryColor1 : greyText,
-          fontSize: 16,
+        subtitle: StepperText(
+          "Your parcel has been delivered successfully.",
+          textStyle: TextStyle(
+            color: activeStep >= 4 ? primaryColor1 : greyText,
+            fontSize: 16,
+          ),
         ),
-      ),
-      iconWidget: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: activeStep >= 4 ? primaryColor1 : greyText,
-          borderRadius: const BorderRadius.all(
-            Radius.circular(30),
+        iconWidget: Container(
+          padding: const EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: activeStep >= 4 ? primaryColor1 : greyText,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(30),
+            ),
           ),
         ),
       ),
-    ),
-  ];
+    ];
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarWidget(context, title: 'Track Your Parcel'),
+      appBar:
+          appBarWidget(context, title: 'Track Your Parcel', hasBackBtn: true),
       body: Padding(
         padding: const EdgeInsets.all(25.0),
         child: Column(

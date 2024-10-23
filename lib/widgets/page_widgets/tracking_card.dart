@@ -1,9 +1,7 @@
-import 'package:auto_route/auto_route.dart';
+import 'package:cargo_run/screens/dashboard/home_screens/track_parcel_screen.dart';
 import 'package:flutter/material.dart';
 import '../../styles/app_colors.dart';
-
 import '../../models/order.dart';
-import '../../utils/app_router.gr.dart';
 
 class TrackingCard extends StatefulWidget {
   final Order order;
@@ -22,9 +20,13 @@ class _TrackingCardState extends State<TrackingCard> {
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: ListTile(
-        onTap: () => context.router.push(
-          TrackParcelRoute(order: widget.order),
-        ),
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      TrackParcelScreen(order: widget.order)));
+        },
         leading: Image.asset(
           'assets/images/logo.png',
           height: 40,

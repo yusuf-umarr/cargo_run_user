@@ -23,7 +23,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
     List<StepperData> stepperData = [
       StepperData(
         title: StepperText(
-          '${widget.order!.addressDetails!.houseNumber!}, ${widget.order!.addressDetails!.landMark!}',
+          widget.order!.addressDetails!.landMark!,
           textStyle: const TextStyle(
             decoration: TextDecoration.underline,
             decorationColor: greyText,
@@ -64,66 +64,82 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
     ];
     return Scaffold(
       backgroundColor: const Color(0xffF3F3F3),
-      appBar: appBarWidget(context, title: 'Order History'),
+      appBar: appBarWidget(context, title: 'Order detail', hasBackBtn: true),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 0,
             vertical: 20,
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: RichText(
-                  text: TextSpan(
-                    text: 'Order: ',
-                    style: const TextStyle(
-                      color: blackText,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: widget.order!.orderId,
-                        style: const TextStyle(
-                          color: primaryColor1,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: RichText(
+                    text: TextSpan(
+                      text: 'Order: ',
+                      style: const TextStyle(
+                        color: blackText,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
                       ),
-                    ],
+                      children: [
+                        TextSpan(
+                          text: widget.order!.orderId,
+                          style: const TextStyle(
+                            color: primaryColor1,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 25.0,
-                  vertical: 5,
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 25.0,
+                    vertical: 5,
+                  ),
+                  child: AnotherStepper(
+                    stepperList: stepperData,
+                    stepperDirection: Axis.vertical,
+                  ),
                 ),
-                child: AnotherStepper(
-                  stepperList: stepperData,
-                  stepperDirection: Axis.vertical,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: AppButton(
+                    text: 'Get help with order',
+                    hasIcon: false,
+                    textColor: Colors.white,
+                    backgroundColor: primaryColor1.withOpacity(0.7),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: AppButton(
-                  text: 'Get help with order',
-                  hasIcon: false,
-                  textColor: Colors.white,
-                  backgroundColor: primaryColor1.withOpacity(0.7),
+                PaymentSummaryCard(
+                  deliveryFee:
+                      widget.order!.deliveryFee!.toStringAsFixed(2).toString(),
+                  paymentStatus: widget.order!.paymentStatus!,
                 ),
-              ),
-              PaymentSummaryCard(
-                deliveryFee:
-                    widget.order!.deliveryFee!.toStringAsFixed(2).toString(),
-                paymentStatus: widget.order!.paymentStatus!,
-              ),
-            ],
+                if (widget.order!.status! == "accepted" ||
+                    widget.order!.status! == "successful" ||
+                    widget.order!.status! == "delivered") ...[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: AppButton(
+                      text: 'Pay now',
+                      hasIcon: false,
+                      textColor: Colors.white,
+                      backgroundColor: primaryColor2,
+                      onPressed: () {},
+                    ),
+                  ),
+                ]
+              ],
+            ),
           ),
         ),
       ),
