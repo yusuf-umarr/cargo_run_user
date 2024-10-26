@@ -28,7 +28,7 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
     log("widget.order.status:${widget.order.status}");
     if (widget.order.status == "accepted") {
       activeStep = 1;
-    } else if (widget.order.status == "pickup") {
+    } else if (widget.order.status == "picked") {
       activeStep = 2;
     } else if (widget.order.status == "arrived") {
       activeStep = 3;

@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:cargo_run/services/notification_service.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/utils/app_router.gr.dart';
 import 'package:cargo_run/utils/shared_prefs.dart';
@@ -64,9 +66,26 @@ class _DashboardPageState extends State<DashboardPage> {
       });
 
       //fetch all notifications
-      socket!.on(sharedPrefs.userId, (data) {
+      socket!.on(sharedPrefs.userId, (data) async {
         try {
-          log("notifications===${data}");
+          context.read<OrderProvider>().getOrders();
+          await NotificationService.showNotification(
+              title: "Order ",
+              body: "${data['msg']}",
+              payload: {
+                "navigate": "true",
+                // "status": data['_doc']['status'],
+                // "doctorId": data['_doc']['doctorId']
+              },
+              actionButtons: [
+                NotificationActionButton(
+                  key: 'Preview',
+                  label: '',
+                  actionType: ActionType.Default,
+                  color: Colors.green,
+                )
+              ]);
+          log("notifications===${data['msg']}");
           //  var jsonResponse = jsonDecode(data);
           var res = data['data'];
           // context.read<OrderProvider>().getOrderData(res);

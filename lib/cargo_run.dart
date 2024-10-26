@@ -9,6 +9,8 @@ class CargoRun extends StatelessWidget {
   CargoRun({super.key});
 
   final _appRouter = AppRouter();
+  static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +24,7 @@ class CargoRun extends StatelessWidget {
         ),
       ],
       child: MaterialApp.router(
+        // navigatorKey: CargoRun.navigatorKey,
         theme: ThemeData(
           fontFamily: 'Poppins',
           scaffoldBackgroundColor: Colors.white,

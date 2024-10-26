@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:cargo_run/config/config.dart';
+import 'package:cargo_run/models/order.dart';
 import 'package:cargo_run/services/orders/orders_implementation.dart';
 import 'package:cargo_run/styles/app_colors.dart';
+import 'package:cargo_run/utils/location.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -10,24 +12,26 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class TripRoutePage extends StatefulWidget {
-  final LatLng pickUpLocation;
-  final LatLng dropOffLocation;
-  final LatLng riderLocation;
-  final String pickUpAddr;
-  final String dropOffAddr;
-  final String itemName;
-  final String itemImage;
-  final String pickUpTime;
+  final Order order;
+  // final LatLng pickUpLocation;
+  // final LatLng dropOffLocation;
+  // final LatLng riderLocation;
+  // final String pickUpAddr;
+  // final String dropOffAddr;
+  // final String itemName;
+  // final String itemImage;
+  // final String pickUpTime;
   const TripRoutePage({
     super.key,
-    required this.dropOffLocation,
-    required this.pickUpLocation,
-    required this.riderLocation,
-    required this.pickUpAddr,
-    required this.dropOffAddr,
-    required this.itemName,
-    required this.itemImage,
-    required this.pickUpTime,
+    // required this.dropOffLocation,
+    // required this.pickUpLocation,
+    // required this.riderLocation,
+    // required this.pickUpAddr,
+    // required this.dropOffAddr,
+    // required this.itemName,
+    // required this.itemImage,
+    // required this.pickUpTime,
+    required this.order,
   });
 
   @override
@@ -45,39 +49,30 @@ class _TripRoutePageState extends State<TripRoutePage> {
   BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
+  double riderLat = 6.64638;
+  double riderLong = 3.517462;
 
-  void getCurrentLocation() async {
-    LocationPermission permission;
+  late LatLng _initialPosition;
+  late GoogleMapController mapController;
 
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
+  CameraPosition? cposition;
+
+  void getLocation() async {
+    Position position = await determinePosition();
+    debugPrint('position: $position');
+    _initialPosition = LatLng(position.latitude, position.longitude);
+    final CameraPosition kGooglePlex = CameraPosition(
+      target: _initialPosition,
+      zoom: 14.4746,
+    );
+
+    if (mounted) {
+      setState(() {
+        cposition = kGooglePlex;
+        riderLat = position.latitude;
+        riderLong = position.latitude;
+      });
     }
-
-    if (permission == LocationPermission.deniedForever) {
-      // Permissions are denied forever, handle appropriately.
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    Position position = await Geolocator.getCurrentPosition();
-    _currentPosition = position;
-    setState(() {});
-
-    log("------position.longitude.toString() ${_currentPosition!.latitude.toString()}");
-
-    GoogleMapController googleMapController = await _controller.future;
-
-    Future.delayed(const Duration(milliseconds: 100), () {
-      googleMapController.animateCamera(
-        CameraUpdate.newCameraPosition(
-          CameraPosition(zoom: 12, target: widget.pickUpLocation),
-        ),
-      );
-    });
   }
 
   void getPolyPoints() async {
@@ -86,12 +81,13 @@ class _TripRoutePageState extends State<TripRoutePage> {
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       request: PolylineRequest(
         origin: PointLatLng(
-          widget.pickUpLocation.latitude,
-          widget.pickUpLocation.longitude,
+          //source
+          widget.order.addressDetails!.lat!.toDouble(),
+          widget.order.addressDetails!.lng!.toDouble(),
         ),
         destination: PointLatLng(
-          widget.dropOffLocation.latitude,
-          widget.dropOffLocation.longitude,
+          widget.order.receiverDetails!.lat!.toDouble(),
+          widget.order.receiverDetails!.lng!.toDouble(),
         ),
         mode: TravelMode.driving,
       ),
@@ -131,7 +127,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
 
   @override
   void initState() {
-    getCurrentLocation();
+    getLocation();
     setCustomMarkerIcon();
 
     getPolyPoints();
@@ -148,12 +144,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
     final Size size = MediaQuery.of(context).size;
     // final provider = ref.watch(requestController);
     return Scaffold(
-      body:
-
-          // _currentPosition == null
-          //     ? const Center(child: CupertinoActivityIndicator())
-          //     :
-          Column(
+      body: Column(
         children: [
           Expanded(
             child: SizedBox(
@@ -162,7 +153,10 @@ class _TripRoutePageState extends State<TripRoutePage> {
                 myLocationButtonEnabled: false,
                 zoomControlsEnabled: false,
                 initialCameraPosition: CameraPosition(
-                  target: widget.pickUpLocation,
+                  target: LatLng(
+                    widget.order.addressDetails!.lat!.toDouble(),
+                    widget.order.addressDetails!.lng!.toDouble(),
+                  ),
                   zoom: 13.5,
                 ),
                 polylines: {
@@ -180,12 +174,18 @@ class _TripRoutePageState extends State<TripRoutePage> {
                       position: LatLng(8.4751, 4.6289)),
                   Marker(
                     markerId: const MarkerId("source"),
-                    position: widget.pickUpLocation,
+                    position: LatLng(
+                      widget.order.addressDetails!.lat!.toDouble(),
+                      widget.order.addressDetails!.lng!.toDouble(),
+                    ),
                     icon: sourceIcon,
                   ),
                   Marker(
                       markerId: const MarkerId("destination"),
-                      position: widget.dropOffLocation,
+                      position: LatLng(
+                        widget.order.receiverDetails!.lat!.toDouble(),
+                        widget.order.receiverDetails!.lng!.toDouble(),
+                      ),
                       icon: destinationIcon),
                 },
                 onMapCreated: (mapController) {

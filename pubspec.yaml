@@ -35,6 +35,8 @@ dependencies:
   geocoding: ^3.0.0
   socket_io_client: ^2.0.3+1
   nb_utils: ^6.1.0
+  awesome_notifications: ^0.8.2
+  
 
 
 dev_dependencies:

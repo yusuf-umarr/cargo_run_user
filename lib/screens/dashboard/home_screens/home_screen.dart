@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/providers/order_provider.dart';
-import 'package:cargo_run/screens/dashboard/home_screens/map_screen.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/trip_route_page.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/utils/app_router.gr.dart';
@@ -59,32 +58,13 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Row(
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const TripRoutePage(
-                              dropOffLocation: LatLng(8.500000, 4.550000),
-                              pickUpLocation: LatLng(8.4813, 4.6115),
-                              riderLocation: LatLng(8.4751, 4.6289),
-                              pickUpAddr: 'pickUpAddr',
-                              dropOffAddr: 'dropOffAddr',
-                              itemName: 'itemName',
-                              itemImage: 'itemImage',
-                              pickUpTime: '',
-                            ),
-                          ),
-                        );
-                      },
-                      child: const CircleAvatar(
-                        radius: 30,
-                        backgroundColor: primaryColor2,
-                        child: Center(
-                          child: Text(
-                            'EO',
-                            style: TextStyle(color: Colors.white, fontSize: 25),
-                          ),
+                    const CircleAvatar(
+                      radius: 30,
+                      backgroundColor: primaryColor2,
+                      child: Center(
+                        child: Text(
+                          'EO',
+                          style: TextStyle(color: Colors.white, fontSize: 25),
                         ),
                       ),
                     ),
