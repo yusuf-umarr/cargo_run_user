@@ -7,7 +7,7 @@ import '../../models/api_response.dart';
 abstract class OrdersService {
   Future<Either<ErrorResponse, ApiResponse>> getOrder(String orderId);
 
-  Future<Either<ErrorResponse, ApiResponse>> createOrder(
+  Future<ApiResp<dynamic>>  createOrder(
     AddressDetails addressDetails,
     ReceiverDetails receiverDetails,
     String deliveryOption,

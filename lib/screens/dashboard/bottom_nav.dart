@@ -22,20 +22,19 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   late OrderStatus _orderStatus;
 
-    io.Socket? socket;
+  io.Socket? socket;
 
   @override
   void initState() {
-     _connectSocket() ;
+    _connectSocket();
     _orderStatus = OrderStatus.loading;
     Provider.of<OrderProvider>(context, listen: false).getOrders();
     super.initState();
   }
 
-    //connecting websocket
+  //connecting websocket
   void _connectSocket() async {
     log("_connectSocket() started....");
-
 
     try {
       socket = io.io(
@@ -54,41 +53,34 @@ class _DashboardPageState extends State<DashboardPage> {
           {
             "socketId": socket!.id!,
             "userId": sharedPrefs.userId,
-            "type": "Rider"
+            "type": "User"
           },
         );
         context.read<OrderProvider>().setSocketIo(socket);
-        socket!.emit(
-          'order'
-        );
+        socket!.emit('order');
         socket!.on('join', (data) {
           log("on join=====:${data}");
         });
       });
 
-      //fetch all orders
-      socket!.on('order', (data) {
+      //fetch all notifications
+      socket!.on(sharedPrefs.userId, (data) {
         try {
-          log("message${data.runtimeType}");
-            //  var jsonResponse = jsonDecode(data);
-         var res = data['data'];
+          log("notifications===${data}");
+          //  var jsonResponse = jsonDecode(data);
+          var res = data['data'];
           // context.read<OrderProvider>().getOrderData(res);
-         
         } catch (e) {
-          // log("orders error:${e}");
+          log("notifications error:${e}");
         }
       });
-
-   
 
       socket!.onAny(
         (event, data) {
           // print(
           //   "event:$event, data:$data",
           // );
-          // log(
-          //   "event:$event, data:$data"
-          // );
+          // log("event:$event, data:$data");
         },
       );
     } catch (e) {
@@ -161,7 +153,6 @@ class _DashboardPageState extends State<DashboardPage> {
       },
     );
   }
-
 
   @override
   void dispose() {

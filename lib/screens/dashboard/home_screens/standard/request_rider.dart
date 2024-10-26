@@ -4,6 +4,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:nb_utils/nb_utils.dart' as util;
 // import 'package:location_picker_text_field/open_street_location_picker.dart';
 import 'package:provider/provider.dart';
 // import 'package:cargo_run/providers/order_provider.dart';
@@ -140,19 +141,25 @@ class _RequestRiderState extends State<RequestRider> {
                         children: otherVM.dSearchResults.map<Widget>((x) {
                           return ListTile(
                             onTap: () async {
-                              _pickupAddressController.text = x.description;
+                              try {
+                                _pickupAddressController.text = x.description;
 
-                              isTypingPickUp = false;
+                                isTypingPickUp = false;
 
-                              List<Location> locations =
-                                  await locationFromAddress("${x.description}");
+                                List<Location> locations =
+                                    await locationFromAddress(
+                                        "${x.description}");
 
-                              _latController.text =
-                                  locations[0].latitude.toString();
-                              _longController.text =
-                                  locations[0].longitude.toString();
+                                _latController.text =
+                                    locations[0].latitude.toString();
+                                _longController.text =
+                                    locations[0].longitude.toString();
 
-                              setState(() {});
+                                setState(() {});
+                              } catch (e) {
+                                util.toast("Network error, please retry");
+                                log("source addr err:$e");
+                              }
                             },
                             title: Text(
                               x.description,
@@ -191,4 +198,6 @@ class _RequestRiderState extends State<RequestRider> {
       );
     });
   }
+
+
 }

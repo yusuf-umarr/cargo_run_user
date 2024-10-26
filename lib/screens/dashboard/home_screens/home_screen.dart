@@ -64,9 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const 
-                            
-                            TripRoutePage(
+                            builder: (context) => const TripRoutePage(
                               dropOffLocation: LatLng(8.500000, 4.550000),
                               pickUpLocation: LatLng(8.4813, 4.6115),
                               riderLocation: LatLng(8.4751, 4.6289),
@@ -191,6 +189,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
 
           Consumer<OrderProvider>(builder: (context, otherVM, _) {
+            otherVM.orders
+                .sort((a, b) => b!.createdAt!.compareTo(a!.createdAt!));
+
             if (otherVM.orders.isNotEmpty) {
               return Column(
                 children: List.generate(otherVM.orders.length, (int index) {

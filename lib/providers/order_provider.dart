@@ -46,11 +46,10 @@ class OrderProvider extends ChangeNotifier {
 
   List dSearchResults = [];
 
-    io.Socket? _socket;
+  io.Socket? _socket;
 
   setSocketIo(socket) {
     _socket = socket;
-
   }
 
   void setOrderStatus(OrderStatus status) {
@@ -112,14 +111,14 @@ class OrderProvider extends ChangeNotifier {
       _deliveryOption,
       _category,
     );
-    response.fold((error) {
+
+    if (response.success) {
+      getOrders();
+      setOrderStatus(OrderStatus.success);
+      _socket!.emit("order");
+    } else {
       setOrderStatus(OrderStatus.failed);
-      setErrorMessage(error.message);
-    }, (success) {
-      setOrderStatus(OrderStatus.pending);
-      // _currentOrder = Order.fromJson(success.data);
-      notifyListeners();
-    });
+    }
   }
 
   Future<void> searchPlaces(search) async {
@@ -146,6 +145,7 @@ class OrderProvider extends ChangeNotifier {
 
       log("_distancePrice:$_distancePrice");
     } else {
+      log("_distancePrice  error :${response.data}");
       //
     }
 

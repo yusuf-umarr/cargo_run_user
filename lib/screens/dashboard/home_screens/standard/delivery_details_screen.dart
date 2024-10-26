@@ -1,11 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:developer';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/providers/order_provider.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/standard/delivery_summary.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/standard/rider_pricing_screen.dart';
 import 'package:cargo_run/styles/app_colors.dart';
-import 'package:cargo_run/utils/app_router.gr.dart';
 import 'package:cargo_run/utils/util.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/app_textfields.dart';
@@ -13,6 +14,7 @@ import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:group_button/group_button.dart';
+import 'package:nb_utils/nb_utils.dart' as util;
 import 'package:provider/provider.dart';
 
 @RoutePage()
@@ -55,16 +57,21 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
     super.dispose();
   }
 
-  void navigate() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DeliverySummary(
-          isExpressDelivery: expressDelivery,
+  void navigate() async {
+    await context.read<OrderProvider>().getDistancePrice();
+
+    if (context.read<OrderProvider>().distancePrice != '') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DeliverySummary(
+            isExpressDelivery: expressDelivery,
+          ),
         ),
-      ),
-    );
-    context.read<OrderProvider>().getDistancePrice();
+      );
+    } else {
+      log("price could be fteched");
+    }
   }
 
   void showSnackBar(String message) {
@@ -308,21 +315,28 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                         children: otherVM.dSearchResults.map<Widget>((x) {
                           return ListTile(
                             onTap: () async {
-                              _recipientsAddressController.text = x.description;
+                              try {
+                                _recipientsAddressController.text =
+                                    x.description;
 
-                              isTypingPickUp = false;
+                                isTypingPickUp = false;
 
-                              List<Location> locations =
-                                  await locationFromAddress("${x.description}");
+                                List<Location> locations =
+                                    await locationFromAddress(
+                                        "${x.description}");
 
-                              _latController.text =
-                                  locations[0].latitude.toString();
-                              _longController.text =
-                                  locations[0].longitude.toString();
+                                _latController.text =
+                                    locations[0].latitude.toString();
+                                _longController.text =
+                                    locations[0].longitude.toString();
 
-                              setState(() {});
-                              if (mounted) {
-                                FocusScope.of(context).unfocus();
+                                setState(() {});
+                                if (mounted) {
+                                  FocusScope.of(context).unfocus();
+                                }
+                              } catch (e) {
+                                util.toast("Network error, please retry");
+                                log("error:$e");
                               }
                             },
                             title: Text(

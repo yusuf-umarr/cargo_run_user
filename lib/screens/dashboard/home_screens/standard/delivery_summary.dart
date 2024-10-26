@@ -154,6 +154,7 @@ class _DeliverySummaryState extends State<DeliverySummary> {
     required String distanceInMiles,
     bool isExpressDelivery = false,
   }) {
+    log("distanceInMiles:$distanceInMiles");
     int pricePerMile = 1000;
 
     double total = pricePerMile * double.parse(removeMiSuffix(distanceInMiles));

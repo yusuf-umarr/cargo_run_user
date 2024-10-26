@@ -45,7 +45,7 @@ class OrdersImpl implements OrdersService {
   }
 
   @override
-  Future<Either<ErrorResponse, ApiResponse>> createOrder(
+  Future<ApiResp<dynamic>> createOrder(
     AddressDetails addressDetails,
     ReceiverDetails receiverDetails,
     String deliveryOption,
@@ -70,12 +70,30 @@ class OrdersImpl implements OrdersService {
         body: jsonEncode(body),
       );
 
-      log("Delivery res${response.body}");
-      var jsonResponse = jsonDecode(response.body);
-      return Right(ApiResponse.fromJson(jsonResponse));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        log("Delivery res${response.body}");
+        var jsonResponse = jsonDecode(response.body);
+        return ApiResp<dynamic>(
+          success: true,
+          data: jsonResponse,
+          message: " error",
+        );
+      } else {
+        log("Delivery res${response.body}");
+        var jsonResponse = jsonDecode(response.body);
+        return ApiResp<dynamic>(
+          success: false,
+          data: jsonResponse,
+          message: " successfull",
+        );
+      }
     } catch (e) {
       debugPrint(e.toString());
-      return Left(ErrorResponse(message: 'Error: $e'));
+      return ApiResp<dynamic>(
+        success: false,
+        data: "$e",
+        message: " error",
+      );
     }
   }
 
@@ -171,14 +189,11 @@ class OrdersImpl implements OrdersService {
 
   @override
   Future<ApiResp<dynamic>> getDistancePrice(source, destination) async {
-
     try {
       var url = Uri.parse(
         "https://maps.googleapis.com/maps/api/distancematrix/json?destinations=$destination&origins=$source&units=imperial&key=$googleApiKey",
       );
-      final response = await http.get(
-        url
-      );
+      final response = await http.get(url);
 
       var jsonResponse = jsonDecode(response.body);
 
