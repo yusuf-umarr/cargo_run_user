@@ -1,11 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:developer';
-
-import 'package:auto_route/auto_route.dart';
+// import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/providers/order_provider.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/standard/delivery_summary.dart';
-import 'package:cargo_run/screens/dashboard/home_screens/standard/rider_pricing_screen.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/utils/util.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
@@ -17,7 +15,7 @@ import 'package:group_button/group_button.dart';
 import 'package:nb_utils/nb_utils.dart' as util;
 import 'package:provider/provider.dart';
 
-@RoutePage()
+// @RoutePage()
 class DeliveryDetailsScreen extends StatefulWidget {
   const DeliveryDetailsScreen({super.key});
 
@@ -69,6 +67,7 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
         ),
       );
     } else {
+      util.toast("Network error, please try again");
       log("price could be fteched");
     }
   }
@@ -87,7 +86,8 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xffF3F3F3),
-      appBar: appBarWidget(context, title: "Reciever's details"),
+      appBar:
+          appBarWidget(context, title: "Reciever's details", hasBackBtn: true),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -114,6 +114,7 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                         normalDelivery = true;
                         expressDelivery = false;
                       });
+                      context.read<OrderProvider>().setDeliveryOption('normal');
                     }),
                     deliveryOption(expressDelivery,
                         title: 'Express', width: size.width * 0.42, onTap: () {
@@ -122,6 +123,9 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                         normalDelivery = false;
                         _deliveryOption.text = 'Express ';
                       });
+                      context
+                          .read<OrderProvider>()
+                          .setDeliveryOption('express');
                     }),
                   ],
                 ),
@@ -186,6 +190,7 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                       'Electronics',
                       'Liquid',
                       'Glass',
+                      'Others',
                     ],
                     options: GroupButtonOptions(
                       unselectedBorderColor: primaryColor2,
@@ -335,6 +340,7 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                                 }
                               } catch (e) {
                                 util.toast("Network error, please retry");
+                                _recipientsAddressController.clear();
                                 log("error:$e");
                               }
                             },

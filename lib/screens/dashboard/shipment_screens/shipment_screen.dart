@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -7,7 +6,6 @@ import '/providers/order_provider.dart';
 import '/widgets/page_widgets/appbar_widget.dart';
 import '../../../widgets/page_widgets/shipment_card.dart';
 
-@RoutePage()
 class ShipmentScreen extends StatefulWidget {
   const ShipmentScreen({super.key});
 
@@ -18,6 +16,7 @@ class ShipmentScreen extends StatefulWidget {
 class _ShipmentScreenState extends State<ShipmentScreen> {
   @override
   void initState() {
+        Provider.of<OrderProvider>(context, listen: false).getOrders();
     super.initState();
   }
 

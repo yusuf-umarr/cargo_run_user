@@ -1,8 +1,7 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/screens/alerts/account_creation_success.dart';
+import 'package:cargo_run/screens/authentication/login_screen.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/providers/auth_provider.dart';
-import 'package:cargo_run/utils/app_router.gr.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/app_textfields.dart';
 import 'package:flutter/gestures.dart';
@@ -10,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '/widgets/page_widgets/appbar_widget.dart';
 
-@RoutePage()
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -172,7 +170,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       TextSpan(
                         recognizer: TapGestureRecognizer()
                           ..onTap = () {
-                            context.router.replace(const LoginRoute());
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const LoginScreen(),
+                              ),
+                            );
                           },
                         text: 'Login',
                         style: const TextStyle(

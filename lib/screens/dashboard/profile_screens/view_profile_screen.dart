@@ -1,13 +1,13 @@
-import 'package:auto_route/auto_route.dart';
+import 'package:cargo_run/screens/authentication/login_screen.dart';
+import 'package:cargo_run/screens/dashboard/profile_screens/edit_profile_screen.dart';
+import 'package:cargo_run/screens/dashboard/profile_screens/get_help_screen.dart';
 import 'package:cargo_run/styles/app_colors.dart';
-import 'package:cargo_run/utils/app_router.gr.dart';
 import 'package:cargo_run/utils/shared_prefs.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/app_textfields.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 
-@RoutePage()
 class ViewProfileScreen extends StatefulWidget {
   const ViewProfileScreen({super.key});
 
@@ -37,7 +37,14 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: () => context.router.push(const GetHelpRoute()),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const GetHelpScreen(),
+                          ),
+                        );
+                      },
                       child: const Text(
                         'Get Help',
                         style: TextStyle(
@@ -48,8 +55,14 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                       ),
                     ),
                     IconButton(
-                      onPressed: () =>
-                          context.router.push(const EditProfileRoute()),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const EditProfileScreen(),
+                          ),
+                        );
+                      },
                       icon: const Icon(
                         Iconsax.setting_2,
                         size: 35,
@@ -78,10 +91,15 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   backgroundColor: primaryColor1,
                   onPressed: () async {
                     sharedPrefs.clearAll();
-                    context.router.pushAndPopUntil(
-                      const LoginRoute(),
-                      predicate: (route) => false,
+
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => LoginScreen(),
+                      ),
+                      (Route<dynamic> route) => false,
                     );
+                 
+                  
                   },
                 )
               ],

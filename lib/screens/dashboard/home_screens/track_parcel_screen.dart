@@ -1,13 +1,13 @@
 import 'dart:developer';
 
 import 'package:another_stepper/another_stepper.dart';
-import 'package:auto_route/auto_route.dart';
+import 'package:cargo_run/screens/dashboard/home_screens/trip_route_page.dart';
+import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
 import '../../../models/order.dart';
 import '../../../styles/app_colors.dart';
 
-@RoutePage()
 class TrackParcelScreen extends StatefulWidget {
   final Order order;
   const TrackParcelScreen({
@@ -169,6 +169,25 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
               stepperDirection: Axis.vertical,
               stepperList: stepperData,
             ),
+            const SizedBox(height: 20),
+            if (activeStep >= 1) ...[
+              AppButton(
+                text: 'Preview',
+                hasIcon: false,
+                backgroundColor: primaryColor1,
+                textColor: Colors.white,
+                onPressed: () async {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TripRoutePage(
+                        order: widget.order,
+                      ),
+                    ),
+                  );
+                },
+              )
+            ]
           ],
         ),
       ),

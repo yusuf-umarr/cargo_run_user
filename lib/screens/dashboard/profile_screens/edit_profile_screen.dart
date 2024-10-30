@@ -1,11 +1,9 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/app_textfields.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
 
-@RoutePage()
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
 

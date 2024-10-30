@@ -8,7 +8,7 @@ environment:
 
 dependencies:
   another_stepper: ^1.2.2
-  auto_route: ^9.2.2
+  # auto_route: ^9.2.2
   chat_bubbles: ^1.5.0
   dartz: ^0.10.1
   flutter:
@@ -36,11 +36,13 @@ dependencies:
   socket_io_client: ^2.0.3+1
   nb_utils: ^6.1.0
   awesome_notifications: ^0.8.2
+  upgrader:
+
   
 
 
 dev_dependencies:
-  auto_route_generator: 
+  # auto_route_generator: 
   build_runner:
   flutter_lints: ^2.0.0
   flutter_test:

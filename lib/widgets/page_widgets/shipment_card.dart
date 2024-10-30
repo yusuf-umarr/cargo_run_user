@@ -1,10 +1,9 @@
-import 'package:auto_route/auto_route.dart';
+import 'package:cargo_run/screens/dashboard/shipment_screens/shipment_details.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../../models/order.dart';
 import '../../styles/app_colors.dart';
-import '../../utils/app_router.gr.dart';
 
 class ShipmentCard extends StatelessWidget {
   final Order order;
@@ -13,7 +12,7 @@ class ShipmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.router.push(ShipmentDetailsRoute(order: order)),
+      onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>ShipmentDetailsScreen(order: order)));},
       child: Container(
         margin: const EdgeInsets.only(bottom: 20.0),
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
@@ -89,7 +88,7 @@ class ShipmentCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 5.0),
                 Text(
-                  "₦${order.deliveryFee}",
+                  "₦${order.price ?? "0"}",
                   style: GoogleFonts.roboto(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,

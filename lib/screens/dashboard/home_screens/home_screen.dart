@@ -1,17 +1,14 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/providers/order_provider.dart';
-import 'package:cargo_run/screens/dashboard/home_screens/trip_route_page.dart';
+import 'package:cargo_run/screens/dashboard/home_screens/notification_screen.dart';
+import 'package:cargo_run/screens/dashboard/home_screens/standard/request_rider.dart';
 import 'package:cargo_run/styles/app_colors.dart';
-import 'package:cargo_run/utils/app_router.gr.dart';
 import 'package:cargo_run/utils/shared_prefs.dart';
 import 'package:cargo_run/widgets/page_widgets/delivery_card.dart';
 import 'package:cargo_run/widgets/page_widgets/tracking_card.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
-@RoutePage()
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -26,6 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    Provider.of<OrderProvider>(context, listen: false).getOrders();
+
     setState(() {
       greeting = switch (now.hour) {
         >= 6 && < 12 => 'Good Morning,',
@@ -95,8 +94,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const Spacer(),
                     GestureDetector(
-                      onTap: () =>
-                          context.router.push(const NotificationRoute()),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const NotificationScreen()));
+                      },
                       child: const Icon(
                         Iconsax.notification,
                         color: Colors.white,
@@ -136,16 +140,37 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   children: [
                     GestureDetector(
-                      onTap: () =>
-                          context.router.push(RequestRider(type: 'standard')),
+                      onTap: () {
+                        context
+                            .read<OrderProvider>()
+                            .setDeliveryService("standard");
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const RequestRider(type: 'standard'),
+                          ),
+                        );
+                      },
                       child: const DeliveryServiceCard(
                         image: 'ds1.png',
                         text: 'Standard Delivery',
                       ),
                     ),
                     GestureDetector(
-                      onTap: () =>
-                          context.router.push(RequestRider(type: 'bulk')),
+                      onTap: () {
+                        context
+                            .read<OrderProvider>()
+                            .setDeliveryService("bulk");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                const RequestRider(type: 'bulk'),
+                          ),
+                        );
+                      },
                       child: const DeliveryServiceCard(
                         image: 'ds2.png',
                         text: 'Bulk Shipping',

@@ -1,6 +1,4 @@
-import 'dart:developer';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
@@ -13,7 +11,6 @@ import 'package:provider/provider.dart';
 import '../../../../providers/order_provider.dart';
 import 'pay_screen.dart';
 
-@RoutePage()
 class RiderPricingScreen extends StatefulWidget {
   final bool isExpressDelivery;
   const RiderPricingScreen({super.key, this.isExpressDelivery = false});

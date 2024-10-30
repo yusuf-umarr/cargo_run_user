@@ -20,6 +20,7 @@ class SharedPrefs {
   String get orderId => _sharedPrefs.getString('orderId') ?? "";
   String get lat => _sharedPrefs.getString('lat') ?? "";
   String get lng => _sharedPrefs.getString('lng') ?? "";
+  String get usedApp => _sharedPrefs.getString('usedApp')??"";
 
   set token(String value) {
     _sharedPrefs.setString('token', value);
@@ -63,6 +64,9 @@ class SharedPrefs {
 
   void clearAll() {
     _sharedPrefs.clear();
+  }
+    set usedApp(String value) {
+    _sharedPrefs.setString('usedApp', value);
   }
 }
 

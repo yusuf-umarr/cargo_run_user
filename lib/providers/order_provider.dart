@@ -1,6 +1,7 @@
-import 'dart:developer';
+import 'dart:developer' as dev;
 import 'package:cargo_run/models/order.dart';
 import 'package:flutter/material.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import '/services/service_locator.dart';
 import '/services/orders/orders_abstract.dart';
@@ -23,11 +24,13 @@ class OrderProvider extends ChangeNotifier {
 
   String _distancePrice = '';
   String _category = '';
+  String _deliveryService = '';
   String _url = '';
   String _deliveryOption = '';
   String _errorMessage = '';
 
   String get category => _category;
+  String get deliveryService => _deliveryService;
   String get distancePrice => _distancePrice;
   String get deliveryOption => _deliveryOption;
 
@@ -82,6 +85,18 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setDeliveryService(String service) {
+    _deliveryService = service;
+
+    notifyListeners();
+  }
+
+  void setDeliveryOption(String option) {
+    _deliveryOption = option;
+
+    notifyListeners();
+  }
+
   void addRecipientDetails(
     String name,
     String phone,
@@ -99,24 +114,27 @@ class OrderProvider extends ChangeNotifier {
       lng: double.parse(long),
     );
     _category = category;
-    _deliveryOption = deliveryOption;
+
     notifyListeners();
   }
 
-  Future<void> placeOrder() async {
+  Future<void> placeOrder(String price) async {
     setOrderStatus(OrderStatus.loading);
     var response = await _ordersService.createOrder(
-      _addressDetails!,
-      _receiverDetails!,
-      _deliveryOption,
-      _category,
-    );
+        _addressDetails!,
+        _receiverDetails!,
+        _deliveryOption, //nornal/express
+        _deliveryService, //standard/bulk
+        price);
+
+    dev.log("deliveryPrice:$price");
 
     if (response.success) {
       getOrders();
       setOrderStatus(OrderStatus.success);
       _socket!.emit("order");
     } else {
+      dev.log("order error:${response.data}");
       setOrderStatus(OrderStatus.failed);
     }
   }
@@ -136,15 +154,18 @@ class OrderProvider extends ChangeNotifier {
   }
 
   Future<void> getDistancePrice() async {
+    setOrderStatus(OrderStatus.loading);
     var response = await _ordersService.getDistancePrice(
         _addressDetails?.landMark!, _receiverDetails?.address);
 
     if (response.success) {
+      setOrderStatus(OrderStatus.success);
       _distancePrice =
           response.data['rows'][0]['elements'][0]['distance']['text'];
 
       log("_distancePrice:$_distancePrice");
     } else {
+      setOrderStatus(OrderStatus.failed);
       log("_distancePrice  error :${response.data}");
       //
     }

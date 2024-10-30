@@ -1,18 +1,16 @@
 import 'dart:ui';
 
 import 'package:another_stepper/another_stepper.dart';
-import 'package:auto_route/auto_route.dart';
+import 'package:cargo_run/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../../providers/order_provider.dart';
-import '../../../../utils/app_router.gr.dart';
 import '../../../../widgets/app_buttons.dart';
 import '../../../../widgets/page_widgets/appbar_widget.dart';
 import '../../../../styles/app_colors.dart';
 import '../../../../widgets/page_widgets/payment_summary_card.dart';
 
-@RoutePage()
 class OrderSummaryScreen extends StatefulWidget {
   const OrderSummaryScreen({super.key});
 
@@ -68,7 +66,7 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
     ];
     return Scaffold(
         backgroundColor: const Color(0xffF3F3F3),
-        appBar: appBarWidget(context, title: 'Order Summary'),
+        appBar: appBarWidget(context, title: 'Order Summary', hasBackBtn:true),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(
@@ -161,11 +159,7 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
                             );
                           });
                       Future.delayed(const Duration(seconds: 3), () {
-                        context.maybePop();
-                        context.router.replaceAll(const [
-                          DashboardRoute(),
-                          MapRoute(),
-                        ]);
+                       Navigator.push(context, MaterialPageRoute(builder: (context)=>const BottomNavBar()));
                       });
                     },
                   ),

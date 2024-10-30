@@ -1,8 +1,6 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
 
-@RoutePage()
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
 

@@ -1,19 +1,14 @@
 import 'dart:developer';
-
-import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/screens/alerts/account_creation_success.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/utils/shared_prefs.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
-// import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
+import 'package:nb_utils/nb_utils.dart' as util;
 import 'package:provider/provider.dart';
-
 import '../../../../providers/order_provider.dart';
-import 'pay_screen.dart';
 
 class DeliverySummary extends StatefulWidget {
   final bool isExpressDelivery;
@@ -26,6 +21,8 @@ class DeliverySummary extends StatefulWidget {
 class _DeliverySummaryState extends State<DeliverySummary> {
   bool getPrice = false;
   bool pickedCash = false;
+
+  String deliveryPrice = '';
 
   @override
   void initState() {
@@ -54,7 +51,7 @@ class _DeliverySummaryState extends State<DeliverySummary> {
     final orderVM = context.watch<OrderProvider>();
     return Scaffold(
       backgroundColor: const Color(0xffF3F3F3),
-      appBar: appBarWidget(context, title: 'Summary'),
+      appBar: appBarWidget(context, title: 'Summary', hasBackBtn: true),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
@@ -105,13 +102,21 @@ class _DeliverySummaryState extends State<DeliverySummary> {
                                 backgroundColor: primaryColor1,
                               )
                             : AppButton(
-                                text: 'Proceed',
+                                text: 'Confirm order',
                                 hasIcon: false,
                                 textColor: Colors.white,
                                 backgroundColor: primaryColor1,
                                 onPressed: () async {
-                                  await watch.placeOrder().then((value) {
-                                    navigate();
+                                  await watch
+                                      .placeOrder(deliveryPrice)
+                                      .then((value) {
+                                    if (watch.orderStatus ==
+                                        OrderStatus.success) {
+                                      navigate();
+                                    } else {
+                                      util.toast(
+                                          "Unable to create order, please try again");
+                                    }
                                   });
                                 },
                               );
@@ -139,37 +144,54 @@ class _DeliverySummaryState extends State<DeliverySummary> {
     int pricePerMile = 1000;
     double subTotal = 0.0;
 
-    double total = pricePerMile * double.parse(removeMiSuffix(distanceInMiles));
+    try {
+      double total =
+          pricePerMile * double.parse(removeMiSuffix(distanceInMiles));
 
-    if (isExpressDelivery) {
-      subTotal = total + (total * 0.10);
-    } else {
-      subTotal = total;
+      if (isExpressDelivery) {
+        subTotal = total + (total * 0.10);
+      } else {
+        subTotal = total;
+      }
+
+      deliveryPrice = subTotal.toStringAsFixed(2);
+      return subTotal.toStringAsFixed(2);
+    } catch (e) {
+      util.toast("Error fetching price, Please try again");
+      return '';
     }
-
-    return subTotal.toStringAsFixed(2);
   }
 
   String getTotalPrice({
     required String distanceInMiles,
     bool isExpressDelivery = false,
   }) {
-    log("distanceInMiles:$distanceInMiles");
-    int pricePerMile = 1000;
+    double total = 0;
+    try {
+      log("distanceInMiles:$distanceInMiles");
+      int pricePerMile = 1000;
 
-    double total = pricePerMile * double.parse(removeMiSuffix(distanceInMiles));
-
-    return total.toStringAsFixed(2);
+      total = pricePerMile * double.parse(removeMiSuffix(distanceInMiles));
+      return total.toStringAsFixed(2);
+    } catch (e) {
+      util.toast("Error fetching price, please agian");
+      return '';
+    }
   }
 
-  String getTenPercent({
-    required String distanceInMiles,
-  }) {
-    int pricePerMile = 1000; //#1000 per mile
+  String getTenPercent({required String distanceInMiles}) {
     double subTotal = 0.0;
-    double total = pricePerMile * double.parse(removeMiSuffix(distanceInMiles));
-    subTotal = total * (10 / 100);
-    return subTotal.toStringAsFixed(2);
+    try {
+      int pricePerMile = 1000; //#1000 per mile
+
+      double total =
+          pricePerMile * double.parse(removeMiSuffix(distanceInMiles));
+      subTotal = total * (10 / 100);
+      return subTotal.toStringAsFixed(2);
+    } catch (e) {
+      util.toast("Error fetching price, please agian");
+      return "";
+    }
   }
 
   Widget _paymentSummary(size) {
@@ -249,11 +271,11 @@ class _DeliverySummaryState extends State<DeliverySummary> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Expanded(
+              Expanded(
                 flex: 3,
                 child: Text(
-                  'Recipient name :',
-                  style: TextStyle(
+                  '$title name :',
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                   ),

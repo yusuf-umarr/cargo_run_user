@@ -1,6 +1,6 @@
 import 'dart:developer';
 
-import 'package:auto_route/auto_route.dart';
+// import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/providers/order_provider.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/standard/delivery_summary.dart';
 import 'package:cargo_run/styles/app_colors.dart';
@@ -15,7 +15,6 @@ import 'package:group_button/group_button.dart';
 import 'package:provider/provider.dart';
 import 'package:nb_utils/nb_utils.dart' as util;
 
-@RoutePage()
 class BulkDeliveryDetailsScreen extends StatefulWidget {
   const BulkDeliveryDetailsScreen({super.key});
 
@@ -85,7 +84,8 @@ class _BulkDeliveryDetailsScreenState extends State<BulkDeliveryDetailsScreen> {
     final size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xffF3F3F3),
-      appBar: appBarWidget(context, title: 'Delivery Details'),
+      appBar:
+          appBarWidget(context, title: 'Delivery Details', hasBackBtn: true),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -116,6 +116,21 @@ class _BulkDeliveryDetailsScreenState extends State<BulkDeliveryDetailsScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     deliveryOption(
+                      normalDelivery,
+                      title: 'Normal',
+                      width: size.width * 0.42,
+                      onTap: () {
+                        setState(() {
+                          normalDelivery = true;
+                          expressDelivery = false;
+                        });
+                        context
+                            .read<OrderProvider>()
+                            .setDeliveryOption("normal");
+                      },
+                      image: 'bulk-normal',
+                    ),
+                    deliveryOption(
                       expressDelivery,
                       title: 'Express',
                       width: size.width * 0.42,
@@ -125,20 +140,11 @@ class _BulkDeliveryDetailsScreenState extends State<BulkDeliveryDetailsScreen> {
                           normalDelivery = false;
                           _deliveryOption.text = 'Express ';
                         });
+                        context
+                            .read<OrderProvider>()
+                            .setDeliveryOption("express");
                       },
                       image: 'bulk-express',
-                    ),
-                    deliveryOption(
-                      normalDelivery,
-                      title: 'Normal',
-                      width: size.width * 0.42,
-                      onTap: () {
-                        setState(() {
-                          normalDelivery = true;
-                          expressDelivery = false;
-                        });
-                      },
-                      image: 'bulk-normal',
                     ),
                   ],
                 ),
@@ -259,7 +265,7 @@ class _BulkDeliveryDetailsScreenState extends State<BulkDeliveryDetailsScreen> {
                                   _latController.text,
                                   _latController.text,
                                 );
-                                     navigate();
+                                navigate();
                                 // await watch.placeOrder().then((value) => {
                                 //       if (watch.orderStatus ==
                                 //           OrderStatus.pending)
@@ -353,6 +359,8 @@ class _BulkDeliveryDetailsScreenState extends State<BulkDeliveryDetailsScreen> {
                                 }
                               } catch (e) {
                                 util.toast("Network error, please retry");
+
+                                _recipientsAddressController.clear();
                                 log("error:$e");
                               }
                             },

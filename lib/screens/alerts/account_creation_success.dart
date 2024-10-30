@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'package:auto_route/auto_route.dart';
-import 'package:cargo_run/utils/app_router.gr.dart';
+import 'package:cargo_run/screens/authentication/login_screen.dart';
+import 'package:cargo_run/screens/authentication/phone_verify_screen.dart';
+import 'package:cargo_run/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 
 enum SuccessRedirectRoute { registeredPage, verifyPage, orderSummay }
 
-@RoutePage()
 class SuccessScreen extends StatefulWidget {
   final SuccessRedirectRoute successRedirectRoute;
   const SuccessScreen(
@@ -22,15 +22,28 @@ class _SuccessScreenState extends State<SuccessScreen> {
     // setState(() => sharedPrefs.isLoggedIn = true);
     Timer(const Duration(seconds: 3), () {
       if (widget.successRedirectRoute == SuccessRedirectRoute.registeredPage) {
-        context.router.push(const PhoneVerifyRoute());
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const PhoneVerifyScreen(),
+          ),
+        );
       } else if (widget.successRedirectRoute ==
           SuccessRedirectRoute.verifyPage) {
-        context.router.replace(const LoginRoute());
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginScreen(),
+          ),
+        );
       } else if (widget.successRedirectRoute ==
           SuccessRedirectRoute.orderSummay) {
-        context.router.replaceAll([
-          const HomeRoute(),
-        ]);
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const BottomNavBar(),
+          ),
+          (Route<dynamic> route) => false,
+        );
       }
     });
     super.initState();

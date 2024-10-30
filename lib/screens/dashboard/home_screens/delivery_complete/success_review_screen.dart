@@ -1,11 +1,10 @@
-import 'package:auto_route/auto_route.dart';
+import 'package:cargo_run/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../../../../utils/app_router.gr.dart';
 import '../../../../widgets/app_buttons.dart';
 import '../../../../styles/app_colors.dart';
 
-@RoutePage()
+// @RoutePage()
 class SuccessReviewScreen extends StatefulWidget {
   const SuccessReviewScreen({super.key});
 
@@ -67,7 +66,9 @@ class _SuccessReviewScreenState extends State<SuccessReviewScreen> {
                 hasIcon: false,
                 textColor: Colors.white,
                 backgroundColor: primaryColor1,
-                onPressed: () => context.router.push(const DashboardRoute())),
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>const BottomNavBar()));
+                }),
           ],
         ),
       ),

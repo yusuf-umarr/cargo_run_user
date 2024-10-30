@@ -1,13 +1,13 @@
 import 'package:another_stepper/another_stepper.dart';
-import 'package:auto_route/auto_route.dart';
-import 'package:cargo_run/utils/app_router.gr.dart';
+import 'package:cargo_run/screens/bottom_nav/bottom_nav_bar.dart';
+
 import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:givestarreviews/givestarreviews.dart';
 
 import '../../../../styles/app_colors.dart';
 
-@RoutePage()
+// @RoutePage()
 class ReviewScreen extends StatefulWidget {
   const ReviewScreen({super.key});
 
@@ -64,7 +64,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
         elevation: 0.0,
         actions: [
           IconButton(
-            onPressed: () => context.router.maybePop(),
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context)=> const BottomNavBar())),
             icon: Container(
               padding: const EdgeInsets.all(5),
               margin: const EdgeInsets.only(right: 10, top: 10),
@@ -162,8 +162,9 @@ class _ReviewScreenState extends State<ReviewScreen> {
                     hasIcon: false,
                     textColor: Colors.white,
                     backgroundColor: primaryColor1,
-                    onPressed: () =>
-                        context.router.push(const SuccessReviewRoute()))
+                    onPressed: () {}
+                        // context.router.push(const SuccessReviewRoute())
+                )
               ],
             ),
           ),

@@ -1,11 +1,8 @@
 // ignore_for_file: deprecated_member_use
-
-import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-@RoutePage()
 class GetHelpScreen extends StatefulWidget {
   const GetHelpScreen({super.key});
 
@@ -20,7 +17,7 @@ class _GetHelpScreenState extends State<GetHelpScreen> {
       appBar: AppBar(
         title: const Text('Get Help'),
         leading: IconButton(
-          onPressed: () => context.maybePop(),
+          onPressed: () {},
           icon: SvgPicture.asset(
             'assets/images/arrow-left.svg',
             color: blackText,

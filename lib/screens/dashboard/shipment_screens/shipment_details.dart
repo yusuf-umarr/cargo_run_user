@@ -1,5 +1,5 @@
 import 'package:another_stepper/another_stepper.dart';
-import 'package:auto_route/auto_route.dart';
+import 'package:cargo_run/screens/dashboard/home_screens/trip_route_page.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 
 import '../../../models/order.dart';
 
-@RoutePage()
 class ShipmentDetailsScreen extends StatefulWidget {
   final Order? order;
   const ShipmentDetailsScreen({super.key, required this.order});
@@ -110,33 +109,70 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                     stepperDirection: Axis.vertical,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: AppButton(
-                    text: 'Get help with order',
-                    hasIcon: false,
-                    textColor: Colors.white,
-                    backgroundColor: primaryColor1.withOpacity(0.7),
-                  ),
-                ),
-                PaymentSummaryCard(
-                  deliveryFee:
-                      widget.order!.deliveryFee!.toStringAsFixed(2).toString(),
-                  paymentStatus: widget.order!.paymentStatus!,
-                ),
-                if (widget.order!.status! == "accepted" ||
-                    widget.order!.status! == "successful" ||
-                    widget.order!.status! == "delivered") ...[
+                if (widget.order!.status == "pending" ||
+                    widget.order!.status == "delivered") ...[
+                  //         Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  //   child: AppButton(
+                  //     text: 'Get help with order',
+                  //     hasIcon: false,
+                  //     textColor: Colors.white,
+                  //     backgroundColor: primaryColor1.withOpacity(0.7),
+                  //     onPressed: () {
+                  //       // Navigator.push(
+                  //       //   context,
+                  //       //   MaterialPageRoute(
+                  //       //     builder: (context) => TripRoutePage(
+                  //       //       order: widget.order!,
+                  //       //     ),
+                  //       //   ),
+                  //       // );
+                  //     },
+                  //   ),
+                  // ),
+                ] else ...[
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: AppButton(
-                      text: 'Pay now',
+                      text: 'Preview',
                       hasIcon: false,
                       textColor: Colors.white,
-                      backgroundColor: primaryColor2,
-                      onPressed: () {},
+                      backgroundColor: primaryColor1.withOpacity(0.7),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TripRoutePage(
+                              order: widget.order!,
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
+                ],
+                PaymentSummaryCard(
+                  deliveryFee: widget.order!.price != null
+                      ? widget.order!.price!.toStringAsFixed(2).toString()
+                      : "0",
+                  paymentStatus: widget.order!.paymentStatus!,
+                ),
+                if (widget.order!.paymentStatus!.toLowerCase() ==
+                    "pending") ...[
+                  if (widget.order!.status! == "accepted" ||
+                      widget.order!.status! == "successful" ||
+                      widget.order!.status! == "delivered") ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: AppButton(
+                        text: 'Pay now',
+                        hasIcon: false,
+                        textColor: Colors.white,
+                        backgroundColor: primaryColor2,
+                        onPressed: () {},
+                      ),
+                    ),
+                  ]
                 ]
               ],
             ),

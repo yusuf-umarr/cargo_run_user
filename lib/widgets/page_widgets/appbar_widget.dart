@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -21,8 +20,8 @@ AppBar appBarWidget(BuildContext context,
           hasBackBtn
               ? GestureDetector(
                   onTap: (!isBack)
-                      ? () => context.router.popUntilRoot()
-                      : () => context.maybePop(),
+                      ? () => Navigator.of(context).pop()
+                      : () => Navigator.of(context).pop(),
                   child: SvgPicture.asset(
                     'assets/images/arrow-left.svg',
                     width: 30,

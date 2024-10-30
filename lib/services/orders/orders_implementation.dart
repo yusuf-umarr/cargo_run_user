@@ -50,14 +50,17 @@ class OrdersImpl implements OrdersService {
     ReceiverDetails receiverDetails,
     String deliveryOption,
     String deliveryService,
+    String price,
   ) async {
     String token = sharedPrefs.token;
     var url = Uri.parse('${Env.endpointUrl}/order');
+
     Map<String, dynamic> body = {
       'addressDetails': addressDetails.toJson(),
       'receiverDetails': receiverDetails.toJson(),
-      'deliveryOption': 'express',
-      'deliveryService': 'standard',
+      'deliveryOption': deliveryOption,
+      'deliveryService': deliveryService,
+      'price': price,
     };
     var headers = {
       'Content-Type': 'application/json',
@@ -69,22 +72,20 @@ class OrdersImpl implements OrdersService {
         headers: headers,
         body: jsonEncode(body),
       );
-
+      log("Delivery res${response.statusCode}");
       if (response.statusCode == 200 || response.statusCode == 201) {
-        log("Delivery res${response.body}");
         var jsonResponse = jsonDecode(response.body);
         return ApiResp<dynamic>(
           success: true,
           data: jsonResponse,
-          message: " error",
+          message: "successful",
         );
       } else {
-        log("Delivery res${response.body}");
         var jsonResponse = jsonDecode(response.body);
         return ApiResp<dynamic>(
           success: false,
           data: jsonResponse,
-          message: " successfull",
+          message: "error",
         );
       }
     } catch (e) {

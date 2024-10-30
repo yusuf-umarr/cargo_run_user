@@ -1,6 +1,7 @@
 import 'dart:developer';
 
-import 'package:auto_route/auto_route.dart';
+import 'package:cargo_run/screens/dashboard/home_screens/bulk/bulk_delivery_details_screen.dart';
+import 'package:cargo_run/screens/dashboard/home_screens/standard/delivery_details_screen.dart';
 import 'package:cargo_run/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
@@ -13,9 +14,7 @@ import '../../../../widgets/app_buttons.dart';
 import '../../../../widgets/app_textfields.dart';
 import '../../../../widgets/page_widgets/appbar_widget.dart';
 import '../../../../providers/order_provider.dart';
-import '../../../../utils/app_router.gr.dart';
 
-@RoutePage()
 class RequestRider extends StatefulWidget {
   final String type;
   const RequestRider({super.key, required this.type});
@@ -55,7 +54,7 @@ class _RequestRiderState extends State<RequestRider> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarWidget(context, title: 'Pickup details'),
+      appBar: appBarWidget(context, title: 'Pickup details', hasBackBtn: true),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -112,9 +111,21 @@ class _RequestRiderState extends State<RequestRider> {
                             _latController.text,
                             _longController.text);
                         if (widget.type == 'bulk') {
-                          context.router.push(const BulkDeliveryDetailsRoute());
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const BulkDeliveryDetailsScreen(),
+                            ),
+                          );
                         } else {
-                          context.router.push(const DeliveryDetailsRoute());
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const DeliveryDetailsScreen(),
+                            ),
+                          );
                         }
                       }
                     },
@@ -158,6 +169,7 @@ class _RequestRiderState extends State<RequestRider> {
                                 setState(() {});
                               } catch (e) {
                                 util.toast("Network error, please retry");
+                                _pickupAddressController.clear();
                                 log("source addr err:$e");
                               }
                             },
@@ -198,6 +210,4 @@ class _RequestRiderState extends State<RequestRider> {
       );
     });
   }
-
-
 }

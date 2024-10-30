@@ -1,23 +1,19 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:developer';
-
-import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/providers/auth_provider.dart';
-import 'package:cargo_run/screens/authentication/input_verification_screen.dart';
 import 'package:cargo_run/screens/authentication/phone_verify_screen.dart';
+import 'package:cargo_run/screens/authentication/register_screen.dart';
+import 'package:cargo_run/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:cargo_run/utils/shared_prefs.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../utils/app_router.gr.dart';
 import '../../widgets/app_buttons.dart';
 import '../../styles/app_colors.dart';
 import '../../widgets/app_textfields.dart';
 import '../../widgets/page_widgets/appbar_widget.dart';
 
-@RoutePage()
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -31,9 +27,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void navigate() {
-    context.router.replaceAll([
-      const HomeRoute(),
-    ]);
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => const BottomNavBar(),
+      ),
+      (Route<dynamic> route) => false,
+    );
   }
 
   void showSnackBar(String message) {
@@ -129,10 +128,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                           Future.delayed(
                                               const Duration(seconds: 1), () {
                                             Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const PhoneVerifyScreen()));
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const PhoneVerifyScreen(),
+                                              ),
+                                            );
                                           });
                                         }
                                       }
@@ -155,8 +156,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 TextSpan(
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      context.router
-                                          .replace(const RegisterRoute());
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const RegisterScreen(),
+                                        ),
+                                      );
                                     },
                                   text: 'Sign Up',
                                   style: const TextStyle(

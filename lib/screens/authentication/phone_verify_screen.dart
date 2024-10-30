@@ -1,4 +1,3 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/screens/alerts/account_creation_success.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -12,7 +11,6 @@ import '../../widgets/page_widgets/appbar_widget.dart';
 import '../../providers/auth_provider.dart';
 import '../../utils/shared_prefs.dart';
 
-@RoutePage()
 class PhoneVerifyScreen extends StatefulWidget {
   const PhoneVerifyScreen({super.key});
 

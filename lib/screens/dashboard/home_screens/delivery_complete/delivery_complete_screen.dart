@@ -1,10 +1,10 @@
-import 'package:auto_route/auto_route.dart';
+import 'package:cargo_run/screens/bottom_nav/bottom_nav_bar.dart';
+import 'package:cargo_run/screens/dashboard/home_screens/delivery_complete/review_screen.dart';
 import 'package:flutter/material.dart';
 import '../../../../styles/app_colors.dart';
 import '../../../../widgets/app_buttons.dart';
-import '../../../../utils/app_router.gr.dart';
 
-@RoutePage()
+// @RoutePage()
 class DeliveryCompleteScreen extends StatefulWidget {
   const DeliveryCompleteScreen({super.key});
 
@@ -21,8 +21,12 @@ class _DeliveryCompleteScreenState extends State<DeliveryCompleteScreen> {
         toolbarHeight: 100,
         actions: [
           IconButton(
-            onPressed: () =>
-                context.router.replaceAll([const DashboardRoute()]),
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const BottomNavBar()));
+            },
             icon: Container(
               padding: const EdgeInsets.all(5),
               margin: const EdgeInsets.only(right: 10, top: 10),
@@ -69,12 +73,16 @@ class _DeliveryCompleteScreenState extends State<DeliveryCompleteScreen> {
             ),
             const Spacer(),
             AppButton(
-              text: 'Make a Review',
-              hasIcon: false,
-              textColor: Colors.white,
-              backgroundColor: primaryColor1,
-              onPressed: () => context.router.push(const ReviewRoute()),
-            ),
+                text: 'Make a Review',
+                hasIcon: false,
+                textColor: Colors.white,
+                backgroundColor: primaryColor1,
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ReviewScreen()));
+                }),
           ],
         ),
       ),

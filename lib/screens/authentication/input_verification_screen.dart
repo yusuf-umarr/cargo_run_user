@@ -1,6 +1,5 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/providers/auth_provider.dart';
-import 'package:cargo_run/utils/app_router.gr.dart';
+import 'package:cargo_run/screens/authentication/phone_verify_screen.dart';
 import 'package:cargo_run/widgets/app_textfields.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +8,6 @@ import '../../styles/app_colors.dart';
 import '../../widgets/app_buttons.dart';
 import '../../widgets/page_widgets/appbar_widget.dart';
 
-@RoutePage()
 class InputPhoneScreen extends StatefulWidget {
   const InputPhoneScreen({super.key});
 
@@ -22,7 +20,12 @@ class _InputPhoneScreenState extends State<InputPhoneScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void navigate() {
-    context.router.push(const PhoneVerifyRoute());
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const PhoneVerifyScreen(),
+      ),
+    );
   }
 
   void showSnackBar(String message) {

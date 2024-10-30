@@ -12,6 +12,7 @@ abstract class OrdersService {
     ReceiverDetails receiverDetails,
     String deliveryOption,
     String deliveryService,
+    String price,
   );
 
   Future<Either<ErrorResponse, ApiResponse>> initializePayment({

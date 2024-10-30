@@ -1,36 +1,19 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:cargo_run/config/config.dart';
 import 'package:cargo_run/models/order.dart';
-import 'package:cargo_run/services/orders/orders_implementation.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/utils/location.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:iconsax/iconsax.dart';
 
 class TripRoutePage extends StatefulWidget {
   final Order order;
-  // final LatLng pickUpLocation;
-  // final LatLng dropOffLocation;
-  // final LatLng riderLocation;
-  // final String pickUpAddr;
-  // final String dropOffAddr;
-  // final String itemName;
-  // final String itemImage;
-  // final String pickUpTime;
+
   const TripRoutePage({
     super.key,
-    // required this.dropOffLocation,
-    // required this.pickUpLocation,
-    // required this.riderLocation,
-    // required this.pickUpAddr,
-    // required this.dropOffAddr,
-    // required this.itemName,
-    // required this.itemImage,
-    // required this.pickUpTime,
     required this.order,
   });
 
@@ -127,7 +110,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
 
   @override
   void initState() {
-    getLocation();
+    // getLocation();
     setCustomMarkerIcon();
 
     getPolyPoints();
@@ -144,53 +127,75 @@ class _TripRoutePageState extends State<TripRoutePage> {
     final Size size = MediaQuery.of(context).size;
     // final provider = ref.watch(requestController);
     return Scaffold(
-      body: Column(
+      body: Stack(
         children: [
-          Expanded(
-            child: SizedBox(
-              height: size.height * 0.65,
-              child: GoogleMap(
-                myLocationButtonEnabled: false,
-                zoomControlsEnabled: false,
-                initialCameraPosition: CameraPosition(
-                  target: LatLng(
-                    widget.order.addressDetails!.lat!.toDouble(),
-                    widget.order.addressDetails!.lng!.toDouble(),
-                  ),
-                  zoom: 13.5,
-                ),
-                polylines: {
-                  Polyline(
-                    polylineId: const PolylineId("route"),
-                    points: polylineCoordinates,
-                    color: primaryColor1,
-                    width: 6,
-                  )
-                },
-                markers: {
-                  Marker(
-                      markerId: const MarkerId("riderLocation"),
-                      icon: currentLocationIcon,
-                      position: LatLng(8.4751, 4.6289)),
-                  Marker(
-                    markerId: const MarkerId("source"),
-                    position: LatLng(
-                      widget.order.addressDetails!.lat!.toDouble(),
-                      widget.order.addressDetails!.lng!.toDouble(),
-                    ),
-                    icon: sourceIcon,
-                  ),
-                  Marker(
-                      markerId: const MarkerId("destination"),
-                      position: LatLng(
-                        widget.order.receiverDetails!.lat!.toDouble(),
-                        widget.order.receiverDetails!.lng!.toDouble(),
+          Column(
+            children: [
+              Expanded(
+                child: SizedBox(
+                  height: size.height * 0.65,
+                  child: GoogleMap(
+                    myLocationButtonEnabled: false,
+                    zoomControlsEnabled: false,
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(
+                        widget.order.addressDetails!.lat!.toDouble(),
+                        widget.order.addressDetails!.lng!.toDouble(),
                       ),
-                      icon: destinationIcon),
-                },
-                onMapCreated: (mapController) {
-                  _controller.complete(mapController);
-                },
+                      zoom: 13.5,
+                    ),
+                    polylines: {
+                      Polyline(
+                        polylineId: const PolylineId("route"),
+                        points: polylineCoordinates,
+                        color: primaryColor1,
+                        width: 6,
+                      )
+                    },
+                    markers: {
+                      Marker(
+                          markerId: const MarkerId("riderLocation"),
+                          icon: currentLocationIcon,
+                          position: LatLng(8.4751, 4.6289)),
+                      Marker(
+                        markerId: const MarkerId("source"),
+                        position: LatLng(
+                          widget.order.addressDetails!.lat!.toDouble(),
+                          widget.order.addressDetails!.lng!.toDouble(),
+                        ),
+                        icon: sourceIcon,
+                      ),
+                      Marker(
+                          markerId: const MarkerId("destination"),
+                          position: LatLng(
+                            widget.order.receiverDetails!.lat!.toDouble(),
+                            widget.order.receiverDetails!.lng!.toDouble(),
+                          ),
+                          icon: destinationIcon),
+                    },
+                    onMapCreated: (mapController) {
+                      _controller.complete(mapController);
+                    },
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            top: 50,
+            left: 20,
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                  color: primaryColor1,
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                child: const Icon(Iconsax.arrow_left, color: Colors.white),
               ),
             ),
           ),

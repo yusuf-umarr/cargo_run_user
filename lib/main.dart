@@ -12,5 +12,5 @@ Future<void> main() async {
   await NotificationService.initializeNotification();
   await sharedPrefs.init();
   setupServiceLocator();
-  runApp(CargoRun());
+  runApp(CargoRun(   usedApp: sharedPrefs.usedApp));
 }

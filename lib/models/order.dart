@@ -12,6 +12,7 @@ class Order {
     required this.deliveryOption,
     required this.averageRating,
     required this.deliveryFee,
+    required this.price,
     required this.isDelete,
     required this.ratings,
     required this.createdAt,
@@ -32,6 +33,7 @@ class Order {
   final String? deliveryOption;
   final num? averageRating;
   final num? deliveryFee;
+  final num? price;
   final bool? isDelete;
   final List<Rating> ratings;
   final DateTime? createdAt;
@@ -57,6 +59,7 @@ class Order {
       deliveryOption: json["deliveryOption"],
       averageRating: json["averageRating"],
       deliveryFee: json["deliveryFee"],
+      price: json["price"],
       isDelete: json["isDelete"],
       ratings: json["ratings"] == null
           ? []
@@ -81,6 +84,7 @@ class Order {
         "deliveryOption": deliveryOption,
         "averageRating": averageRating,
         "deliveryFee": deliveryFee,
+        "price": price,
         "isDelete": isDelete,
         "ratings": ratings.map((x) => x.toJson()).toList(),
         "createdAt": createdAt?.toIso8601String(),
