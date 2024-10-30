@@ -73,6 +73,16 @@ class AuthProvider extends ChangeNotifier {
       setLoadingState(LoadingState.success);
     });
   }
+  Future<void> forgotPassword({required String email}) async {
+    setLoadingState(LoadingState.loading);
+    var response = await _authService.forgotPassword(email: email);
+    response.fold((error) {
+      setLoadingState(LoadingState.error);
+      setErrorMessage(error.message);
+    }, (success) {
+      setLoadingState(LoadingState.success);
+    });
+  }
 
   Future<void> verifyOTP({required String otp, required String email}) async {
     setLoadingState(LoadingState.loading);

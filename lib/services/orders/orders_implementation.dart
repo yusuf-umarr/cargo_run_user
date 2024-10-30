@@ -121,6 +121,8 @@ class OrdersImpl implements OrdersService {
         body: jsonEncode(body),
       );
       debugPrint(response.body);
+
+      log("payment res:${response.body}");
       var jsonResponse = jsonDecode(response.body);
 
       return Right(ApiResponse.fromJson(jsonResponse));

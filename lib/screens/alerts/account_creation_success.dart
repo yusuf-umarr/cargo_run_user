@@ -4,7 +4,12 @@ import 'package:cargo_run/screens/authentication/phone_verify_screen.dart';
 import 'package:cargo_run/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:flutter/material.dart';
 
-enum SuccessRedirectRoute { registeredPage, verifyPage, orderSummay }
+enum SuccessRedirectRoute {
+  registeredPage,
+  verifyPage,
+  orderSummay,
+  forgotPass
+}
 
 class SuccessScreen extends StatefulWidget {
   final SuccessRedirectRoute successRedirectRoute;
@@ -44,6 +49,14 @@ class _SuccessScreenState extends State<SuccessScreen> {
           ),
           (Route<dynamic> route) => false,
         );
+      } else if (widget.successRedirectRoute ==
+          SuccessRedirectRoute.forgotPass) {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => const LoginScreen(),
+          ),
+          (Route<dynamic> route) => false,
+        );
       }
     });
     super.initState();
@@ -68,7 +81,10 @@ class _SuccessScreenState extends State<SuccessScreen> {
                   : widget.successRedirectRoute ==
                           SuccessRedirectRoute.verifyPage
                       ? "Account Verified Successful"
-                      : "Order request completed",
+                      : widget.successRedirectRoute ==
+                              SuccessRedirectRoute.forgotPass
+                          ? "Passowrd reset successful"
+                          : "Order request completed",
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 25.0,
@@ -82,7 +98,10 @@ class _SuccessScreenState extends State<SuccessScreen> {
                   : widget.successRedirectRoute ==
                           SuccessRedirectRoute.verifyPage
                       ? "You can now log into your account"
-                      : "Please wait while we process your request",
+                      : widget.successRedirectRoute ==
+                              SuccessRedirectRoute.verifyPage
+                          ? "You can now log into your account"
+                          : "Please wait while we process your request",
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 17.0,

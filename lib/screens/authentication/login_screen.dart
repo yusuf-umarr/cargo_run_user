@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:cargo_run/providers/auth_provider.dart';
+import 'package:cargo_run/screens/authentication/forgot_password.dart';
 import 'package:cargo_run/screens/authentication/phone_verify_screen.dart';
 import 'package:cargo_run/screens/authentication/register_screen.dart';
 import 'package:cargo_run/screens/bottom_nav/bottom_nav_bar.dart';
@@ -93,6 +94,25 @@ class _LoginScreenState extends State<LoginScreen> {
                           labelText: 'Password',
                           isPassword: true,
                           controller: _passwordController,
+                        ),
+                        const SizedBox(height: 7.0),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ForgotPasswordScreen(),
+                                ));
+                          },
+                          child: const Text(
+                            'Forgot password?',
+                            style: TextStyle(
+                              fontSize: 17.0,
+                              color: primaryColor1,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 60.0),
                         Consumer<AuthProvider>(

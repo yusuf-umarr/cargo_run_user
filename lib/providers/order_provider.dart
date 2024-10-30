@@ -1,5 +1,6 @@
 import 'dart:developer' as dev;
 import 'package:cargo_run/models/order.dart';
+import 'package:cargo_run/screens/dashboard/home_screens/check_out.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
@@ -173,11 +174,11 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> initiatePayment() async {
+  Future<void> initiatePayment(String orderId, String price, context) async {
     setOrderStatus(OrderStatus.loading);
     var response = await _ordersService.initializePayment(
-      orderId: _currentOrder!.id!,
-      amount: (_currentOrder!.deliveryFee! + 2000.00).toString(),
+      orderId: orderId,
+      amount: price,
     );
     response.fold((error) {
       setOrderStatus(OrderStatus.failed);
@@ -185,6 +186,9 @@ class OrderProvider extends ChangeNotifier {
     }, (success) {
       debugPrint(success.data.toString());
       _url = success.data['data']['authorizationUrl'];
+     Navigator.push(context, MaterialPageRoute(builder: (context)=> CheckoutScreen(paymentUrl: url,)));
+
+      dev.log("_url:$_url");
       setOrderStatus(OrderStatus.success);
       notifyListeners();
     });

@@ -74,6 +74,7 @@ class ShipmentCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
+                  order.status!.toLowerCase()=="picked"?"ON GOING":
                   order.status!.toUpperCase(),
                   style: TextStyle(
                     fontSize: 12.0,

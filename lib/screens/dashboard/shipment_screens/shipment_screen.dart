@@ -22,7 +22,7 @@ class _ShipmentScreenState extends State<ShipmentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return Scaffold( 
       backgroundColor: const Color(0xFFF3F3F3),
       appBar: appBarWidget(context, title: 'Order history', isBack: false),
       body: Consumer<OrderProvider>(

@@ -1,11 +1,13 @@
 import 'package:another_stepper/another_stepper.dart';
+import 'package:cargo_run/providers/app_provider.dart';
+import 'package:cargo_run/providers/order_provider.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/trip_route_page.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
 import 'package:cargo_run/widgets/page_widgets/payment_summary_card.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import '../../../models/order.dart';
 
 class ShipmentDetailsScreen extends StatefulWidget {
@@ -80,7 +82,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: RichText(
                     text: TextSpan(
-                      text: 'Order: ',
+                      text: 'Order Id: ',
                       style: const TextStyle(
                         color: blackText,
                         fontSize: 16,
@@ -89,6 +91,32 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                       children: [
                         TextSpan(
                           text: widget.order!.orderId,
+                          style: const TextStyle(
+                            color: primaryColor1,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: RichText(
+                    text: TextSpan(
+                      text: 'Order Status: ',
+                      style: const TextStyle(
+                        color: blackText,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: widget.order!.status!.toLowerCase() == "picked"
+                              ? "ON GOING"
+                              : widget.order!.status!.toUpperCase(),
                           style: const TextStyle(
                             color: primaryColor1,
                             fontSize: 16,
@@ -159,7 +187,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                 ),
                 if (widget.order!.paymentStatus!.toLowerCase() ==
                     "pending") ...[
-                  if (widget.order!.status! == "accepted" ||
+                  if (widget.order!.status! == "picked" ||
                       widget.order!.status! == "successful" ||
                       widget.order!.status! == "delivered") ...[
                     Padding(
@@ -169,7 +197,13 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                         hasIcon: false,
                         textColor: Colors.white,
                         backgroundColor: primaryColor2,
-                        onPressed: () {},
+                        onPressed: () {
+                          context.read<OrderProvider>().initiatePayment(
+                                widget.order!.id!,
+                                widget.order!.price.toString(),
+                                context,
+                              );
+                        },
                       ),
                     ),
                   ]

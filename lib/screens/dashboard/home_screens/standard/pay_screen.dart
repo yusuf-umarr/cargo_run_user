@@ -27,7 +27,7 @@ class _PayScreenState extends State<PayScreen> {
           onPageFinished: (String url) {},
           onWebResourceError: (WebResourceError error) {},
           onNavigationRequest: (NavigationRequest request) {
-            if (request.url.startsWith('https://standard.paystack.co/close')) {
+            if (request.url.startsWith('')) {//https://standard.paystack.co/close
               Navigator.of(context).pop(); //close webview
               return NavigationDecision.prevent;
             }

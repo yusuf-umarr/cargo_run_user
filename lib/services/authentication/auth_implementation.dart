@@ -101,6 +101,8 @@ class AuthImpl implements AuthService {
       );
       responseBody = response.body;
       var jsonResponse = jsonDecode(responseBody);
+
+      log("forgot pass jsonResponse:${jsonResponse}");
       if (jsonResponse['success'] == true) {
         return Right(ApiResponse.fromJson(jsonResponse));
       } else {

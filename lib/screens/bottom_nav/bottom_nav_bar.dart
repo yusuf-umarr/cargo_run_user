@@ -36,8 +36,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     const ViewProfileScreen(),
   ];
 
-   late OrderStatus _orderStatus;
-
+  late OrderStatus _orderStatus;
 
   @override
   void initState() {
@@ -103,7 +102,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           log("notifications error:${e}");
         }
       });
-     
+
       socket!.on("route${sharedPrefs.userId}", (data) async {
         try {
           log("route-userId===++${data}");
@@ -118,13 +117,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
           // print(
           //   "event:$event, data:$data",
 
-          log("event:$event, data:$data");
+          // log("event:$event, data:$data");
         },
       );
     } catch (e) {
       debugPrint("socket error:${e.toString()}");
     }
   }
+
 //
   DateTime? currentBackPressTime;
 
