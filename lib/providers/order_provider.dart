@@ -23,6 +23,8 @@ class OrderProvider extends ChangeNotifier {
   Order? _currentOrder;
   List<Order?> _orders = [];
 
+  List searcheOrders = [];
+
   String _distancePrice = '';
   String _category = '';
   String _deliveryService = '';
@@ -184,9 +186,14 @@ class OrderProvider extends ChangeNotifier {
       setOrderStatus(OrderStatus.failed);
       setErrorMessage(error.message);
     }, (success) {
-      debugPrint(success.data.toString());
+      // debugPrint(success.data.toString());
       _url = success.data['data']['authorizationUrl'];
-     Navigator.push(context, MaterialPageRoute(builder: (context)=> CheckoutScreen(paymentUrl: url,)));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => CheckoutScreen(
+                    paymentUrl: url,
+                  )));
 
       dev.log("_url:$_url");
       setOrderStatus(OrderStatus.success);
@@ -213,21 +220,18 @@ class OrderProvider extends ChangeNotifier {
         );
   }
 
-  // Future<List<Order?>> getOrders() async {
-  //   List<Order?> res = [];
-  //   var response = await _ordersService.getOrders();
-  //   response.fold((error) {
-  //     setOrderStatus(OrderStatus.failed);
-  //     setErrorMessage(error.message);
-  //     return [];
-  //   }, (success) {
-  //     debugPrint(success.data.toString());
-  //     _orders = success.data.map((e) => Order.fromJson(e)).toList();
-  //     res = _orders;
-  //     setOrderStatus(OrderStatus.success);
-  //     notifyListeners();
-  //     return _orders;
-  //   });
-  //   return res;
-  // }
+  void trackOrders(String query) {
+    searcheOrders = _orders;
+
+    final suggestions = _orders.where((data) {
+      final dataName = data!.orderId!;
+      final input = query;
+
+      // return false;
+      return dataName.contains(input) ? true : false;
+    }).toList();
+
+    searcheOrders = suggestions;
+    notifyListeners();
+  }
 }

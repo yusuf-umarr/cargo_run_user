@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:cargo_run/providers/auth_provider.dart';
+import 'package:cargo_run/providers/bottom_nav_provider.dart';
 import 'package:cargo_run/screens/authentication/forgot_password.dart';
 import 'package:cargo_run/screens/authentication/phone_verify_screen.dart';
 import 'package:cargo_run/screens/authentication/register_screen.dart';
@@ -128,6 +129,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                     backgroundColor: primaryColor1,
                                     textColor: Colors.white,
                                     onPressed: () async {
+                                      context
+                                          .read<BottomNavProvider>()
+                                          .setNavbarIndex(0);
                                       await watch.loginUser(
                                         email: _emailController.text,
                                         password: _passwordController.text,

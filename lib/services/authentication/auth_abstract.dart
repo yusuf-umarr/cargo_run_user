@@ -29,7 +29,7 @@ abstract class AuthService {
   });
 
   Future<Either<ErrorResponse, ApiResponse>> resetPassword({
-    required String email,
     required String password,
+    required String otp,
   });
 }

@@ -21,6 +21,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String greeting = '';
   DateTime now = DateTime.now();
 
+  bool isTyping = false;
+
   @override
   void initState() {
     Provider.of<OrderProvider>(context, listen: false).getOrders();
@@ -57,13 +59,13 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Row(
                   children: [
-                    const CircleAvatar(
+                    CircleAvatar(
                       radius: 30,
                       backgroundColor: primaryColor2,
                       child: Center(
                         child: Text(
-                          'EO',
-                          style: TextStyle(color: Colors.white, fontSize: 25),
+                          sharedPrefs.fullName.substring(0, 1).toUpperCase(),
+                          style: const TextStyle(color: Colors.white, fontSize: 25),
                         ),
                       ),
                     ),
@@ -115,170 +117,178 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 25.0, vertical: 20.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          if (!isTyping)
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 25.0, vertical: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Select your Preferred Delivery Service',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.w500,
+                      color: blackText,
+                    ),
+                  ),
+                  GridView(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.symmetric(vertical: 10.0),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 1,
+                      crossAxisSpacing: 20.0,
+                      mainAxisSpacing: 20.0,
+                    ),
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          context
+                              .read<OrderProvider>()
+                              .setDeliveryService("standard");
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const RequestRider(type: 'standard'),
+                            ),
+                          );
+                        },
+                        child: const DeliveryServiceCard(
+                          image: 'ds1.png',
+                          text: 'Standard Delivery',
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          context
+                              .read<OrderProvider>()
+                              .setDeliveryService("bulk");
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const RequestRider(type: 'bulk'),
+                            ),
+                          );
+                        },
+                        child: const DeliveryServiceCard(
+                          image: 'ds2.png',
+                          text: 'Bulk Shipping',
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            ),
+          Consumer<OrderProvider>(builder: (context, orderVM, _) {
+            return Column(
               children: [
-                const Text(
-                  'Select your Preferred Delivery Service',
-                  style: TextStyle(
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.w500,
-                    color: blackText,
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Text(
+                    'Tracking History',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                      color: blackText,
+                    ),
                   ),
                 ),
-                GridView(
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1,
-                    crossAxisSpacing: 20.0,
-                    mainAxisSpacing: 20.0,
-                  ),
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        context
-                            .read<OrderProvider>()
-                            .setDeliveryService("standard");
+                if (isTyping) ...[
+                  ...List.generate(orderVM.searcheOrders.length, (int index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: TrackingCard(
+                        order: orderVM.orders[index]!,
+                      ),
+                    );
+                  }),
+                ] else ...[
+                  Consumer<OrderProvider>(builder: (context, orderVM, _) {
+                    orderVM.orders
+                        .sort((a, b) => b!.createdAt!.compareTo(a!.createdAt!));
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const RequestRider(type: 'standard'),
+                    if (orderVM.orders.isNotEmpty) {
+                      return Column(
+                        children:
+                            List.generate(orderVM.orders.length, (int index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: TrackingCard(
+                              order: orderVM.orders[index]!,
+                            ),
+                          );
+                        }),
+                      );
+                    }
+                    return const Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 40),
+                        child: Text(
+                          'No Tracking History',
+                          style: TextStyle(
+                            fontSize: 20,
                           ),
-                        );
-                      },
-                      child: const DeliveryServiceCard(
-                        image: 'ds1.png',
-                        text: 'Standard Delivery',
+                        ),
                       ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        context
-                            .read<OrderProvider>()
-                            .setDeliveryService("bulk");
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const RequestRider(type: 'bulk'),
-                          ),
-                        );
-                      },
-                      child: const DeliveryServiceCard(
-                        image: 'ds2.png',
-                        text: 'Bulk Shipping',
-                      ),
-                    ),
-                  ],
-                )
+                    );
+                  }),
+                ]
               ],
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 25.0),
-            child: Text(
-              'Tracking History',
-              style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-                color: blackText,
-              ),
-            ),
-          ),
-
-          Consumer<OrderProvider>(builder: (context, otherVM, _) {
-            otherVM.orders
-                .sort((a, b) => b!.createdAt!.compareTo(a!.createdAt!));
-
-            if (otherVM.orders.isNotEmpty) {
-              return Column(
-                children: List.generate(otherVM.orders.length, (int index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: TrackingCard(
-                      order: otherVM.orders[index]!,
-                    ),
-                  );
-                }),
-              );
-            }
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.only(top: 40),
-                child: Text(
-                  'No Tracking History',
-                  style: TextStyle(
-                    fontSize: 20,
-                  ),
-                ),
-              ),
             );
           }),
-          // Expanded(
-          //   child: Consumer<OrderProvider>(builder: (context, watch, _) {
-          //     if (watch.orders.isNotEmpty) {
-          //       return ListView.builder(
-          //         padding:
-          //             const EdgeInsets.symmetric(horizontal: 25.0, vertical: 5.0),
-          //         itemCount: watch.orders.length,
-          //         itemBuilder: (context, index) => Padding(
-          //           padding: const EdgeInsets.symmetric(vertical: 8.0),
-          //           child: TrackingCard(
-          //             order: watch.orders[index]!,
-          //           ),
-          //         ),
-          //       );
-          //     }
-          //     return const Center(
-          //       child: Text(
-          //         'No Tracking History',
-          //         style: TextStyle(
-          //           fontSize: 20,
-          //         ),
-          //       ),
-          //     );
-          //   }),
-          // ),
         ],
       ),
     );
   }
 
   Widget trackingTextField() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: const Row(
-        children: [
-          Expanded(
-            child: TextField(
-              style: TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.w500,
-              ),
-              decoration: InputDecoration(
-                hintText: 'Enter Tracking Number',
-                hintStyle: TextStyle(
+    return Consumer<OrderProvider>(builder: (context, orderVM, _) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                style: const TextStyle(
                   fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                 ),
-                border: InputBorder.none,
+                decoration: const InputDecoration(
+                  hintText: 'Enter Tracking Number',
+                  hintStyle: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  border: InputBorder.none,
+                ),
+                onChanged: (value) {
+                  orderVM.trackOrders(value);
+                  if (value.isNotEmpty) {
+                    setState(() {
+                      isTyping = true;
+                    });
+                  } else {
+                    setState(() {
+                      isTyping = false;
+                    });
+                  }
+                },
               ),
             ),
-          ),
-          Icon(Iconsax.location, color: primaryColor2),
-        ],
-      ),
-    );
+            const Icon(Iconsax.location, color: primaryColor2),
+          ],
+        ),
+      );
+    });
   }
 }

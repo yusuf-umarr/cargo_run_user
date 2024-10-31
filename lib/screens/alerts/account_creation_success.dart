@@ -99,7 +99,7 @@ class _SuccessScreenState extends State<SuccessScreen> {
                           SuccessRedirectRoute.verifyPage
                       ? "You can now log into your account"
                       : widget.successRedirectRoute ==
-                              SuccessRedirectRoute.verifyPage
+                              SuccessRedirectRoute.forgotPass
                           ? "You can now log into your account"
                           : "Please wait while we process your request",
               textAlign: TextAlign.center,

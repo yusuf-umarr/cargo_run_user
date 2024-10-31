@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Util {
   static Widget inputField2({
@@ -124,5 +127,25 @@ class Util {
         ),
       ],
     );
+  }
+}
+
+Future<File> myUploadImage() async {
+  final imagePicker = ImagePicker();
+  XFile? image;
+
+  var file = File("");
+
+  image = await imagePicker.pickImage(
+      source: ImageSource.gallery, imageQuality: 25);
+
+  if (image != null) {
+    file = File(image.path);
+  }
+
+  try {
+    return file;
+  } catch (e) {
+    return File("");
   }
 }

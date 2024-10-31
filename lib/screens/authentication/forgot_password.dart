@@ -1,6 +1,4 @@
 import 'package:cargo_run/providers/auth_provider.dart';
-import 'package:cargo_run/screens/authentication/phone_verify_screen.dart';
-import 'package:cargo_run/screens/authentication/reset_password.dart';
 import 'package:cargo_run/screens/authentication/verify_otp.dart';
 import 'package:cargo_run/utils/shared_prefs.dart';
 import 'package:cargo_run/widgets/app_textfields.dart';
@@ -92,6 +90,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           backgroundColor: primaryColor1,
                           textColor: Colors.white,
                           onPressed: () async {
+                            FocusScope.of(context).unfocus();
                             sharedPrefs.email = _emailController.text;
                             if (_formKey.currentState!.validate()) {
                               await watch.forgotPassword(

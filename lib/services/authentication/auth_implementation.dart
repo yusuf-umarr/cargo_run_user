@@ -46,8 +46,8 @@ class AuthImpl implements AuthService {
         return Left(ErrorResponse(message: jsonResponse['errors']['msg']));
       }
     } catch (e) {
-      debugPrint('Error: $e');
-      return Left(ErrorResponse(message: 'Error: $e'));
+      debugPrint('Network error');
+      return Left(ErrorResponse(message: 'Network error'));
     }
   }
 
@@ -80,7 +80,7 @@ class AuthImpl implements AuthService {
         return Left(ErrorResponse(message: jsonResponse['errors']['msg']));
       }
     } catch (e) {
-      return Left(ErrorResponse(message: 'Error: $e'));
+      return Left(ErrorResponse(message: 'Network error'));
     }
   }
 
@@ -90,14 +90,14 @@ class AuthImpl implements AuthService {
     final Map<String, dynamic> body = {
       'email': email,
     };
-    final Map<String, String> headers = {'Content-Type': 'application/json'};
+    // final Map<String, String> headers = {'Content-Type': 'application/json'};
     String responseBody;
 
     try {
       var response = await http.post(
         Uri.parse('${Env.endpointUrl}/auth/forgot-password'),
         body: body,
-        headers: headers,
+        // headers: headers,
       );
       responseBody = response.body;
       var jsonResponse = jsonDecode(responseBody);
@@ -109,7 +109,7 @@ class AuthImpl implements AuthService {
         return Left(ErrorResponse(message: jsonResponse['errors']['msg']));
       }
     } catch (e) {
-      return Left(ErrorResponse(message: 'Error: $e'));
+      return Left(ErrorResponse(message: 'Network error'));
     }
   }
 
@@ -145,37 +145,43 @@ class AuthImpl implements AuthService {
         return Left(ErrorResponse(message: jsonResponse['errors']['msg']));
       }
     } catch (e) {
-      return Left(ErrorResponse(message: 'Error: $e'));
+      return Left(ErrorResponse(message: 'Network error'));
     }
   }
 
   @override
   Future<Either<ErrorResponse, ApiResponse>> resetPassword({
-    required String email,
+    required String otp,
     required String password,
   }) async {
     final Map<String, dynamic> body = {
-      'email': email,
-      'password': password,
+      'email': sharedPrefs.email,
+      'newPassword': password,
+      'otp': otp,
     };
-    final Map<String, String> headers = {'Content-Type': 'application/json'};
+    log("reset-pass=======email:${sharedPrefs.email}");
+    log("reset-pass=======pass:${password}");
+    log("reset-pass=======otp:${otp}");
+    // final Map<String, String> headers = {'Content-Type': 'application/json'};
     String responseBody;
 
     try {
-      var response = await http.post(
+      var response = await http.patch(
         Uri.parse('${Env.endpointUrl}/auth/reset-password'),
         body: body,
-        headers: headers,
+        // headers: headers,
       );
       responseBody = response.body;
       var jsonResponse = jsonDecode(responseBody);
+
+      log("reset-pass=======jsonResponse:${jsonResponse}");
       if (jsonResponse['success'] == true) {
         return Right(ApiResponse.fromJson(jsonResponse));
       } else {
         return Left(ErrorResponse(message: jsonResponse['errors']['msg']));
       }
     } catch (e) {
-      return Left(ErrorResponse(message: 'Error: $e'));
+      return Left(ErrorResponse(message: 'Network error'));
     }
   }
 
@@ -206,7 +212,7 @@ class AuthImpl implements AuthService {
         return Left(ErrorResponse(message: jsonResponse['errors']['msg']));
       }
     } catch (e) {
-      return Left(ErrorResponse(message: 'Error: $e'));
+      return Left(ErrorResponse(message: 'Network error'));
     }
   }
 }

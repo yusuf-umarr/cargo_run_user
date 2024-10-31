@@ -127,6 +127,7 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 25.0,
@@ -190,22 +191,29 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                   if (widget.order!.status! == "picked" ||
                       widget.order!.status! == "successful" ||
                       widget.order!.status! == "delivered") ...[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: AppButton(
-                        text: 'Pay now',
-                        hasIcon: false,
-                        textColor: Colors.white,
-                        backgroundColor: primaryColor2,
-                        onPressed: () {
-                          context.read<OrderProvider>().initiatePayment(
-                                widget.order!.id!,
-                                widget.order!.price.toString(),
-                                context,
-                              );
-                        },
-                      ),
-                    ),
+                    Consumer<OrderProvider>(builder: (context, orderVM, _) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child: orderVM.orderStatus == OrderStatus.loading
+                            ? const LoadingButton(
+                                textColor: Colors.white,
+                                backgroundColor: primaryColor2,
+                              )
+                            : AppButton(
+                                text: 'Pay now',
+                                hasIcon: false,
+                                textColor: Colors.white,
+                                backgroundColor: primaryColor2,
+                                onPressed: () {
+                                  context.read<OrderProvider>().initiatePayment(
+                                        widget.order!.id!,
+                                        widget.order!.price.toString(),
+                                        context,
+                                      );
+                                },
+                              ),
+                      );
+                    }),
                   ]
                 ]
               ],

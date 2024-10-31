@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'package:cargo_run/config/config.dart';
 import 'package:cargo_run/models/order.dart';
+import 'package:cargo_run/providers/order_provider.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/utils/location.dart';
+import 'package:cargo_run/widgets/delivery_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:provider/provider.dart';
 
 class TripRoutePage extends StatefulWidget {
   final Order order;
@@ -24,6 +27,7 @@ class TripRoutePage extends StatefulWidget {
 class _TripRoutePageState extends State<TripRoutePage> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
+  bool showPopup = true;
 
   bool isShowCard = true;
   Position? _currentPosition;
@@ -154,9 +158,13 @@ class _TripRoutePageState extends State<TripRoutePage> {
                     },
                     markers: {
                       Marker(
-                          markerId: const MarkerId("riderLocation"),
-                          icon: currentLocationIcon,
-                          position: LatLng(8.4751, 4.6289)),
+                        markerId: const MarkerId("riderLocation"),
+                        icon: currentLocationIcon,
+                        position: LatLng(
+                          widget.order.orderLocation!.lat!.toDouble(),
+                          widget.order.orderLocation!.lng!.toDouble(),
+                        ),
+                      ),
                       Marker(
                         markerId: const MarkerId("source"),
                         position: LatLng(
@@ -199,6 +207,92 @@ class _TripRoutePageState extends State<TripRoutePage> {
               ),
             ),
           ),
+          Positioned(
+            bottom: -20,
+            left: MediaQuery.of(context).size.width * 0.1,
+            right: MediaQuery.of(context).size.width * 0.1,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              height: showPopup ? size.height * 0.38 : 0, // Animate height
+              width: size.width,
+              curve: Curves.easeInOut,
+              decoration: showPopup
+                  ? BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.1),
+                          blurRadius: 10,
+                          spreadRadius: 5,
+                        ),
+                      ],
+                    )
+                  : BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+              child: SizedBox(
+                child: showPopup
+                    ? Center(
+                        child: Stack(
+                          children: [
+                            Consumer<OrderProvider>(
+                                builder: (context, orderVM, _) {
+                              return DeliveryCard(order: widget.order);
+                            }),
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    showPopup = false;
+                                  });
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 10, vertical: 5),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.white),
+                                  child: const Row(
+                                    children: [
+                                      Text("Hide card"),
+                                      Icon(Icons.arrow_downward)
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    : null,
+              ),
+            ),
+          ),
+          if (!showPopup) ...[
+            Positioned(
+              right: 5,
+              bottom: 20,
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    showPopup = true;
+                  });
+                },
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white),
+                  child: const Row(
+                    children: [Text("Show card"), Icon(Icons.arrow_upward)],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );

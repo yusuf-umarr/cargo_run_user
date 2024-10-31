@@ -1,148 +1,84 @@
-import 'package:cargo_run/providers/order_provider.dart';
+import 'package:cargo_run/models/order.dart';
 import 'package:cargo_run/styles/app_colors.dart';
-import 'package:cargo_run/widgets/app_buttons.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:iconsax/iconsax.dart';
-import 'package:provider/provider.dart';
 
 class DeliveryCard extends StatefulWidget {
-  const DeliveryCard({super.key});
+  final Order order;
+
+  const DeliveryCard({
+    super.key,
+    required this.order,
+  });
 
   @override
   State<DeliveryCard> createState() => _DeliveryCardState();
 }
 
 class _DeliveryCardState extends State<DeliveryCard> {
-  int order = 1;
+  // _callNumber(String phone) async {
+  //   bool? res = await FlutterPhoneDirectCaller.callNumber(phone);
+  // }
+
+  // int order = 1;
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final orderP = Provider.of<OrderProvider>(context);
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 20.0),
-      width: size.width * 1,
+      // margin: const EdgeInsets.symmetric(horizontal: 20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 15.0),
+      width: size.width,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: primaryColor1,
         borderRadius: BorderRadius.circular(10.0),
       ),
       child: Column(
         children: [
-          Text(
-            (order == 1)
-                ? "Your rider 6 minutes away"
-                : (order == 2)
-                    ? "Your Rider has arrived at the pickup location"
-                    : "Riding to Destination",
-            style: const TextStyle(
-              fontSize: 16.0,
-              fontWeight: FontWeight.w500,
-            ),
+          Row(
+            children: [
+              Text(
+                (widget.order.status == "accepted")
+                    ? "The rider is few\nminutes away"
+                    : (widget.order.status == 'picked')
+                        ? "Order is en route\nto destination"
+                        : (widget.order.status == 'arrived')
+                            ? "Order has arrived\ndestination point"
+                            : " ",
+                style: const TextStyle(
+                  fontSize: 11.0,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 10.0),
-          rowItem(title: 'Order ID', value: '186792'),
-          const SizedBox(height: 10.0),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Image.asset(
-              'assets/images/pp.png',
-              height: 40,
-            ),
-          ),
+          rowItem(title: 'Order ID', value: '${widget.order.orderId}'),
+          const SizedBox(height: 5.0),
           ListTile(
-            contentPadding: const EdgeInsets.all(0),
             visualDensity: const VisualDensity(
               horizontal: -4,
             ),
-            title: const Text(
-              'Samuel Olisa',
-              style: TextStyle(
-                fontSize: 16.0,
+            title: Text(
+              widget.order.receiverDetails!.name!,
+              style: const TextStyle(
+                fontSize: 13.0,
                 fontWeight: FontWeight.bold,
+                color: Colors.white,
               ),
             ),
             subtitle: Text(
-              "orderP.currentOrder!.receiverDetails!.address!",
+              widget.order.receiverDetails!.address!,
               style: const TextStyle(
-                fontSize: 14.0,
-              ),
-            ),
-            trailing: const SizedBox(
-              width: 58,
-              child: Row(
-                children: [
-                  Icon(Iconsax.call, color: primaryColor1),
-                  SizedBox(width: 10),
-                  Icon(Iconsax.message, color: primaryColor1),
-                ],
+                fontSize: 11.0,
+                color: Colors.white,
               ),
             ),
           ),
-          const SizedBox(height: 10.0),
-          rowItem(title: 'Delivery Fee', value: '₦ 1,980.00'),
-          const SizedBox(height: 25.0),
-          (order == 1)
-              ? AppButton(
-                  text: 'Cancel Request',
-                  hasIcon: false,
-                  width: size.width * 0.6,
-                  textColor: Colors.white,
-                  backgroundColor: primaryColor1,
-                  height: 45,
-                  textSize: 16,
-                  onPressed: () {
-                    setState(() {
-                      order = 2;
-                    });
-                  },
-                )
-              : (order == 2)
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          width: size.width * 0.4,
-                          child: AppButton(
-                            text: 'Start',
-                            hasIcon: false,
-                            textColor: primaryColor1,
-                            onPressed: () {
-                              setState(() {
-                                order = 3;
-                              });
-                            },
-                            height: 45,
-                            textSize: 14,
-                          ),
-                        ),
-                        SizedBox(
-                          width: size.width * 0.4,
-                          child: AppButton(
-                            text: 'Cancel',
-                            hasIcon: false,
-                            textColor: Colors.white,
-                            backgroundColor: primaryColor2,
-                            onPressed: () {
-                              setState(() {
-                                order = 1;
-                              });
-                            },
-                            height: 45,
-                            textSize: 14,
-                          ),
-                        )
-                      ],
-                    )
-                  : AppButton(
-                      text: 'Package Delivered',
-                      hasIcon: false,
-                      textColor: Colors.white,
-                      backgroundColor: primaryColor1,
-                      width: size.width * 0.6,
-                      height: 45,
-                      textSize: 16,
-                      onPressed: () => Navigator.pop(context),
-                    )
+          const SizedBox(height: 5.0),
+          rowItem(title: 'Delivery Fee', value: '₦ ${widget.order.price}'),
+          const SizedBox(height: 15.0),
         ],
       ),
     );
@@ -154,17 +90,18 @@ class _DeliveryCardState extends State<DeliveryCard> {
       children: [
         Text(
           title,
-          style: const TextStyle(
+          style: GoogleFonts.roboto(
             fontSize: 15.0,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w500,
+            color: primaryColor2,
           ),
         ),
         Text(
           value,
           style: GoogleFonts.roboto(
-            fontSize: 17.0,
-            fontWeight: FontWeight.w600,
-            color: primaryColor1,
+            fontSize: 15.0,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
           ),
         ),
       ],

@@ -16,4 +16,6 @@ class BottomNavProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  
+
 }

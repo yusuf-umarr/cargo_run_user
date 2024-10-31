@@ -16,13 +16,13 @@ class ShipmentScreen extends StatefulWidget {
 class _ShipmentScreenState extends State<ShipmentScreen> {
   @override
   void initState() {
-        Provider.of<OrderProvider>(context, listen: false).getOrders();
+    Provider.of<OrderProvider>(context, listen: false).getOrders();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold( 
+    return Scaffold(
       backgroundColor: const Color(0xFFF3F3F3),
       appBar: appBarWidget(context, title: 'Order history', isBack: false),
       body: Consumer<OrderProvider>(
@@ -51,12 +51,17 @@ class _ShipmentScreenState extends State<ShipmentScreen> {
                 child: SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Column(
-                      children: List.generate(
-                        watch.orders.length,
-                        (i) => ShipmentCard(order: watch.orders[i]!),
-                      ),
-                    ),
+                    child: Builder(builder: (context) {
+                      watch.orders.sort(
+                          (a, b) => b!.createdAt!.compareTo(a!.createdAt!));
+
+                      return Column(
+                        children: List.generate(
+                          watch.orders.length,
+                          (i) => ShipmentCard(order: watch.orders[i]!),
+                        ),
+                      );
+                    }),
                   ),
                 ),
               ),

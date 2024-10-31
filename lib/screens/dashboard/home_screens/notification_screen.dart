@@ -12,7 +12,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBarWidget(context, title: 'Notifications'),
+      appBar: appBarWidget(context, title: 'Notifications', hasBackBtn: true),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

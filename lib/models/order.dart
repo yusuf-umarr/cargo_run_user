@@ -2,6 +2,7 @@ class Order {
   Order({
     required this.addressDetails,
     required this.receiverDetails,
+    required this.orderLocation,
     required this.id,
     required this.orderId,
     required this.trackingId,
@@ -23,6 +24,7 @@ class Order {
 
   final AddressDetails? addressDetails;
   final ReceiverDetails? receiverDetails;
+  final OrderLocation? orderLocation;
   final String? id;
   final String? orderId;
   final String? trackingId;
@@ -46,9 +48,14 @@ class Order {
       addressDetails: json["addressDetails"] == null
           ? null
           : AddressDetails.fromJson(json["addressDetails"]),
+
       receiverDetails: json["receiverDetails"] == null
           ? null
           : ReceiverDetails.fromJson(json["receiverDetails"]),
+      orderLocation: json["orderLocation"] == null
+          ? null
+          : OrderLocation.fromJson(json["orderLocation"]),
+
       id: json["_id"],
       orderId: json["orderId"],
       trackingId: json["trackingId"],
@@ -74,6 +81,7 @@ class Order {
   Map<String, dynamic> toJson() => {
         "addressDetails": addressDetails?.toJson(),
         "receiverDetails": receiverDetails?.toJson(),
+        "orderLocation": orderLocation?.toJson(),
         "_id": id,
         "orderId": orderId,
         "trackingId": trackingId,
@@ -92,6 +100,22 @@ class Order {
         "__v": v,
         "amount": amount,
       };
+}
+
+class OrderLocation{
+  OrderLocation({ required this.lat, required this.lng});
+
+  final num? lng;
+  final num? lat;
+
+  factory OrderLocation.fromJson(Map<String, dynamic> json){
+    return OrderLocation(lat: json['lat'], lng: json['lng']);
+  }
+
+  Map<String, dynamic> toJson() =>{
+    "lat":lat,
+    "lng":lng
+  };
 }
 
 class AddressDetails {

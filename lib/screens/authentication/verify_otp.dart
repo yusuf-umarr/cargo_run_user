@@ -39,7 +39,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(120),
-        child: appBarWidget(context, title: 'Verification'),
+        child: appBarWidget(context, title: 'Otp verification'),
       ),
       body: SafeArea(
         child: Padding(
@@ -49,7 +49,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               const Text(
-                'Please enter the verification code sent to your email address',
+                'Please enter the otp code sent to your email address',
                 style: TextStyle(
                   fontSize: 17.0,
                   color: greyText,
@@ -131,7 +131,7 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
                           ..onTap = () async {
                             await context
                                 .read<AuthProvider>()
-                                .getOTP(
+                                .forgotPassword(
                                   email: sharedPrefs.email,
                                 )
                                 .then((v) => showSnackBar("Otp sent"));

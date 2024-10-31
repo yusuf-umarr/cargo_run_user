@@ -1,5 +1,9 @@
+import 'dart:io';
+
 import 'package:cargo_run/utils/shared_prefs.dart';
+import 'package:cargo_run/utils/util.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import '/services/authentication/auth_abstract.dart';
 import '/services/service_locator.dart';
@@ -13,6 +17,9 @@ class AuthProvider extends ChangeNotifier {
 
   LoadingState get loadingState => _loadingState;
   String get errorMessage => _errorMessage;
+
+    File imageUpload = File("");
+  dynamic imageFile;
 
   void setLoadingState(LoadingState loadingState) {
     _loadingState = loadingState;
@@ -73,9 +80,27 @@ class AuthProvider extends ChangeNotifier {
       setLoadingState(LoadingState.success);
     });
   }
+
   Future<void> forgotPassword({required String email}) async {
     setLoadingState(LoadingState.loading);
     var response = await _authService.forgotPassword(email: email);
+    response.fold((error) {
+      setLoadingState(LoadingState.error);
+      setErrorMessage(error.message);
+    }, (success) {
+      setLoadingState(LoadingState.success);
+    });
+  }
+
+  Future<void> resetPassword({
+    required String password,
+    required String otp,
+  }) async {
+    setLoadingState(LoadingState.loading);
+    var response = await _authService.resetPassword(
+      password: password,
+      otp: otp,
+    );
     response.fold((error) {
       setLoadingState(LoadingState.error);
       setErrorMessage(error.message);
@@ -93,5 +118,47 @@ class AuthProvider extends ChangeNotifier {
     }, (success) {
       setLoadingState(LoadingState.success);
     });
+  }
+
+    Future<void> selectImages() async {
+    imageUpload = await myUploadImage();
+    imageFile = imageUpload;
+
+    if (imageFile != null) {
+      Map image = {"image": imageUpload.path};
+
+      await uploadImage(file: image);
+    }
+
+    notifyListeners();
+  }
+
+    Future<dynamic> uploadImage({
+    BuildContext? context,
+    file,
+    int responseCode = 200,
+  }) async {
+
+    var headers = {
+      'Authorization': 'Bearer ${sharedPrefs.token}',
+    };
+    try {
+      var request =
+          http.MultipartRequest("POST", Uri.parse("UrlEndpoints.uploadImage"));
+
+      request.headers.addAll(headers);
+      request.files.add(
+          await http.MultipartFile.fromPath("profileImage", imageUpload.path));
+
+      return request.send().then((response) {
+        return http.Response.fromStream(response).then((onValue) {
+          debugPrint("response1:${onValue.body}");
+          // authProvider.getProfile();
+        });
+      });
+    } catch (e) {
+      debugPrint("response:$e");
+      return null;
+    }
   }
 }

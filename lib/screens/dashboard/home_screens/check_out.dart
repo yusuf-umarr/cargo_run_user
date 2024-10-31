@@ -36,9 +36,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           onNavigationRequest: (NavigationRequest request) async {
             if (request.url.contains('')) {
               //api/subscription/paystack/callback
-              dev.log('===========X================: ${request.url}');
+              dev.log('===========X==========================: ${request.url}');
 
-              // toast("Payment successful");
+              toast("Payment successful");
               // Future.delayed(const Duration(seconds: 3), () {
               //   Navigator.of(context).pop();
               // });
