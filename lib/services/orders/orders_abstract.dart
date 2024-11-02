@@ -7,13 +7,17 @@ import '../../models/api_response.dart';
 abstract class OrdersService {
   Future<Either<ErrorResponse, ApiResponse>> getOrder(String orderId);
 
-  Future<ApiResp<dynamic>>  createOrder(
+  Future<ApiResp<dynamic>> createOrder(
     AddressDetails addressDetails,
     ReceiverDetails receiverDetails,
     String deliveryOption,
     String deliveryService,
     String price,
   );
+  Future<ApiResp<dynamic>> verify(
+    String reference,
+  );
+  Future<ApiResp<dynamic>> getNotification();
 
   Future<Either<ErrorResponse, ApiResponse>> initializePayment({
     required String orderId,
@@ -27,6 +31,6 @@ abstract class OrdersService {
   });
 
   Future<ApiResp<dynamic>> getAutocomplete(searchTerm);
-    Future<ApiResp<dynamic>> getDistancePrice(source, destination) ;
 
+  Future<ApiResp<dynamic>> getDistancePrice(source, destination);
 }

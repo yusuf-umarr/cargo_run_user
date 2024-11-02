@@ -1,18 +1,23 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:developer' as dev;
+import 'package:cargo_run/providers/app_provider.dart';
+import 'package:cargo_run/providers/order_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:provider/provider.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';
 
 class CheckoutScreen extends StatefulWidget {
   final String paymentUrl;
+  final String reference;
   static const String routeName = '/checkout';
 
   const CheckoutScreen({
     super.key,
     required this.paymentUrl,
+    required this.reference,
   });
 
   @override
@@ -34,14 +39,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           onProgress: (int progress) {},
           onPageFinished: (url) {},
           onNavigationRequest: (NavigationRequest request) async {
-            if (request.url.contains('')) {
+            if (request.url.contains('api/subscription/paystack/callback')) {
               //api/subscription/paystack/callback
               dev.log('===========X==========================: ${request.url}');
 
+              context.read<OrderProvider>().verifyPayment(widget.reference);
+
               toast("Payment successful");
-              // Future.delayed(const Duration(seconds: 3), () {
-              //   Navigator.of(context).pop();
-              // });
+              Future.delayed(const Duration(seconds: 3), () {
+                Navigator.of(context).pop();
+              });
 
               return NavigationDecision.prevent;
             } else {}
@@ -50,14 +57,32 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         ),
       )
       ..loadRequest(Uri.parse(widget.paymentUrl));
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Payment",
-          style: TextStyle(fontSize: 14),
+    return PopScope(
+      onPopInvokedWithResult: (a, b) {
+        context.read<OrderProvider>().verifyPayment(widget.reference);
+      },
+      canPop: true,
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: Row(
+            children: [
+              IconButton(
+                  onPressed: () {
+                    context
+                        .read<OrderProvider>()
+                        .verifyPayment(widget.reference);
+                  },
+                  icon: const Icon(Icons.arrow_back_ios)),
+              const Text(
+                "Payment",
+                style: TextStyle(fontSize: 14),
+              ),
+            ],
+          ),
         ),
+        body: WebViewWidget(controller: controller),
       ),
-      body: WebViewWidget(controller: controller),
     );
   }
 }

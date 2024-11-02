@@ -17,6 +17,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+    String getFirstWord(String input) {
+    return input.split(" ").first;
+  }
   int history = 0;
   String greeting = '';
   DateTime now = DateTime.now();
@@ -76,8 +79,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         //automated greeting text that is in sync with the time of the day
 
-                        Text(
-                          greeting,
+                        Text(getFirstWord(
+                          greeting),
                           style: const TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.w500,

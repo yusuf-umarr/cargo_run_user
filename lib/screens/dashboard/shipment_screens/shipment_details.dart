@@ -190,7 +190,13 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                     "pending") ...[
                   if (widget.order!.status! == "picked" ||
                       widget.order!.status! == "successful" ||
-                      widget.order!.status! == "delivered") ...[
+                      widget.order!.status! == "delivered" 
+                      // ||
+
+                      // widget.order!.status! == "pending" ||
+                      // widget.order!.status! == "accepted"
+                      
+                      ) ...[
                     Consumer<OrderProvider>(builder: (context, orderVM, _) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),

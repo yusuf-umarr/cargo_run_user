@@ -43,6 +43,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     _connectSocket();
     _orderStatus = OrderStatus.loading;
     Provider.of<OrderProvider>(context, listen: false).getOrders();
+    Provider.of<OrderProvider>(context, listen: false).getNotification();
     super.initState();
   }
 
@@ -81,6 +82,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
       socket!.on(sharedPrefs.userId, (data) async {
         try {
           context.read<OrderProvider>().getOrders();
+          Provider.of<OrderProvider>(context, listen: false).getNotification();
+
           await NotificationService.showNotification(
               title: "Order ",
               body: "${data['msg']}",

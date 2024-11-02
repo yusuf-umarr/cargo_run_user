@@ -1,4 +1,5 @@
 import 'dart:developer' as dev;
+import 'package:cargo_run/models/notification_model.dart';
 import 'package:cargo_run/models/order.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/check_out.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,11 @@ class OrderProvider extends ChangeNotifier {
   String get url => _url;
   Order? get currentOrder => _currentOrder;
   OrderStatus get orderStatus => _orderStatus;
+
   List<Order?> get orders => _orders;
+
+   List<NotificationData> get notificationModel => _notificationModel;
+   List<NotificationData>  _notificationModel =[];
 
   AddressDetails? _addressDetails;
 
@@ -142,6 +147,20 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> verifyPayment(String reference) async {
+    setOrderStatus(OrderStatus.loading);
+    var response = await _ordersService.verify(reference);
+
+    if (response.success) {
+      getOrders();
+      setOrderStatus(OrderStatus.success);
+      _socket!.emit("order");
+    } else {
+      dev.log("order error:${response.data}");
+      setOrderStatus(OrderStatus.failed);
+    }
+  }
+
   Future<void> searchPlaces(search) async {
     var response = await _ordersService.getAutocomplete(
       search,
@@ -176,6 +195,30 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getNotification() async {
+    var response = await _ordersService.getNotification(); 
+    if (response.success) {
+      setOrderStatus(OrderStatus.success);
+
+      //_notificationModel
+      //NotificationData
+
+         List data = response.data['data'];
+              List<NotificationData> fetched =
+                  data.map((e) => NotificationData.fromJson(e)).toList();
+              _notificationModel = fetched;
+              notifyListeners();
+
+      // dev.log("notification===:${_notificationModel}");
+    } else {
+      setOrderStatus(OrderStatus.failed);
+      log("notification  error :${response.data}");
+      //
+    }
+
+    notifyListeners();
+  }
+
   Future<void> initiatePayment(String orderId, String price, context) async {
     setOrderStatus(OrderStatus.loading);
     var response = await _ordersService.initializePayment(
@@ -186,16 +229,19 @@ class OrderProvider extends ChangeNotifier {
       setOrderStatus(OrderStatus.failed);
       setErrorMessage(error.message);
     }, (success) {
-      // debugPrint(success.data.toString());
-      _url = success.data['data']['authorizationUrl'];
+      // _url = success.data['data']['authorizationUrl'];
+      final url = success.data['data']['authorizationUrl'];
+      final ref = success.data['data']['reference'];
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => CheckoutScreen(
-                    paymentUrl: url,
-                  )));
+        context,
+        MaterialPageRoute(
+          builder: (context) => CheckoutScreen(
+            paymentUrl: url,
+            reference: ref,
+          ),
+        ),
+      );
 
-      dev.log("_url:$_url");
       setOrderStatus(OrderStatus.success);
       notifyListeners();
     });
