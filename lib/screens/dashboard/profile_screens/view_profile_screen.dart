@@ -185,9 +185,19 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                 //     ]),
                 //   );
                 // }),
-                Image.asset(
-                  'assets/images/pp.png',
-                  height: size.height * 0.1,
+                // Image.asset(
+                //   'assets/images/pp.png',
+                //   height: size.height * 0.1,
+                // ),
+                CircleAvatar(
+                  radius: 30,
+                  backgroundColor: primaryColor2,
+                  child: Center(
+                    child: Text(
+                      sharedPrefs.fullName.substring(0, 1).toUpperCase(),
+                      style: const TextStyle(color: Colors.white, fontSize: 25),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 40.0),
                 AppTextField(

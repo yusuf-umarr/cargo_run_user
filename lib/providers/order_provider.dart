@@ -45,8 +45,8 @@ class OrderProvider extends ChangeNotifier {
 
   List<Order?> get orders => _orders;
 
-   List<NotificationData> get notificationModel => _notificationModel;
-   List<NotificationData>  _notificationModel =[];
+  List<NotificationData> get notificationModel => _notificationModel;
+  List<NotificationData> _notificationModel = [];
 
   AddressDetails? _addressDetails;
 
@@ -148,7 +148,7 @@ class OrderProvider extends ChangeNotifier {
   }
 
   Future<void> verifyPayment(String reference) async {
-    setOrderStatus(OrderStatus.loading);
+    // setOrderStatus(OrderStatus.loading);
     var response = await _ordersService.verify(reference);
 
     if (response.success) {
@@ -196,18 +196,18 @@ class OrderProvider extends ChangeNotifier {
   }
 
   Future<void> getNotification() async {
-    var response = await _ordersService.getNotification(); 
+    var response = await _ordersService.getNotification();
     if (response.success) {
       setOrderStatus(OrderStatus.success);
 
       //_notificationModel
       //NotificationData
 
-         List data = response.data['data'];
-              List<NotificationData> fetched =
-                  data.map((e) => NotificationData.fromJson(e)).toList();
-              _notificationModel = fetched;
-              notifyListeners();
+      List data = response.data['data'];
+      List<NotificationData> fetched =
+          data.map((e) => NotificationData.fromJson(e)).toList();
+      _notificationModel = fetched;
+      notifyListeners();
 
       // dev.log("notification===:${_notificationModel}");
     } else {
@@ -232,6 +232,8 @@ class OrderProvider extends ChangeNotifier {
       // _url = success.data['data']['authorizationUrl'];
       final url = success.data['data']['authorizationUrl'];
       final ref = success.data['data']['reference'];
+
+      dev.log("success.data['data']:${success.data['data']}");
       Navigator.push(
         context,
         MaterialPageRoute(

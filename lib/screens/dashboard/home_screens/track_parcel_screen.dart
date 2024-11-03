@@ -173,7 +173,7 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
                 stepperList: stepperData,
               ),
               const SizedBox(height: 20),
-              if (activeStep >= 1) ...[
+              if (activeStep >= 1 && activeStep <= 3) ...[
                 AppButton(
                   text: 'Preview',
                   hasIcon: false,

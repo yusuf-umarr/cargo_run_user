@@ -17,9 +17,10 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-    String getFirstWord(String input) {
+  String getFirstWord(String input) {
     return input.split(" ").first;
   }
+
   int history = 0;
   String greeting = '';
   DateTime now = DateTime.now();
@@ -68,7 +69,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Center(
                         child: Text(
                           sharedPrefs.fullName.substring(0, 1).toUpperCase(),
-                          style: const TextStyle(color: Colors.white, fontSize: 25),
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 25),
                         ),
                       ),
                     ),
@@ -79,8 +81,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         //automated greeting text that is in sync with the time of the day
 
-                        Text(getFirstWord(
-                          greeting),
+                        Text(
+                          greeting,
                           style: const TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.w500,
@@ -88,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                         ),
                         Text(
-                          sharedPrefs.fullName,
+                          getFirstWord(sharedPrefs.fullName),
                           style: const TextStyle(
                             fontSize: 22.0,
                             fontWeight: FontWeight.bold,

@@ -72,6 +72,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     context
                         .read<OrderProvider>()
                         .verifyPayment(widget.reference);
+                    Navigator.pop(context);
                   },
                   icon: const Icon(Icons.arrow_back_ios)),
               const Text(

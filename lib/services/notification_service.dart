@@ -1,5 +1,4 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:cargo_run/screens/bottom_nav/bottom_nav.dart';
 import 'package:flutter/material.dart';
 
 class NotificationService {
@@ -110,6 +109,8 @@ class NotificationService {
         category: category,
         payload: payload,
         bigPicture: bigPicture,
+        // icon: "assets/images/logo.png"
+        //  icon: '@mipmap/ic_lancher',
       ),
       actionButtons: actionButtons,
       schedule: scheduled
