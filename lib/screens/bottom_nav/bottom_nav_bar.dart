@@ -36,12 +36,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
     const ViewProfileScreen(),
   ];
 
-  late OrderStatus _orderStatus;
-
   @override
   void initState() {
     _connectSocket();
-    _orderStatus = OrderStatus.loading;
     Provider.of<OrderProvider>(context, listen: false).getOrders();
     Provider.of<OrderProvider>(context, listen: false).getNotification();
     super.initState();
@@ -74,7 +71,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         context.read<OrderProvider>().setSocketIo(socket);
         socket!.emit('order');
         socket!.on('join', (data) {
-          log("on join=====:${data}");
+          log("on join=====:$data");
         });
       });
 
@@ -98,20 +95,31 @@ class _BottomNavBarState extends State<BottomNavBar> {
                   color: Colors.green,
                 )
               ]);
-          log("notifications===+======+${data}");
-          var res = data['data'];
-          // context.read<OrderProvider>().getOrderData(res);
         } catch (e) {
-          log("notifications error:${e}");
+          log("notifications error:$e");
         }
       });
-
-      socket!.on("route${sharedPrefs.userId}", (data) async {
+      socket!.on("payment-${sharedPrefs.userId}", (data) async {
         try {
-          log("route-userId===++${data}");
-          var res = data['data'];
+          context.read<OrderProvider>().getOrders();
+          Provider.of<OrderProvider>(context, listen: false).getNotification();
+
+          await NotificationService.showNotification(
+              title: "Payment ",
+              body: "${data['msg']}",
+              payload: {
+                "navigate": "true",
+              },
+              actionButtons: [
+                NotificationActionButton(
+                  key: 'Preview',
+                  label: 'Preview',
+                  actionType: ActionType.Default,
+                  color: Colors.green,
+                )
+              ]);
         } catch (e) {
-          log("notifications error:${e}");
+          log("notifications error:$e");
         }
       });
 

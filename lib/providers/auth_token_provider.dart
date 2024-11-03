@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:developer';
 import 'package:cargo_run/utils/env.dart';
 import 'package:cargo_run/utils/shared_prefs.dart';
@@ -18,7 +17,6 @@ class AuthTokenProvider with ChangeNotifier {
       "Authorization": "Bearer ${sharedPrefs.token}"
     };
   
-    //  log("response:${response.body}");
 
     try {
       final response = await http.get(
@@ -29,7 +27,6 @@ class AuthTokenProvider with ChangeNotifier {
       log("response:${response.statusCode}");
 
       if (response.statusCode == 200) {
-        final res = jsonDecode(response.body);
 
         return {
           "res": true,

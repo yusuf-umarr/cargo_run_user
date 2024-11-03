@@ -159,9 +159,7 @@ class AuthImpl implements AuthService {
       'newPassword': password,
       'otp': otp,
     };
-    log("reset-pass=======email:${sharedPrefs.email}");
-    log("reset-pass=======pass:${password}");
-    log("reset-pass=======otp:${otp}");
+
     // final Map<String, String> headers = {'Content-Type': 'application/json'};
     String responseBody;
 
@@ -206,6 +204,38 @@ class AuthImpl implements AuthService {
       );
       var jsonResponse = jsonDecode(response.body);
       debugPrint('Response: $jsonResponse');
+      if (jsonResponse['success'] == true) {
+        return Right(ApiResponse.fromJson(jsonResponse));
+      } else {
+        return Left(ErrorResponse(message: jsonResponse['errors']['msg']));
+      }
+    } catch (e) {
+      return Left(ErrorResponse(message: 'Network error'));
+    }
+  }
+  @override
+  Future<Either<ErrorResponse, ApiResponse>> updateProfile({
+    required String name,
+    required String email,
+    required String phone,
+  }) async {
+    final Map<String, dynamic> body = {
+      'fullName': name,
+      'email': email,
+      'phone': phone,
+    };
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${sharedPrefs.token}'
+    };
+    try {
+      var response = await http.patch(
+        Uri.parse('${Env.endpointUrl}/user'),
+        headers: headers,
+        body: jsonEncode(body),
+      );
+      var jsonResponse = jsonDecode(response.body);
+     log('update Response: $jsonResponse');
       if (jsonResponse['success'] == true) {
         return Right(ApiResponse.fromJson(jsonResponse));
       } else {

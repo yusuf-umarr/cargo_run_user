@@ -12,7 +12,12 @@ class ShipmentCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {Navigator.push(context, MaterialPageRoute(builder: (context)=>ShipmentDetailsScreen(order: order)));},
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ShipmentDetailsScreen(order: order)));
+      },
       child: Container(
         margin: const EdgeInsets.only(bottom: 20.0),
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
@@ -51,7 +56,7 @@ class ShipmentCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 5.0),
                   Text(
-                    DateFormat.yMMMMd().format(order.createdAt!),
+                    DateFormat.yMMMMd().format(DateTime.parse(order.createdAt!)),
                     style: const TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w500,
@@ -74,8 +79,9 @@ class ShipmentCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  order.status!.toLowerCase()=="picked"?"ON GOING":
-                  order.status!.toUpperCase(),
+                  order.status!.toLowerCase() == "picked"
+                      ? "ON GOING"
+                      : order.status!.toUpperCase(),
                   style: TextStyle(
                     fontSize: 12.0,
                     fontWeight: FontWeight.w600,
@@ -94,6 +100,14 @@ class ShipmentCard extends StatelessWidget {
                     fontSize: 15,
                     fontWeight: FontWeight.w500,
                   ),
+                ),
+                const SizedBox(height: 20.0),
+                Text(
+                  order.paymentStatus == "paid" ? "PAID" : "",
+                  style: GoogleFonts.roboto(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: greenText),
                 ),
               ],
             ),

@@ -27,7 +27,6 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
 
   @override
   initState() {
-    log("widget.order.status:${widget.order.status}");
     if (widget.order.status == "accepted") {
       activeStep = 1;
     } else if (widget.order.status == "picked") {
@@ -150,6 +149,7 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
 
   @override
   Widget build(BuildContext context) {
+    log("widget.order.paymentStatus---:${widget.order.paymentStatus}");
     return Scaffold(
       appBar:
           appBarWidget(context, title: 'Track Your Parcel', hasBackBtn: true),
@@ -167,6 +167,9 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
                   fontWeight: FontWeight.bold,
                   color: primaryColor1,
                 ),
+              ),
+              const SizedBox(
+                height: 5,
               ),
               AnotherStepper(
                 stepperDirection: Axis.vertical,
@@ -222,7 +225,29 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
                       }),
                     ),
                   ]
-                ]
+                ],
+              ],
+              if (widget.order.paymentStatus == "paid") ...[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Payment status',
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      widget.order.paymentStatus!.toUpperCase(),
+                      style: const TextStyle(
+                        fontSize: 15.0,
+                        fontWeight: FontWeight.bold,
+                        color: primaryColor2,
+                      ),
+                    ),
+                  ],
+                ),
               ]
             ],
           ),

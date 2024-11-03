@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:another_stepper/another_stepper.dart';
 import 'package:cargo_run/providers/app_provider.dart';
 import 'package:cargo_run/providers/order_provider.dart';
@@ -168,6 +170,8 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                       textColor: Colors.white,
                       backgroundColor: primaryColor1.withOpacity(0.7),
                       onPressed: () {
+                        log("coordinate:${widget.order!.riderLocation!.lat}");
+                        log("coordinate:${widget.order!.riderLocation!.lng}");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -189,13 +193,13 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                 if (widget.order!.paymentStatus!.toLowerCase() ==
                     "pending") ...[
                   if (widget.order!.status! == "picked" ||
-                      widget.order!.status! == "successful" ||
-                      widget.order!.status! == "delivered" 
+                          widget.order!.status! == "successful" ||
+                          widget.order!.status! == "delivered"
                       // ||
 
                       // widget.order!.status! == "pending" ||
                       // widget.order!.status! == "accepted"
-                      
+
                       ) ...[
                     Consumer<OrderProvider>(builder: (context, orderVM, _) {
                       return Padding(

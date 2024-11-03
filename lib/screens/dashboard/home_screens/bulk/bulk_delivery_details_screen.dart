@@ -1,10 +1,11 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 // import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/providers/order_provider.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/standard/delivery_summary.dart';
 import 'package:cargo_run/styles/app_colors.dart';
-import 'package:cargo_run/utils/app_router.gr.dart';
 import 'package:cargo_run/utils/util.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/app_textfields.dart';

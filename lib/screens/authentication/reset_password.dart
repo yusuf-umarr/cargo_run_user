@@ -1,6 +1,5 @@
 import 'package:cargo_run/providers/auth_provider.dart';
 import 'package:cargo_run/screens/alerts/account_creation_success.dart';
-import 'package:cargo_run/screens/authentication/verify_otp.dart';
 import 'package:cargo_run/widgets/app_textfields.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -87,7 +86,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           backgroundColor: primaryColor1,
                           textColor: Colors.white,
                         )
-                      : AppButton(
+                      :  AppButton(
                           text: 'Continue',
                           hasIcon: true,
                           backgroundColor: primaryColor1,

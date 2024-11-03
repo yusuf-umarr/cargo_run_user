@@ -217,20 +217,29 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   controller: email,
                 ),
                 const SizedBox(height: 40.0),
-                AppButton(
-                  text: 'Update profile',
-                  hasIcon: false,
-                  textColor: Colors.white,
-                  backgroundColor: primaryColor1,
-                  onPressed: () async {
-                    // Navigator.of(context).pushAndRemoveUntil(
-                    //   MaterialPageRoute(
-                    //     builder: (context) => LoginScreen(),
-                    //   ),
-                    //   (Route<dynamic> route) => false,
-                    // );
-                  },
-                )
+                Consumer<AuthProvider>(builder: (context, authVM, _) {
+                  return (authVM.loadingState == LoadingState.loading)
+                      ? const LoadingButton(
+                          backgroundColor: primaryColor1,
+                          textColor: Colors.white,
+                        )
+                      : AppButton(
+                          text: 'Update profile',
+                          hasIcon: false,
+                          textColor: Colors.white,
+                          backgroundColor: primaryColor1,
+                          onPressed: () async {
+                            sharedPrefs.fullName = name.text;
+                            sharedPrefs.email = email.text;
+                            sharedPrefs.phone = phone.text;
+                            context.read<AuthProvider>().updateProfile(
+                                  name: name.text,
+                                  email: email.text,
+                                  phone: phone.text,
+                                );
+                          },
+                        );
+                })
               ],
             ),
           ),

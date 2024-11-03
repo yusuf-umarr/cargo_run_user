@@ -4,6 +4,7 @@ import 'package:cargo_run/utils/shared_prefs.dart';
 import 'package:cargo_run/utils/util.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:nb_utils/nb_utils.dart';
 
 import '/services/authentication/auth_abstract.dart';
 import '/services/service_locator.dart';
@@ -18,7 +19,7 @@ class AuthProvider extends ChangeNotifier {
   LoadingState get loadingState => _loadingState;
   String get errorMessage => _errorMessage;
 
-    File imageUpload = File("");
+  File imageUpload = File("");
   dynamic imageFile;
 
   void setLoadingState(LoadingState loadingState) {
@@ -120,7 +121,27 @@ class AuthProvider extends ChangeNotifier {
     });
   }
 
-    Future<void> selectImages() async {
+  Future<void> updateProfile({
+    required String name,
+    required String email,
+    required String phone,
+  }) async {
+    setLoadingState(LoadingState.loading);
+    var response = await _authService.updateProfile(
+      name: name,
+      email: email,
+      phone: phone,
+    );
+    response.fold((error) {
+      setLoadingState(LoadingState.error);
+      setErrorMessage(error.message);
+    }, (success) {
+      toast("Successful");
+      setLoadingState(LoadingState.success);
+    });
+  }
+
+  Future<void> selectImages() async {
     imageUpload = await myUploadImage();
     imageFile = imageUpload;
 
@@ -133,12 +154,11 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-    Future<dynamic> uploadImage({
+  Future<dynamic> uploadImage({
     BuildContext? context,
     file,
     int responseCode = 200,
   }) async {
-
     var headers = {
       'Authorization': 'Bearer ${sharedPrefs.token}',
     };

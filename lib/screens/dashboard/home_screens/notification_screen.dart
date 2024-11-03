@@ -1,9 +1,7 @@
 import 'package:cargo_run/models/notification_model.dart';
-import 'package:cargo_run/models/order.dart';
 import 'package:cargo_run/providers/order_provider.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -45,6 +43,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
         itemCount: orderVM.notificationModel.length,
         itemBuilder: (context, index) {
           if (orderVM.notificationModel.isNotEmpty) {
+            orderVM.notificationModel.sort((a, b) =>
+                DateTime.parse(b.createdAt!)
+                    .compareTo(DateTime.parse(a.createdAt!)));
+
             final NotificationData notification =
                 orderVM.notificationModel[index];
             return Container(

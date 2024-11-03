@@ -1,11 +1,9 @@
-import 'package:cargo_run/screens/alerts/account_creation_success.dart';
 import 'package:cargo_run/screens/authentication/reset_password.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
 import 'package:provider/provider.dart';
-
 import '../../styles/app_colors.dart';
 import '../../widgets/app_buttons.dart';
 import '../../widgets/page_widgets/appbar_widget.dart';

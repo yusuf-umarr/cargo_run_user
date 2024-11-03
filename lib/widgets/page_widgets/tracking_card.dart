@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cargo_run/screens/dashboard/home_screens/track_parcel_screen.dart';
 import 'package:flutter/material.dart';
 import '../../styles/app_colors.dart';
@@ -24,10 +22,11 @@ class _TrackingCardState extends State<TrackingCard> {
       child: ListTile(
         onTap: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      TrackParcelScreen(order: widget.order)));
+            context,
+            MaterialPageRoute(
+              builder: (context) => TrackParcelScreen(order: widget.order),
+            ),
+          );
         },
         leading: Image.asset(
           'assets/images/logo.png',
@@ -61,7 +60,9 @@ class _TrackingCardState extends State<TrackingCard> {
             borderRadius: BorderRadius.circular(5.0),
           ),
           child: Text(
-            widget.order.status!.toUpperCase(),
+            widget.order.status!.toLowerCase() == "picked"
+                ? "ON GOING"
+                : widget.order.status!.toUpperCase(),
             style: const TextStyle(color: Colors.white, fontSize: 12.0),
           ),
         ),

@@ -30,7 +30,6 @@ class _TripRoutePageState extends State<TripRoutePage> {
   bool showPopup = true;
 
   bool isShowCard = true;
-  Position? _currentPosition;
   List<LatLng> polylineCoordinates = [];
 
   BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
@@ -161,8 +160,8 @@ class _TripRoutePageState extends State<TripRoutePage> {
                         markerId: const MarkerId("riderLocation"),
                         icon: currentLocationIcon,
                         position: LatLng(
-                          widget.order.orderLocation!.lat!.toDouble(),
-                          widget.order.orderLocation!.lng!.toDouble(),
+                          widget.order.riderLocation!.lat!,
+                          widget.order.riderLocation!.lng!,
                         ),
                       ),
                       Marker(

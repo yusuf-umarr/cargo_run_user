@@ -23,6 +23,11 @@ abstract class AuthService {
     required String email,
     required String otp,
   });
+  Future<Either<ErrorResponse, ApiResponse>> updateProfile({
+    required String name,
+    required String phone,
+    required String email,
+  });
 
   Future<Either<ErrorResponse, ApiResponse>> forgotPassword({
     required String email,
