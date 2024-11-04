@@ -162,27 +162,28 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                   //   ),
                   // ),
                 ] else ...[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: AppButton(
-                      text: 'Preview',
-                      hasIcon: false,
-                      textColor: Colors.white,
-                      backgroundColor: primaryColor1.withOpacity(0.7),
-                      onPressed: () {
-                        log("coordinate:${widget.order!.riderLocation!.lat}");
-                        log("coordinate:${widget.order!.riderLocation!.lng}");
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TripRoutePage(
-                              order: widget.order!,
+                  if (widget.order!.riderLocation != null)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: AppButton(
+                        text: 'Preview',
+                        hasIcon: false,
+                        textColor: Colors.white,
+                        backgroundColor: primaryColor1.withOpacity(0.7),
+                        onPressed: () {
+                          // log("coordinate:${widget.order!.riderLocation!.lat}");
+                          // log("coordinate:${widget.order!.riderLocation!.lng}");
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TripRoutePage(
+                                order: widget.order!,
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
-                  ),
                 ],
                 PaymentSummaryCard(
                   deliveryFee: widget.order!.price != null

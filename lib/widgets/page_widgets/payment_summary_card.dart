@@ -49,7 +49,9 @@ class PaymentSummaryCard extends StatelessWidget {
           rowItem(
             title: 'Payment Status',
             value: paymentStatus.toUpperCase(),
-            textColor: Colors.orange,
+            textColor: paymentStatus.toLowerCase() == "paid"
+                ? primaryColor2
+                : Colors.orange,
           ),
         ],
       ),

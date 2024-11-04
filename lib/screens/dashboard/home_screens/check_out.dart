@@ -28,7 +28,6 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))
@@ -37,7 +36,10 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           onProgress: (int progress) {},
           onPageFinished: (url) {},
           onNavigationRequest: (NavigationRequest request) async {
-            if (request.url.contains('https://cargo-run-payment.com')) {
+            dev.log(
+                '==========print callback url=============: ${request.url}');
+//https://cargo-run-payment.com
+            if (request.url.contains('')) {
               //api/subscription/paystack/callback
               dev.log('===========X==========================: ${request.url}');
 
@@ -56,14 +58,13 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       )
       ..loadRequest(Uri.parse(widget.paymentUrl));
     return Scaffold(
-        appBar: AppBar(
-          title: const Text(
-                "Payment",
-                style: TextStyle(fontSize: 14),
-              ),
+      appBar: AppBar(
+        title: const Text(
+          "Payment",
+          style: TextStyle(fontSize: 14),
         ),
-        body: WebViewWidget(controller: controller),
-      );
-    
+      ),
+      body: WebViewWidget(controller: controller),
+    );
   }
 }
