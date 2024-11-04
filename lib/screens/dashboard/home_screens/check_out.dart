@@ -36,19 +36,14 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           onProgress: (int progress) {},
           onPageFinished: (url) {},
           onNavigationRequest: (NavigationRequest request) async {
-            dev.log(
-                '==========print callback url=============: ${request.url}');
-//https://cargo-run-payment.com
-            if (request.url.contains('')) {
-              //api/subscription/paystack/callback
-              dev.log('===========X==========================: ${request.url}');
+            // dev.log(
+            //     '==========print callback url=============: ${request.url}');
+            if (request.url.contains('https://cargo-run-payment.com')) {
+              // dev.log('===========X==========================: ${request.url}');
 
-              context.read<OrderProvider>().verifyPayment(widget.reference);
-
-              toast("Payment successful");
-              Future.delayed(const Duration(seconds: 3), () {
-                Navigator.of(context).pop();
-              });
+              context
+                  .read<OrderProvider>()
+                  .verifyPayment(widget.reference, context);
 
               return NavigationDecision.prevent;
             } else {}

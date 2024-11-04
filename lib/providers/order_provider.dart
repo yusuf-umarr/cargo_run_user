@@ -1,6 +1,7 @@
 import 'dart:developer' as dev;
 import 'package:cargo_run/models/notification_model.dart';
 import 'package:cargo_run/models/order.dart';
+import 'package:cargo_run/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/check_out.dart';
 import 'package:flutter/material.dart';
 import 'package:nb_utils/nb_utils.dart';
@@ -147,7 +148,7 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> verifyPayment(String reference) async {
+  Future<void> verifyPayment(String reference, context) async {
     // setOrderStatus(OrderStatus.loading);
     var response = await _ordersService.verify(reference);
 
@@ -155,6 +156,15 @@ class OrderProvider extends ChangeNotifier {
       getOrders();
       setOrderStatus(OrderStatus.success);
       _socket!.emit("order");
+      toast("Payment successful");
+      Future.delayed(const Duration(seconds: 1), () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const BottomNavBar(),
+          ),
+        );
+      });
     } else {
       dev.log("order error:${response.data}");
       setOrderStatus(OrderStatus.failed);
