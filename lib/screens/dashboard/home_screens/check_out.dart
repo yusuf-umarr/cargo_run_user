@@ -11,12 +11,14 @@ import 'package:webview_flutter/webview_flutter.dart';
 class CheckoutScreen extends StatefulWidget {
   final String paymentUrl;
   final String reference;
+  final String orderId;
   static const String routeName = '/checkout';
 
   const CheckoutScreen({
     super.key,
     required this.paymentUrl,
     required this.reference,
+    required this.orderId,
   });
 
   @override
@@ -43,7 +45,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
               context
                   .read<OrderProvider>()
-                  .verifyPayment(widget.reference, context);
+                  .verifyPayment(widget.reference,  widget.orderId, context);
 
               return NavigationDecision.prevent;
             } else {}

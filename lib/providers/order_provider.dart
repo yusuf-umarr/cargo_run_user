@@ -148,9 +148,9 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> verifyPayment(String reference, context) async {
+  Future<void> verifyPayment(String reference, String orderId, context) async {
     // setOrderStatus(OrderStatus.loading);
-    var response = await _ordersService.verify(reference);
+    var response = await _ordersService.verify(reference, orderId);
 
     if (response.success) {
       getOrders();
@@ -250,6 +250,8 @@ class OrderProvider extends ChangeNotifier {
           builder: (context) => CheckoutScreen(
             paymentUrl: url,
             reference: ref,
+            orderId:orderId,
+
           ),
         ),
       );

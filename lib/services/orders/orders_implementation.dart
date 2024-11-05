@@ -101,12 +101,14 @@ class OrdersImpl implements OrdersService {
   @override
   Future<ApiResp<dynamic>> verify(
     String reference,
+    String orderId,
   ) async {
     String token = sharedPrefs.token;
     var url = Uri.parse('${Env.endpointUrl}/transaction/verify');
 
     Map<String, dynamic> body = {
       'reference': reference,
+      'orderId': orderId,
     };
     var headers = {
       'Content-Type': 'application/json',
