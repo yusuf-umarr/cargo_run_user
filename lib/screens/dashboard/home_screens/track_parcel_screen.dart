@@ -149,6 +149,8 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
 
   @override
   Widget build(BuildContext context) {
+    log("widget.order.status:${widget.order.status}");
+    log("widget.order.paymentStatus:${widget.order.paymentStatus}");
     return Scaffold(
       appBar:
           appBarWidget(context, title: 'Track Your Parcel', hasBackBtn: true),
@@ -194,11 +196,9 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
                     },
                   ),
                   const SizedBox(height: 30),
-                  if (widget.order.paymentStatus!.toLowerCase() ==
-                      "pending") ...[
-                    if (widget.order.status! == "picked" ||
-                        widget.order.status! == "successful" ||
-                        widget.order.status! == "delivered") ...[
+                  if (widget.order.paymentStatus == "pending") ...[
+                    if (widget.order.status!.toLowerCase() == "picked" ||
+                        widget.order.status!.toLowerCase() == "arrived") ...[
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 25.0),
                         child: Consumer<OrderProvider>(
@@ -225,7 +225,7 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
                           );
                         }),
                       ),
-                    ]
+                    ],
                   ],
                 ],
               ],
@@ -250,6 +250,36 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
                     ),
                   ],
                 ),
+              ] else ...[
+                //payment is pending and order has been delivered
+                if (widget.order.status == "delivered") ...[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child:
+                        Consumer<OrderProvider>(builder: (context, orderVM, _) {
+                      if (orderVM.orderStatus == OrderStatus.loading) {
+                        return const LoadingButton(
+                          backgroundColor: primaryColor2,
+                          textColor: Colors.white,
+                        );
+                      }
+
+                      return AppButton(
+                        text: 'Pay now',
+                        hasIcon: false,
+                        textColor: Colors.white,
+                        backgroundColor: primaryColor2,
+                        onPressed: () {
+                          context.read<OrderProvider>().initiatePayment(
+                                widget.order.id!,
+                                widget.order.price.toString(),
+                                context,
+                              );
+                        },
+                      );
+                    }),
+                  ),
+                ]
               ]
             ],
           ),
