@@ -284,8 +284,8 @@ class OrderProvider extends ChangeNotifier {
     searcheOrders = _orders;
 
     final suggestions = _orders.where((data) {
-      final dataName = data!.orderId!;
-      final input = query;
+      final dataName = data!.orderId!.toLowerCase();
+      final input = query.toLowerCase();
 
       // return false;
       return dataName.contains(input) ? true : false;
