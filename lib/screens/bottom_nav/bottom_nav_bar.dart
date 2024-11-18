@@ -9,6 +9,7 @@ import 'package:cargo_run/screens/dashboard/profile_screens/view_profile_screen.
 import 'package:cargo_run/screens/dashboard/shipment_screens/shipment_screen.dart';
 import 'package:cargo_run/services/notification_service.dart';
 import 'package:cargo_run/styles/app_colors.dart';
+import 'package:cargo_run/utils/env.dart';
 import 'package:cargo_run/utils/shared_prefs.dart';
 
 import 'package:flutter/material.dart';
@@ -50,7 +51,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
     try {
       socket = io.io(
-          "https://cargo-run-test-31c2cf9f78e4.herokuapp.com",
+          Env.endpointUrlSocket,
           <String, dynamic>{
             "transports": ["websocket"],
             "autoConnect": false,
