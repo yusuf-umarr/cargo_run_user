@@ -31,11 +31,14 @@ dependencies:
   geolocator: ^10.1.0
   geocoding: ^3.0.0
   socket_io_client: ^2.0.3+1
-  nb_utils: ^7.0.7
+  nb_utils:
+    git:
+      url: https://github.com/yusuf-umarr/nb_utils.git
   awesome_notifications: ^0.8.2
   upgrader:
   cached_network_image: ^3.3.0
   image_picker: ^1.0.1
+  rename: ^3.0.2
 
   
 

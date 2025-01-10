@@ -1,9 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'dart:developer' as dev;
 import 'package:cargo_run/providers/order_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';

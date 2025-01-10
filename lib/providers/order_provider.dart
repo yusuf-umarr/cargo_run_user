@@ -30,7 +30,7 @@ class OrderProvider extends ChangeNotifier {
   String _distancePrice = '';
   String _category = '';
   String _deliveryService = '';
-  String _url = '';
+  final String _url = '';
   String _deliveryOption = '';
   String _errorMessage = '';
 

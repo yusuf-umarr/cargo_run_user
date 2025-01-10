@@ -1,9 +1,6 @@
-import 'dart:io';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cargo_run/providers/auth_provider.dart';
 import 'package:cargo_run/screens/authentication/login_screen.dart';
-import 'package:cargo_run/screens/dashboard/profile_screens/edit_profile_screen.dart';
 import 'package:cargo_run/screens/dashboard/profile_screens/get_help_screen.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/utils/shared_prefs.dart';
@@ -39,7 +36,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color(0xffF3F3F3),
       body: SafeArea(

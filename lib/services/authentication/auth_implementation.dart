@@ -102,7 +102,7 @@ class AuthImpl implements AuthService {
       responseBody = response.body;
       var jsonResponse = jsonDecode(responseBody);
 
-      log("forgot pass jsonResponse:${jsonResponse}");
+      log("forgot pass jsonResponse:$jsonResponse");
       if (jsonResponse['success'] == true) {
         return Right(ApiResponse.fromJson(jsonResponse));
       } else {
@@ -172,7 +172,7 @@ class AuthImpl implements AuthService {
       responseBody = response.body;
       var jsonResponse = jsonDecode(responseBody);
 
-      log("reset-pass=======jsonResponse:${jsonResponse}");
+      log("reset-pass=======jsonResponse:$jsonResponse");
       if (jsonResponse['success'] == true) {
         return Right(ApiResponse.fromJson(jsonResponse));
       } else {

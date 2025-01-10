@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'dart:async';
 import 'package:cargo_run/config/config.dart';
 import 'package:cargo_run/models/order.dart';

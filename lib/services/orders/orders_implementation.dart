@@ -261,7 +261,7 @@ class OrdersImpl implements OrdersService {
       var places =
           jsonResults.map((place) => PlaceSearch.fromJson(place)).toList();
 
-      // log("places:${jsonResults}");
+      log("places:${jsonResults}");
 
       return ApiResp<dynamic>(
         success: true,

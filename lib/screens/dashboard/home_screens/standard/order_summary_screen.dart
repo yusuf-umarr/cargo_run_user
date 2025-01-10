@@ -159,6 +159,7 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
                             );
                           });
                       Future.delayed(const Duration(seconds: 3), () {
+                       // ignore: use_build_context_synchronously
                        Navigator.push(context, MaterialPageRoute(builder: (context)=>const BottomNavBar()));
                       });
                     },
@@ -167,6 +168,6 @@ class _OrderSummaryScreenState extends State<OrderSummaryScreen> {
               ],
             ),
           ),
-        ));
+        ),);
   }
 }

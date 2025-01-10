@@ -3,14 +3,12 @@ import 'package:cargo_run/screens/onboard/auth_check.dart';
 import 'package:cargo_run/screens/onboard/onboard_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// import 'utils/app_router.dart';
 
 
 class CargoRun extends StatelessWidget {
   final String? usedApp;
-  CargoRun({super.key, this.usedApp});
+  const CargoRun({super.key, this.usedApp});
 
-  // final _appRouter = AppRouter();
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
   @override

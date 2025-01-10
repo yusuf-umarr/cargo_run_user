@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Cargorun User</string>
+	<string>Cargo Run</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>cargorun_user</string>
+	<string>Cargo Run</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -45,5 +45,16 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>NextBud needs to be able to access photo library so you can select images to upload.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Used to collect location data.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Used to collect location data in the background.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Used to collect location data in the background.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Cargo run needs access to your location to provide you with the best possible experience.</string>
+
 </dict>
 </plist>

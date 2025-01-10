@@ -1,7 +1,5 @@
-import 'dart:developer';
 
 import 'package:another_stepper/another_stepper.dart';
-import 'package:cargo_run/providers/app_provider.dart';
 import 'package:cargo_run/providers/order_provider.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/trip_route_page.dart';
 import 'package:cargo_run/styles/app_colors.dart';
