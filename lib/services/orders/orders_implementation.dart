@@ -1,12 +1,15 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:cargo_run/config/config.dart';
 import 'package:cargo_run/models/place_model.dart';
 import 'package:cargo_run/utils/shared_prefs.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../utils/env.dart';
 import '/models/api_response.dart';
@@ -246,6 +249,69 @@ class OrdersImpl implements OrdersService {
   }
 
   @override
+  @override
+  Future<ApiResp<dynamic>> getAutocompletePlaces({
+    required String input,
+    required LatLng currentLatLng,
+  }) async {
+    try {
+      // Get package info for Android/iOS API key signing
+      PackageInfo buildKeys = await PackageInfo.fromPlatform();
+      String signKey = buildKeys.buildSignature;
+      String packageName = buildKeys.packageName;
+
+      // Create the request body
+      var requestBody = {
+        "input": input,
+        "locationBias": {
+          "circle": {
+            "center": {
+              "latitude": currentLatLng.latitude,
+              "longitude": currentLatLng.longitude
+            },
+            "radius": 10000,
+          }
+        },
+      };
+
+      // Set headers with appropriate API key and package info
+      var headers = {
+        'X-Goog-Api-Key': googleApiKey,
+        'Content-Type': 'application/json',
+        if (Platform.isAndroid) 'X-Android-Package': packageName,
+        if (Platform.isAndroid) 'X-Android-Cert': signKey,
+        if (Platform.isIOS) 'X-IOS-Bundle-Identifier': packageName,
+      };
+
+      var url =
+          Uri.parse('https://places.googleapis.com/v1/places:autocomplete');
+
+      // Convert the request body to a JSON string
+      final response = await http.post(
+        url,
+        body: jsonEncode(requestBody), // ✅ Convert to JSON string
+        headers: headers,
+      );
+
+      // log("Response Auto :${response.body}");
+
+      return ApiResp<dynamic>(
+        success: response.statusCode == 200,
+        data: jsonDecode(response.body),
+        message: response.statusCode == 200 ? "Successful" : "Failed",
+      );
+    } catch (e) {
+      log(e.toString());
+
+      return ApiResp<dynamic>(
+        success: false,
+        data: '$e',
+        message: "An error occurred",
+      );
+    }
+  }
+
+  @override
   Future<ApiResp<dynamic>> getAutocomplete(searchTerm) async {
     try {
       var url = Uri.parse(
@@ -256,6 +322,8 @@ class OrdersImpl implements OrdersService {
       final response = await http.get(url);
 
       var jsonResponse = jsonDecode(response.body);
+
+      log("places response:${jsonResponse}");
 
       var jsonResults = jsonResponse['predictions'] as List;
       var places =

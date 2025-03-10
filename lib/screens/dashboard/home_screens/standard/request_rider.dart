@@ -153,13 +153,13 @@ class _RequestRiderState extends State<RequestRider> {
                           return ListTile(
                             onTap: () async {
                               try {
-                                _pickupAddressController.text = x.description;
+                                _pickupAddressController.text = x.placePrediction.text.text;
 
                                 isTypingPickUp = false;
 
                                 List<Location> locations =
                                     await locationFromAddress(
-                                        "${x.description}");
+                                        x.placePrediction.text.text);
 
                                 _latController.text =
                                     locations[0].latitude.toString();
@@ -174,7 +174,7 @@ class _RequestRiderState extends State<RequestRider> {
                               }
                             },
                             title: Text(
-                              x.description,
+                              x.placePrediction.text.text,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall!
@@ -203,7 +203,7 @@ class _RequestRiderState extends State<RequestRider> {
                   isTypingPickUp = false;
                 });
               }
-              otherVM.searchPlaces(query);
+              otherVM.getAutocompletePlaces(query);
             },
           ),
         ],

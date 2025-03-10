@@ -341,13 +341,13 @@ class _BulkDeliveryDetailsScreenState extends State<BulkDeliveryDetailsScreen> {
                             onTap: () async {
                               try {
                                 _recipientsAddressController.text =
-                                    x.description;
+                                    x.placePrediction.text.text;
 
                                 isTypingPickUp = false;
 
                                 List<Location> locations =
                                     await locationFromAddress(
-                                        "${x.description}");
+                                        x.placePrediction.text.text);
 
                                 _latController.text =
                                     locations[0].latitude.toString();
@@ -366,7 +366,7 @@ class _BulkDeliveryDetailsScreenState extends State<BulkDeliveryDetailsScreen> {
                               }
                             },
                             title: Text(
-                              x.description,
+                              x.placePrediction.text.text,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall!
@@ -395,7 +395,7 @@ class _BulkDeliveryDetailsScreenState extends State<BulkDeliveryDetailsScreen> {
                   isTypingPickUp = false;
                 });
               }
-              otherVM.searchPlaces(query);
+              otherVM.getAutocompletePlaces(query);
             },
           ),
         ],

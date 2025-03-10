@@ -1,6 +1,7 @@
 import 'package:cargo_run/models/order.dart';
 import 'package:cargo_run/services/orders/orders_implementation.dart';
 import 'package:dartz/dartz.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../models/api_response.dart';
 
@@ -32,6 +33,10 @@ abstract class OrdersService {
   });
 
   Future<ApiResp<dynamic>> getAutocomplete(searchTerm);
+  Future<ApiResp<dynamic>> getAutocompletePlaces({
+    required String input,
+    required LatLng currentLatLng,
+  });
 
   Future<ApiResp<dynamic>> getDistancePrice(source, destination);
 }

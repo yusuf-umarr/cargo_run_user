@@ -1,9 +1,11 @@
 import 'dart:developer' as dev;
 import 'package:cargo_run/models/notification_model.dart';
 import 'package:cargo_run/models/order.dart';
+import 'package:cargo_run/models/places_model.dart';
 import 'package:cargo_run/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/check_out.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:socket_io_client/socket_io_client.dart' as io;
 import '/services/service_locator.dart';
@@ -56,7 +58,12 @@ class OrderProvider extends ChangeNotifier {
   ReceiverDetails? _receiverDetails;
   ReceiverDetails? get receiverDetails => _receiverDetails;
 
-  List dSearchResults = [];
+  // List dSearchResults = [];
+
+  // SearchPlacesModel? searchResults;
+
+  // List<Suggestion> suggestions = [];
+  List<Suggestion> dSearchResults = [];
 
   io.Socket? _socket;
 
@@ -171,13 +178,32 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> searchPlaces(search) async {
-    var response = await _ordersService.getAutocomplete(
-      search,
+  // Future<void> searchPlaces(search) async {
+  //   var response = await _ordersService.getAutocomplete(
+  //     search,
+  //   );
+
+  //   if (response.success) {
+  //     dSearchResults = response.data;
+  //   } else {
+  //     //
+  //   }
+
+  //   notifyListeners();
+  // }
+
+  Future<void> getAutocompletePlaces(search) async {
+    var response = await _ordersService.getAutocompletePlaces(
+      input: search,
+      currentLatLng: LatLng(-33.867, 151.195),
     );
 
     if (response.success) {
-      dSearchResults = response.data;
+      // suggestions = response.data.;
+
+      dev.log("response.data-suggestions:${response.data['suggestions']}");
+
+      dSearchResults =response.data['suggestions'];
     } else {
       //
     }
@@ -250,8 +276,7 @@ class OrderProvider extends ChangeNotifier {
           builder: (context) => CheckoutScreen(
             paymentUrl: url,
             reference: ref,
-            orderId:orderId,
-
+            orderId: orderId,
           ),
         ),
       );
