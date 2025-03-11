@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'dart:developer' as dev;
+import 'package:cargo_run/models/distance_model.dart';
 import 'package:cargo_run/models/notification_model.dart';
 import 'package:cargo_run/models/order.dart';
 import 'package:cargo_run/models/places_model.dart';
@@ -64,6 +66,8 @@ class OrderProvider extends ChangeNotifier {
 
   // List<Suggestion> suggestions = [];
   List<Suggestion> dSearchResults = [];
+
+  DistanceModel? distanceModel;
 
   io.Socket? _socket;
 
@@ -178,20 +182,6 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  // Future<void> searchPlaces(search) async {
-  //   var response = await _ordersService.getAutocomplete(
-  //     search,
-  //   );
-
-  //   if (response.success) {
-  //     dSearchResults = response.data;
-  //   } else {
-  //     //
-  //   }
-
-  //   notifyListeners();
-  // }
-
   Future<void> getAutocompletePlaces(search) async {
     var response = await _ordersService.getAutocompletePlaces(
       input: search,
@@ -199,35 +189,44 @@ class OrderProvider extends ChangeNotifier {
     );
 
     if (response.success) {
-      // suggestions = response.data.;
-
-      dev.log("response.data-suggestions:${response.data['suggestions']}");
-
-      dSearchResults =response.data['suggestions'];
-    } else {
-      //
-    }
+      if (response.data['suggestions'] != null) {
+        dSearchResults = (response.data['suggestions'] as List)
+            .map((item) => Suggestion.fromJson(item))
+            .toList();
+      }
+    } else {}
 
     notifyListeners();
   }
 
   Future<void> getDistancePrice() async {
     setOrderStatus(OrderStatus.loading);
-    var response = await _ordersService.getDistancePrice(
-        _addressDetails?.landMark!, _receiverDetails?.address);
+    try {
+      var response = await _ordersService.getDistance(
+        sourceLatLng: LatLng(
+            _addressDetails!.lat!.toDouble(), _addressDetails!.lng!.toDouble()),
+        destinationLatLng: LatLng(
+          _receiverDetails!.lat!.toDouble(),
+          _receiverDetails!.lng!.toDouble(),
+        ),
+      );
+      dev.log("_distancePrice:${response.data}");
+      if (response.success) {
+        setOrderStatus(OrderStatus.success);
 
-    if (response.success) {
-      setOrderStatus(OrderStatus.success);
-      _distancePrice =
-          response.data['rows'][0]['elements'][0]['distance']['text'];
+        // distanceModel = response.data;
 
-      log("_distancePrice:$_distancePrice");
-    } else {
-      setOrderStatus(OrderStatus.failed);
-      log("_distancePrice  error :${response.data}");
-      //
+        distanceModel = DistanceModel.fromJson(response.data);
+
+        log("_distancePrice:${distanceModel}");
+      } else {
+        setOrderStatus(OrderStatus.failed);
+        log("_distancePrice  error :${response.data}");
+        //
+      }
+    } catch (e) {
+      log("_distancePrice  catch error :${e}");
     }
-
     notifyListeners();
   }
 

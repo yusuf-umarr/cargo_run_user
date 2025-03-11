@@ -32,11 +32,15 @@ abstract class OrdersService {
     required String orderId,
   });
 
-  Future<ApiResp<dynamic>> getAutocomplete(searchTerm);
+  // Future<ApiResp<dynamic>> getAutocomplete(searchTerm);
   Future<ApiResp<dynamic>> getAutocompletePlaces({
     required String input,
     required LatLng currentLatLng,
   });
+  Future<ApiResp<dynamic>> getDistance({
+    required LatLng sourceLatLng,
+    required LatLng destinationLatLng,
+  });
 
-  Future<ApiResp<dynamic>> getDistancePrice(source, destination);
+  // Future<ApiResp<dynamic>> getDistancePrice(source, destination);
 }

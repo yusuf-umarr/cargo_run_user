@@ -345,7 +345,7 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                               }
                             },
                             title: Text(
-                             x.placePrediction.text.text,
+                              x.placePrediction.text.text,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodySmall!
