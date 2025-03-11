@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer' as dev;
 import 'package:cargo_run/models/distance_model.dart';
 import 'package:cargo_run/models/notification_model.dart';
@@ -31,7 +30,7 @@ class OrderProvider extends ChangeNotifier {
 
   List searcheOrders = [];
 
-  String _distancePrice = '';
+  // String _distancePrice = '';
   String _category = '';
   String _deliveryService = '';
   final String _url = '';
@@ -40,7 +39,7 @@ class OrderProvider extends ChangeNotifier {
 
   String get category => _category;
   String get deliveryService => _deliveryService;
-  String get distancePrice => _distancePrice;
+  // String get distancePrice => _distancePrice;
   String get deliveryOption => _deliveryOption;
 
   String get errorMessage => _errorMessage;
@@ -185,7 +184,7 @@ class OrderProvider extends ChangeNotifier {
   Future<void> getAutocompletePlaces(search) async {
     var response = await _ordersService.getAutocompletePlaces(
       input: search,
-      currentLatLng: LatLng(-33.867, 151.195),
+      currentLatLng: const LatLng(-33.867, 151.195),
     );
 
     if (response.success) {
@@ -210,7 +209,6 @@ class OrderProvider extends ChangeNotifier {
           _receiverDetails!.lng!.toDouble(),
         ),
       );
-      dev.log("_distancePrice:${response.data}");
       if (response.success) {
         setOrderStatus(OrderStatus.success);
 
@@ -218,14 +216,14 @@ class OrderProvider extends ChangeNotifier {
 
         distanceModel = DistanceModel.fromJson(response.data);
 
-        log("_distancePrice:${distanceModel}");
+        dev.log("_distancePrice:---${distanceModel!.routes[0].distanceMeters}");
       } else {
         setOrderStatus(OrderStatus.failed);
         log("_distancePrice  error :${response.data}");
         //
       }
     } catch (e) {
-      log("_distancePrice  catch error :${e}");
+      log("_distancePrice  catch error :$e");
     }
     notifyListeners();
   }

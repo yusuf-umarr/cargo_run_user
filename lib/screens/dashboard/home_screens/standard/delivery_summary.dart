@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:cargo_run/screens/alerts/account_creation_success.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/utils/shared_prefs.dart';
+import 'package:cargo_run/utils/util.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
@@ -138,15 +139,15 @@ class _DeliverySummaryState extends State<DeliverySummary> {
   }
 
   String getPrices({
-    required String distanceInMiles,
+    required String distanceInMeters,
     bool isExpressDelivery = false,
   }) {
-    int pricePerMile = 1000;
+    int pricePerMeters = 1; //#10 per meter
     double subTotal = 0.0;
 
     try {
       double total =
-          pricePerMile * double.parse(removeMiSuffix(distanceInMiles));
+          pricePerMeters * double.parse(removeMiSuffix(distanceInMeters));
 
       if (isExpressDelivery) {
         subTotal = total + (total * 0.10);
@@ -154,8 +155,8 @@ class _DeliverySummaryState extends State<DeliverySummary> {
         subTotal = total;
       }
 
-      deliveryPrice = subTotal.toStringAsFixed(2);
-      return subTotal.toStringAsFixed(2);
+      deliveryPrice = subTotal.toString();
+      return formatAmount(subTotal.toString());
     } catch (e) {
       util.toast("Error fetching price, Please try again");
       return '';
@@ -163,31 +164,31 @@ class _DeliverySummaryState extends State<DeliverySummary> {
   }
 
   String getTotalPrice({
-    required String distanceInMiles,
+    required String distanceInMeters,
     bool isExpressDelivery = false,
   }) {
     double total = 0;
     try {
-      log("distanceInMiles:$distanceInMiles");
-      int pricePerMile = 1000;
+      log("distanceInMeters:$distanceInMeters");
+      int pricePerMeters = 1;
 
-      total = pricePerMile * double.parse(removeMiSuffix(distanceInMiles));
-      return total.toStringAsFixed(2);
+      total = pricePerMeters * double.parse(removeMiSuffix(distanceInMeters));
+      return formatAmount(total.toString());
     } catch (e) {
       util.toast("Error fetching price, please agian");
       return '';
     }
   }
 
-  String getTenPercent({required String distanceInMiles}) {
+  String getTenPercent({required String distanceInMeters}) {
     double subTotal = 0.0;
     try {
-      int pricePerMile = 1000; //#1000 per mile
+      int pricePerMeters = 1; //#1 per meter
 
       double total =
-          pricePerMile * double.parse(removeMiSuffix(distanceInMiles));
+          pricePerMeters * double.parse(removeMiSuffix(distanceInMeters));
       subTotal = total * (10 / 100);
-      return subTotal.toStringAsFixed(2);
+      return formatAmount(subTotal.toString());
     } catch (e) {
       util.toast("Error fetching price, please agian");
       return "";
@@ -217,7 +218,8 @@ class _DeliverySummaryState extends State<DeliverySummary> {
           rowItem(
               title: 'Total',
               value: '₦ ${getTotalPrice(
-                distanceInMiles: order.distancePrice,
+                distanceInMeters:
+                    order.distanceModel!.routes[0].distanceMeters.toString(),
                 isExpressDelivery: widget.isExpressDelivery,
               )}'),
           const SizedBox(height: 10),
@@ -225,7 +227,9 @@ class _DeliverySummaryState extends State<DeliverySummary> {
               ? rowItem(
                   title: 'Express Delivery\nCharge(10%)',
                   value: '₦${getTenPercent(
-                    distanceInMiles: order.distancePrice,
+                    distanceInMeters: order
+                        .distanceModel!.routes[0].distanceMeters
+                        .toString(),
                   )}')
               : const SizedBox.shrink(),
           const SizedBox(height: 10),
@@ -233,7 +237,8 @@ class _DeliverySummaryState extends State<DeliverySummary> {
           rowItem(
               title: 'Subtotal',
               value: '₦ ${getPrices(
-                distanceInMiles: order.distancePrice,
+                distanceInMeters:
+                    order.distanceModel!.routes[0].distanceMeters.toString(),
                 isExpressDelivery: widget.isExpressDelivery,
               )}'),
 

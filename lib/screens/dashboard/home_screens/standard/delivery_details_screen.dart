@@ -57,7 +57,7 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
 
   void navigate() async {
     await context.read<OrderProvider>().getDistancePrice();
-    if (context.read<OrderProvider>().distancePrice != '') {
+    if (context.read<OrderProvider>().distanceModel != null) {
       Navigator.push(
         context,
         MaterialPageRoute(

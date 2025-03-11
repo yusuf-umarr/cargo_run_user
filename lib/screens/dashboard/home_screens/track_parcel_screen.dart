@@ -149,8 +149,8 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
 
   @override
   Widget build(BuildContext context) {
-    log("widget.order.status:${widget.order.status}");
-    log("widget.order.paymentStatus:${widget.order.paymentStatus}");
+    // log("widget.order.status:${widget.order.status}");
+    // log("widget.order.paymentStatus:${widget.order.paymentStatus}");
     return Scaffold(
       appBar:
           appBarWidget(context, title: 'Track Your Parcel', hasBackBtn: true),

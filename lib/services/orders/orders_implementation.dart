@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:cargo_run/config/config.dart';
-import 'package:cargo_run/models/place_model.dart';
+
 import 'package:cargo_run/utils/shared_prefs.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
@@ -323,8 +323,6 @@ class OrdersImpl implements OrdersService {
         'X-Goog-FieldMask': '*'
       };
 
-      log("sourceLatLng:$sourceLatLng");
-      log("destinationLatLng:$destinationLatLng");
 
       var url = Uri.parse(
           'https://routes.googleapis.com/directions/v2:computeRoutes');

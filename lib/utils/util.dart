@@ -1,4 +1,6 @@
+import 'dart:developer';
 import 'dart:io';
+import 'package:intl/intl.dart';
 
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -149,3 +151,15 @@ Future<File> myUploadImage() async {
     return File("");
   }
 }
+
+String formatAmount(String input) {
+  try {
+    String integerPart = input.split('.').first;
+    int value = int.parse(integerPart.replaceAll(',', ''));
+    final formatter = NumberFormat('#,###');
+    return formatter.format(value);
+  } catch (e) {
+    return input;
+  }
+}
+
