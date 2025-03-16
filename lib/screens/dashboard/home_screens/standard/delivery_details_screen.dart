@@ -97,48 +97,48 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 40.0),
-                const Text(
-                  'Select delivery option',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 10.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    deliveryOption(normalDelivery,
-                        title: 'Normal', width: size.width * 0.42, onTap: () {
-                      setState(() {
-                        normalDelivery = true;
-                        expressDelivery = false;
-                      });
-                      context.read<OrderProvider>().setDeliveryOption('normal');
-                    }),
-                    deliveryOption(expressDelivery,
-                        title: 'Express', width: size.width * 0.42, onTap: () {
-                      setState(() {
-                        expressDelivery = true;
-                        normalDelivery = false;
-                        _deliveryOption.text = 'Express ';
-                      });
-                      context
-                          .read<OrderProvider>()
-                          .setDeliveryOption('express');
-                    }),
-                  ],
-                ),
-                const SizedBox(height: 10.0),
-                const Text(
-                  'Please note that express delivery charge extra 10% cost.',
-                  style: TextStyle(
-                    fontSize: 15.0,
-                    color: greyText,
-                  ),
-                ),
+                // const Text(
+                //   'Select delivery option',
+                //   style: TextStyle(
+                //     fontSize: 18.0,
+                //     fontWeight: FontWeight.w500,
+                //   ),
+                // ),
+                // const SizedBox(height: 10.0),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     deliveryOption(normalDelivery,
+                //         title: 'Normal', width: size.width * 0.42, onTap: () {
+                //       setState(() {
+                //         normalDelivery = true;
+                //         expressDelivery = false;
+                //       });
+                //       context.read<OrderProvider>().setDeliveryOption('normal');
+                //     }),
+                //     deliveryOption(expressDelivery,
+                //         title: 'Express', width: size.width * 0.42, onTap: () {
+                //       setState(() {
+                //         expressDelivery = true;
+                //         normalDelivery = false;
+                //         _deliveryOption.text = 'Express ';
+                //       });
+                //       context
+                //           .read<OrderProvider>()
+                //           .setDeliveryOption('express');
+                //     }),
+                //   ],
+                // ),
+                // const SizedBox(height: 10.0),
+                // const Text(
+                //   'Please note that express delivery charge extra 10% cost.',
+                //   style: TextStyle(
+                //     fontSize: 15.0,
+                //     color: greyText,
+                //   ),
+                // ),
 
-                const SizedBox(height: 20.0),
+                const SizedBox(height: 10.0),
                 AppTextField(
                   labelText: 'Recipients name',
                   hintText: 'Enter name',
@@ -230,11 +230,11 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                             textColor: Colors.white,
                             backgroundColor: primaryColor1,
                             onPressed: () async {
-                              if (!expressDelivery && !normalDelivery) {
-                                showSnackBar("Please select a delivery option");
+                              // if (!expressDelivery && !normalDelivery) {
+                              //   showSnackBar("Please select a delivery option");
 
-                                return;
-                              }
+                              //   return;
+                              // }
                               if (_formKey.currentState!.validate()) {
                                 watch.addRecipientDetails(
                                   _recipientsNameController.text,

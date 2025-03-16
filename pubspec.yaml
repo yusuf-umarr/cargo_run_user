@@ -41,6 +41,7 @@ dependencies:
   rename: ^3.0.2
     # packageInfo
   package_info_plus: ^8.2.1
+  step_progress_indicator: ^1.0.2
 
   
 

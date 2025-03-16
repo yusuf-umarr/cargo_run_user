@@ -1,6 +1,8 @@
 import 'package:cargo_run/providers/order_provider.dart';
+import 'package:cargo_run/screens/dashboard/avatar_glow.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/notification_screen.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/standard/request_rider.dart';
+import 'package:cargo_run/screens/dashboard/home_screens/map_widget.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/utils/shared_prefs.dart';
 import 'package:cargo_run/widgets/page_widgets/delivery_card.dart';
@@ -44,213 +46,267 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: double.infinity,
-            height: size.height * 0.35,
-            padding: const EdgeInsets.symmetric(
-              horizontal: 25.0,
-              vertical: 30.0,
-            ),
-            decoration: const BoxDecoration(
-              color: primaryColor1,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Row(
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: double.infinity,
+                height: size.height * 0.35,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 25.0,
+                  vertical: 30.0,
+                ),
+                decoration: const BoxDecoration(
+                  color: primaryColor1,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundColor: primaryColor2,
-                      child: Center(
-                        child: Text(
-                          sharedPrefs.fullName.substring(0, 1).toUpperCase(),
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 25),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 10.0),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    Row(
                       children: [
-                        //automated greeting text that is in sync with the time of the day
-
-                        Text(
-                          greeting,
-                          style: const TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white,
+                        CircleAvatar(
+                          radius: 30,
+                          backgroundColor: primaryColor2,
+                          child: Center(
+                            child: Text(
+                              sharedPrefs.fullName
+                                  .substring(0, 1)
+                                  .toUpperCase(),
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 25),
+                            ),
                           ),
                         ),
-                        Text(
-                          getFirstWord(sharedPrefs.fullName),
-                          style: const TextStyle(
-                            fontSize: 22.0,
-                            fontWeight: FontWeight.bold,
+                        const SizedBox(width: 10.0),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            //automated greeting text that is in sync with the time of the day
+
+                            Text(
+                              greeting,
+                              style: const TextStyle(
+                                fontSize: 18.0,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              ),
+                            ),
+                            Text(
+                              getFirstWord(sharedPrefs.fullName),
+                              style: const TextStyle(
+                                fontSize: 22.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const NotificationScreen(),),);
+                          },
+                          child: const Icon(
+                            Iconsax.notification,
                             color: Colors.white,
+                            size: 30,
                           ),
                         ),
                       ],
                     ),
-                    const Spacer(),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    const NotificationScreen()));
-                      },
-                      child: const Icon(
-                        Iconsax.notification,
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                    ),
+                    const SizedBox(height: 60.0),
+                    trackingTextField(),
+                    const SizedBox(height: 20.0),
                   ],
                 ),
-                const SizedBox(height: 60.0),
-                trackingTextField(),
-                const SizedBox(height: 20.0),
+              ),
+              if (!isTyping)
+                Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
+                    child: SizedBox(
+                      height: size.height * 0.4,
+                    )),
+              SizedBox(height: size.height * 0.05),
+              Consumer<OrderProvider>(builder: (context, orderVM, _) {
+                return Column(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 25.0),
+                      child: Text(
+                        'Tracking History',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          color: blackText,
+                        ),
+                      ),
+                    ),
+                    if (isTyping) ...[
+                      ...List.generate(orderVM.searcheOrders.length,
+                          (int index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: TrackingCard(
+                            order: orderVM.orders[index]!,
+                          ),
+                        );
+                      }),
+                    ] else ...[
+                      Consumer<OrderProvider>(builder: (context, orderVM, _) {
+                        orderVM.orders.sort((a, b) {
+                          // Prioritize "pending" orders
+                          if (a!.status == 'pending' &&
+                              b!.status != 'pending') {
+                            return -1;
+                          } else if (a.status != 'pending' &&
+                              b!.status == 'pending') {
+                            return 1;
+                          } else {
+                            // If both have the same status, sort by createdAt in descending order
+                            return b!.createdAt!.compareTo(a.createdAt!);
+                          }
+                        });
+
+                        if (orderVM.orders.isNotEmpty) {
+                          return Column(
+                            children: List.generate(orderVM.orders.length,
+                                (int index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                child: TrackingCard(
+                                  order: orderVM.orders[index]!,
+                                ),
+                              );
+                            }),
+                          );
+                        }
+                        return const Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 40),
+                            child: Text(
+                              'No Tracking History',
+                              style: TextStyle(
+                                fontSize: 20,
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+                    ]
+                  ],
+                );
+              }),
+            ],
+          ),
+        ),
+        if (!isTyping)
+          Padding(
+            padding: const EdgeInsets.only(top: 40, ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Consumer<OrderProvider>(builder: (context, orderVM, _) {
+                  return SizedBox(
+                    child: Builder(
+                      builder: (context) {
+                        orderVM.orders.sort((a, b) {
+                          if (a!.status == 'pending' &&
+                              b!.status != 'pending') {
+                            return -1;
+                          } else if (a.status != 'pending' &&
+                              b!.status == 'pending') {
+                            return 1;
+                          } else {
+                            return b!.createdAt!.compareTo(a.createdAt!);
+                          }
+                        });
+
+                        if (orderVM.orders.isNotEmpty) {
+                          return Stack(
+                            children: [
+                              MapWidget(order: orderVM.orders.first!),
+                              SizedBox(
+                                height: size.height * 0.35,
+                                width: size.width,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    AvatarGlow(
+                                      glowColor: greenColor,
+                                      glowRadiusFactor: 2.5,
+                                      glowCount: 8,
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 25),
+                                        child: Image.asset(
+                                          'assets/images/confirmation.png',
+                                          height: 10,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Text(
+                                  "Looking For Nearby Riders",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.w500,
+                                      backgroundColor: primaryColor2,),
+                                ),
+                              )
+                            ],
+                          );
+                        }
+
+                        return Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                context
+                                    .read<OrderProvider>()
+                                    .setDeliveryService("standard");
+
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const RequestRider(type: 'standard'),
+                                  ),
+                                );
+                              },
+                              child: const DeliveryServiceCard(
+                                image: 'ds1.png',
+                                text: 'Create request',
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  );
+                }),
               ],
             ),
           ),
-          if (!isTyping)
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 25.0, vertical: 20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // const Text(
-                  //   'Select your Preferred Delivery Service',
-                  //   style: TextStyle(
-                  //     fontSize: 16.0,
-                  //     fontWeight: FontWeight.w500,
-                  //     color: blackText,
-                  //   ),
-                  // ),
-                  // GridView(
-                  //   shrinkWrap: true,
-                  //   padding: const EdgeInsets.symmetric(vertical: 10.0),
-                  //   gridDelegate:
-                  //       const SliverGridDelegateWithFixedCrossAxisCount(
-                  //     crossAxisCount: 2,
-                  //     childAspectRatio: 1,
-                  //     crossAxisSpacing: 20.0,
-                  //     mainAxisSpacing: 20.0,
-                  //   ),
-                  //   children: [
-
-                  //     GestureDetector(
-                  //       onTap: () {
-                  //         context
-                  //             .read<OrderProvider>()
-                  //             .setDeliveryService("bulk");
-                  //         Navigator.push(
-                  //           context,
-                  //           MaterialPageRoute(
-                  //             builder: (context) =>
-                  //                 const RequestRider(type: 'bulk'),
-                  //           ),
-                  //         );
-                  //       },
-                  //       child: const DeliveryServiceCard(
-                  //         image: 'ds2.png',
-                  //         text: 'Bulk Shipping',
-                  //       ),
-                  //     ),
-                  //   ],
-                  // )
-
-                  GestureDetector(
-                    onTap: () {
-                      context
-                          .read<OrderProvider>()
-                          .setDeliveryService("standard");
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              const RequestRider(type: 'standard'),
-                        ),
-                      );
-                    },
-                    child: const DeliveryServiceCard(
-                      image: 'ds1.png',
-                      text: 'Standard Delivery',
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          Consumer<OrderProvider>(builder: (context, orderVM, _) {
-            return Column(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Text(
-                    'Tracking History',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                      color: blackText,
-                    ),
-                  ),
-                ),
-                if (isTyping) ...[
-                  ...List.generate(orderVM.searcheOrders.length, (int index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      child: TrackingCard(
-                        order: orderVM.orders[index]!,
-                      ),
-                    );
-                  }),
-                ] else ...[
-                  Consumer<OrderProvider>(builder: (context, orderVM, _) {
-                    orderVM.orders
-                        .sort((a, b) => b!.createdAt!.compareTo(a!.createdAt!));
-
-                    if (orderVM.orders.isNotEmpty) {
-                      return Column(
-                        children:
-                            List.generate(orderVM.orders.length, (int index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 8.0),
-                            child: TrackingCard(
-                              order: orderVM.orders[index]!,
-                            ),
-                          );
-                        }),
-                      );
-                    }
-                    return const Center(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 40),
-                        child: Text(
-                          'No Tracking History',
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                      ),
-                    );
-                  }),
-                ]
-              ],
-            );
-          }),
-        ],
-      ),
+      ],
     );
   }
 
@@ -299,3 +355,45 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 }
+
+
+  // const Text(
+                      //   'Select your Preferred Delivery Service',
+                      //   style: TextStyle(
+                      //     fontSize: 16.0,
+                      //     fontWeight: FontWeight.w500,
+                      //     color: blackText,
+                      //   ),
+                      // ),
+                      // GridView(
+                      //   shrinkWrap: true,
+                      //   padding: const EdgeInsets.symmetric(vertical: 10.0),
+                      //   gridDelegate:
+                      //       const SliverGridDelegateWithFixedCrossAxisCount(
+                      //     crossAxisCount: 2,
+                      //     childAspectRatio: 1,
+                      //     crossAxisSpacing: 20.0,
+                      //     mainAxisSpacing: 20.0,
+                      //   ),
+                      //   children: [
+        
+                      //     GestureDetector(
+                      //       onTap: () {
+                      //         context
+                      //             .read<OrderProvider>()
+                      //             .setDeliveryService("bulk");
+                      //         Navigator.push(
+                      //           context,
+                      //           MaterialPageRoute(
+                      //             builder: (context) =>
+                      //                 const RequestRider(type: 'bulk'),
+                      //           ),
+                      //         );
+                      //       },
+                      //       child: const DeliveryServiceCard(
+                      //         image: 'ds2.png',
+                      //         text: 'Bulk Shipping',
+                      //       ),
+                      //     ),
+                      //   ],
+                      // )

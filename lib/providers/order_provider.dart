@@ -142,8 +142,8 @@ class OrderProvider extends ChangeNotifier {
     var response = await _ordersService.createOrder(
         _addressDetails!,
         _receiverDetails!,
-        _deliveryOption, //nornal/express
-        _deliveryService, //standard/bulk
+       'normal',// _deliveryOption, //nornal/express
+       'standard',// _deliveryService, //standard/bulk
         price);
 
     dev.log("deliveryPrice:$price");
