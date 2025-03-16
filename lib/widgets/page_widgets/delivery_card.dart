@@ -11,7 +11,8 @@ class DeliveryServiceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     return Container(
-      width: size.width * 0.3,
+      // width: size.width * 0.3,
+      padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: primaryColor1.withOpacity(0.1),
         borderRadius: BorderRadius.circular(10.0),

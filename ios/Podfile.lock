@@ -1,7 +1,7 @@
 PODS:
-  - awesome_notifications (0.10.0):
+  - awesome_notifications (0.8.1):
     - Flutter
-    - IosAwnCore (~> 0.10.0)
+    - IosAwnCore (~> 0.8.0)
   - connectivity_plus (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -30,7 +30,7 @@ PODS:
     - GoogleMaps/Base
   - image_picker_ios (0.0.1):
     - Flutter
-  - IosAwnCore (0.10.0)
+  - IosAwnCore (0.8.0)
   - nb_utils (0.0.1):
     - Flutter
   - package_info_plus (0.4.5):
@@ -114,7 +114,7 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/darwin"
 
 SPEC CHECKSUMS:
-  awesome_notifications: dd5518ff1c80be03d4f1c40f04da9d9cc2a37af5
+  awesome_notifications: db394d2e061e4583ba0f738ddea611e3986cc3fb
   connectivity_plus: 18382e7311ba19efcaee94442b23b32507b20695
   device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
@@ -126,7 +126,7 @@ SPEC CHECKSUMS:
   google_maps_flutter_ios: e31555a04d1986ab130f2b9f24b6cdc861acc6d3
   GoogleMaps: 8939898920281c649150e0af74aa291c60f2e77d
   image_picker_ios: c560581cceedb403a6ff17f2f816d7fea1421fc1
-  IosAwnCore: 653786a911089012092ce831f2945cd339855a89
+  IosAwnCore: ed1b2b6d84962a758354dbacd9ce525c72ce28a9
   nb_utils: 68f1f405e47c19c92dbd4bbf4528dae7dd0fb257
   package_info_plus: c0502532a26c7662a62a356cebe2692ec5fe4ec4
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46

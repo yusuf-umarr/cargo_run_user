@@ -1,6 +1,7 @@
-
 import 'package:another_stepper/another_stepper.dart';
 import 'package:cargo_run/providers/order_provider.dart';
+import 'package:cargo_run/screens/dashboard/avatar_glow.dart';
+import 'package:cargo_run/screens/dashboard/home_screens/trip_detail.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/trip_route_page.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
@@ -21,6 +22,8 @@ class ShipmentDetailsScreen extends StatefulWidget {
 class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+
     List<StepperData> stepperData = [
       StepperData(
         title: StepperText(
@@ -68,162 +71,204 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
       appBar: appBarWidget(context, title: 'Order detail', hasBackBtn: true),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 0,
-            vertical: 20,
+          padding: const EdgeInsets.only(
+            bottom: 20,
           ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 20),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Order Id: ',
-                      style: const TextStyle(
-                        color: blackText,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      children: [
-                        TextSpan(
-                          text: widget.order!.orderId,
-                          style: const TextStyle(
-                            color: primaryColor1,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Order Status: ',
-                      style: const TextStyle(
-                        color: blackText,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      children: [
-                        TextSpan(
-                          text: widget.order!.status!.toLowerCase() == "picked"
-                              ? "ON GOING"
-                              : widget.order!.status!.toUpperCase(),
-                          style: const TextStyle(
-                            color: primaryColor1,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 25.0,
-                    vertical: 5,
-                  ),
-                  child: AnotherStepper(
-                    stepperList: stepperData,
-                    stepperDirection: Axis.vertical,
-                  ),
-                ),
-                if (widget.order!.status == "pending" ||
-                    widget.order!.status == "delivered") ...[
-                  //         Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  //   child: AppButton(
-                  //     text: 'Get help with order',
-                  //     hasIcon: false,
-                  //     textColor: Colors.white,
-                  //     backgroundColor: primaryColor1.withOpacity(0.7),
-                  //     onPressed: () {
-                  //       // Navigator.push(
-                  //       //   context,
-                  //       //   MaterialPageRoute(
-                  //       //     builder: (context) => TripRoutePage(
-                  //       //       order: widget.order!,
-                  //       //     ),
-                  //       //   ),
-                  //       // );
-                  //     },
-                  //   ),
-                  // ),
-                ] else ...[
-                  if (widget.order!.riderLocation != null)
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: AppButton(
-                        text: 'Preview',
-                        hasIcon: false,
-                        textColor: Colors.white,
-                        backgroundColor: primaryColor1.withOpacity(0.7),
-                        onPressed: () {
-                          // log("coordinate:${widget.order!.riderLocation!.lat}");
-                          // log("coordinate:${widget.order!.riderLocation!.lng}");
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TripRoutePage(
-                                order: widget.order!,
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Order Id: ',
+                          style: const TextStyle(
+                            color: blackText,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: widget.order!.orderId,
+                              style: const TextStyle(
+                                color: primaryColor1,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
-                          );
-                        },
+                          ],
+                        ),
                       ),
                     ),
-                ],
-                PaymentSummaryCard(
-                  deliveryFee: widget.order!.price != null
-                      ? widget.order!.price!.toStringAsFixed(2).toString()
-                      : "0",
-                  paymentStatus: widget.order!.paymentStatus!,
-                ),
-                if (widget.order!.paymentStatus!.toLowerCase() ==
-                    "pending") ...[
-                  if (widget.order!.status! == "picked" ||
-                          widget.order!.status! == "successful" ||
-                          widget.order!.status! == "delivered" || widget.order!.status! == "arrived"
-
-
-                      ) ...[
-                    Consumer<OrderProvider>(builder: (context, orderVM, _) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                        child: orderVM.orderStatus == OrderStatus.loading
-                            ? const LoadingButton(
-                                textColor: Colors.white,
-                                backgroundColor: primaryColor2,
-                              )
-                            : AppButton(
-                                text: 'Pay now',
-                                hasIcon: false,
-                                textColor: Colors.white,
-                                backgroundColor: primaryColor2,
-                                onPressed: () {
-                                  context.read<OrderProvider>().initiatePayment(
-                                        widget.order!.id!,
-                                        widget.order!.price.toString(),
-                                        context,
-                                      );
-                                },
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                      child: RichText(
+                        text: TextSpan(
+                          text: 'Order Status: ',
+                          style: const TextStyle(
+                            color: blackText,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          children: [
+                            TextSpan(
+                              text: widget.order!.status!.toLowerCase() ==
+                                      "picked"
+                                  ? "ON GOING"
+                                  : widget.order!.status!.toUpperCase(),
+                              style: const TextStyle(
+                                color: primaryColor1,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
                               ),
-                      );
-                    }),
-                  ]
-                ]
-              ],
-            ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    // if (widget.order!.status == "pending") ...[
+                    //   TripDetailWidget(order: widget.order!),
+                    //     AvatarGlow(
+                    //           glowColor: greenColor,
+                    //           glowRadiusFactor: 2.5,
+                    //           glowCount: 8,
+                    //           child: Padding(
+                    //             padding: const EdgeInsets.only(bottom: 25),
+                    //             child: Image.asset(
+                    //               'assets/images/confirmation.png',
+                    //               height: 30,
+                    //             ),
+                    //           ),
+                    //         ),
+
+                    // ]
+
+                    if (widget.order!.riderLocation != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                        child: AppButton(
+                          text: 'Preview',
+                          hasIcon: false,
+                          textColor: Colors.white,
+                          backgroundColor: primaryColor1.withOpacity(0.7),
+                          onPressed: () {
+                            // log("coordinate:${widget.order!.riderLocation!.lat}");
+                            // log("coordinate:${widget.order!.riderLocation!.lng}");
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TripRoutePage(
+                                  order: widget.order!,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+
+                    const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 25.0,
+                        vertical: 5,
+                      ),
+                      child: AnotherStepper(
+                        stepperList: stepperData,
+                        stepperDirection: Axis.vertical,
+                      ),
+                    ),
+
+                    PaymentSummaryCard(
+                      deliveryFee: widget.order!.price != null
+                          ? widget.order!.price!.toStringAsFixed(2).toString()
+                          : "0",
+                      paymentStatus: widget.order!.paymentStatus!,
+                    ),
+                    if (widget.order!.paymentStatus!.toLowerCase() ==
+                        "pending") ...[
+                      if (widget.order!.status! == "picked" ||
+                          widget.order!.status! == "successful" ||
+                          widget.order!.status! == "delivered" ||
+                          widget.order!.status! == "arrived") ...[
+                        Consumer<OrderProvider>(builder: (context, orderVM, _) {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 25.0),
+                            child: orderVM.orderStatus == OrderStatus.loading
+                                ? const LoadingButton(
+                                    textColor: Colors.white,
+                                    backgroundColor: primaryColor2,
+                                  )
+                                : AppButton(
+                                    text: 'Pay now',
+                                    hasIcon: false,
+                                    textColor: Colors.white,
+                                    backgroundColor: primaryColor2,
+                                    onPressed: () {
+                                      context
+                                          .read<OrderProvider>()
+                                          .initiatePayment(
+                                            widget.order!.id!,
+                                            widget.order!.price.toString(),
+                                            context,
+                                          );
+                                    },
+                                  ),
+                          );
+                        }),
+                      ]
+                    ]
+                  ],
+                ),
+              ),
+              if (widget.order!.status == "pending") ...[
+                TripDetailWidget(order: widget.order!),
+                SizedBox(
+                  height: size.height * 0.4,
+                  width: size.width,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AvatarGlow(
+                        glowColor: greenColor,
+                        glowRadiusFactor: 2.5,
+                        glowCount: 8,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 25),
+                          child: Image.asset(
+                            'assets/images/confirmation.png',
+                            height: 30,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                // Align(
+                //   alignment: Alignment.topCenter,
+                //   child: AvatarGlow(
+                //     glowColor: greenColor,
+                //     glowRadiusFactor: 2.5,
+                //     glowCount: 8,
+                //     child: Padding(
+                //       padding: const EdgeInsets.only(bottom: 25),
+                //       child: Image.asset(
+                //         'assets/images/confirmation.png',
+                //         height: 30,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+              ]
+            ],
           ),
         ),
       ),

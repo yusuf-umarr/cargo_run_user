@@ -7,7 +7,8 @@ import 'package:provider/provider.dart';
 
 class CargoRun extends StatelessWidget {
   final String? usedApp;
-  const CargoRun({super.key, this.usedApp});
+  final String? token;
+  const CargoRun({super.key, this.usedApp, this.token,});
 
   static GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -22,14 +23,15 @@ class CargoRun extends StatelessWidget {
             scaffoldBackgroundColor: Colors.white,
           ),
           debugShowCheckedModeBanner: false,
-          home: MyWidget(usedApp: usedApp)),
+          home: MyWidget(usedApp: usedApp, token:token),),
     );
   }
 }
 
 class MyWidget extends StatelessWidget {
   final String? usedApp;
-  const MyWidget({super.key, this.usedApp});
+  final String? token;
+  const MyWidget({super.key, this.usedApp, this.token,});
 
   @override
   Widget build(BuildContext context) {

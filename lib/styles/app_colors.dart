@@ -6,3 +6,5 @@ const Color greyText = Color(0xFF828282);
 const Color blackText = Color(0xFF050504);
 const Color redText = Color(0xFFFF0000);
 const Color greenText = Color(0xFF6BBC3B);
+const Color greenColor = Color(0xff0BC333);
+
