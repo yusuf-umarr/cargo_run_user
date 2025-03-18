@@ -273,15 +273,19 @@ class OrderProvider extends ChangeNotifier {
   }
 
   Future<void> getAvailableDrivers(dynamic data) async {
-    dev.log("getAvailableDrivers  called==$data==");
-    if (data is List) {
-      _availableDriverModel = data
-          .map((e) => AvailableDriverModel.fromJson(e as Map<String, dynamic>))
-          .toList();
-    } else if (data is Map<String, dynamic>) {
-      _availableDriverModel = [AvailableDriverModel.fromJson(data)];
+    // dev.log("getAvailableDrivers  called==$data==");
+    try {
+      if (data is List) {
+        _availableDriverModel = data
+            .map(
+                (e) => AvailableDriverModel.fromJson(e as Map<String, dynamic>))
+            .toList();
+      } else if (data is Map<String, dynamic>) {
+        _availableDriverModel = [AvailableDriverModel.fromJson(data)];
+      }
+    } catch (e) {
+      dev.log("get drivers error here ----:$e");
     }
-
     dev.log('_availableDriverModel:$_availableDriverModel');
     notifyListeners();
   }
