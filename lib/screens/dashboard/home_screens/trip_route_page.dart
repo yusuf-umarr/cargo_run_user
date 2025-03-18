@@ -46,7 +46,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
   CameraPosition? cposition;
 
   void getLocation() async {
-    Position position = await determinePosition();
+    Position position = await determinePosition(); 
     debugPrint('position: $position');
     _initialPosition = LatLng(position.latitude, position.longitude);
     final CameraPosition kGooglePlex = CameraPosition(

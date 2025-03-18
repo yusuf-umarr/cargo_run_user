@@ -50,14 +50,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
     log("_connectSocket() started....");
 
     try {
-      socket = io.io(
-          Env.endpointUrlSocket,
-          <String, dynamic>{
-            "transports": ["websocket"],
-            "autoConnect": false,
-            'forceNew': true,
-            // 'Connection', 'upgrade'
-          });
+      socket = io.io(Env.endpointUrlSocket, <String, dynamic>{
+        "transports": ["websocket"],
+        "autoConnect": false,
+        'forceNew': true,
+        // 'Connection', 'upgrade'
+      });
 
       socket!.connect();
       socket!.onConnect((data) {
@@ -121,6 +119,19 @@ class _BottomNavBarState extends State<BottomNavBar> {
               ]);
         } catch (e) {
           log("notifications error:$e");
+        }
+      });
+      //get available rider in user's coordinate
+      socket!.on("location-${sharedPrefs.userId}", (data) async {
+        // log("get riders in my proximity:${data}");
+
+      
+        //
+        try {
+          Provider.of<OrderProvider>(context, listen: false)
+            .getAvailableDrivers(data);
+        } catch (e) {
+          log("get riders error:$e");
         }
       });
 

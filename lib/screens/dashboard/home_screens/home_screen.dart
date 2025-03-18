@@ -4,10 +4,12 @@ import 'package:cargo_run/screens/dashboard/home_screens/notification_screen.dar
 import 'package:cargo_run/screens/dashboard/home_screens/standard/request_rider.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/map_widget.dart';
 import 'package:cargo_run/styles/app_colors.dart';
+import 'package:cargo_run/utils/location.dart';
 import 'package:cargo_run/utils/shared_prefs.dart';
 import 'package:cargo_run/widgets/page_widgets/delivery_card.dart';
 import 'package:cargo_run/widgets/page_widgets/tracking_card.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
 
@@ -40,7 +42,18 @@ class _HomeScreenState extends State<HomeScreen> {
         _ => 'Good Evening,',
       };
     });
+    getPosition();
     super.initState();
+  }
+
+  void getPosition() async {
+    Position position = await determinePosition();
+    if (mounted) {
+      context.read<OrderProvider>().setLocationCoordinate(
+            lat: position.latitude,
+            long: position.longitude,
+          );
+    }
   }
 
   @override
@@ -109,10 +122,12 @@ class _HomeScreenState extends State<HomeScreen> {
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const NotificationScreen(),),);
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const NotificationScreen(),
+                              ),
+                            );
                           },
                           child: const Icon(
                             Iconsax.notification,
@@ -211,7 +226,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         if (!isTyping)
           Padding(
-            padding: const EdgeInsets.only(top: 40, ),
+            padding: const EdgeInsets.only(
+              top: 40,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -264,10 +281,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Text(
                                   "Looking For Nearby Riders",
                                   style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16.0,
-                                      fontWeight: FontWeight.w500,
-                                      backgroundColor: primaryColor2,),
+                                    color: Colors.white,
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.w500,
+                                    backgroundColor: primaryColor2,
+                                  ),
                                 ),
                               )
                             ],

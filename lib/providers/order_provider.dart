@@ -1,5 +1,6 @@
 import 'dart:developer' as dev;
 import 'package:cargo_run/models/distance_model.dart';
+import 'package:cargo_run/models/driver_model.dart';
 import 'package:cargo_run/models/notification_model.dart';
 import 'package:cargo_run/models/order.dart';
 import 'package:cargo_run/models/places_model.dart';
@@ -51,6 +52,10 @@ class OrderProvider extends ChangeNotifier {
 
   List<NotificationData> get notificationModel => _notificationModel;
   List<NotificationData> _notificationModel = [];
+
+  List<AvailableDriverModel> _availableDriverModel = [];
+
+  List<AvailableDriverModel> get availableDriverModel => _availableDriverModel;
 
   AddressDetails? _addressDetails;
 
@@ -104,6 +109,21 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setLocationCoordinate({required double lat, required double long}) {
+    if (_socket != null) {
+      _socket!.emit(
+        'location',
+        {
+          "lat": lat,
+          "lng": long,
+          "userId": sharedPrefs.userId,
+        },
+      );
+    }
+
+    // dev.log("lat:$lat ---long:$long --userId:${sharedPrefs.userId}");
+  }
+
   void setDeliveryService(String service) {
     _deliveryService = service;
 
@@ -142,8 +162,8 @@ class OrderProvider extends ChangeNotifier {
     var response = await _ordersService.createOrder(
         _addressDetails!,
         _receiverDetails!,
-       'normal',// _deliveryOption, //nornal/express
-       'standard',// _deliveryService, //standard/bulk
+        'normal', // _deliveryOption, //nornal/express
+        'standard', // _deliveryService, //standard/bulk
         price);
 
     dev.log("deliveryPrice:$price");
@@ -249,6 +269,20 @@ class OrderProvider extends ChangeNotifier {
       //
     }
 
+    notifyListeners();
+  }
+
+  Future<void> getAvailableDrivers(dynamic data) async {
+    dev.log("getAvailableDrivers  called==$data==");
+    if (data is List) {
+      _availableDriverModel = data
+          .map((e) => AvailableDriverModel.fromJson(e as Map<String, dynamic>))
+          .toList();
+    } else if (data is Map<String, dynamic>) {
+      _availableDriverModel = [AvailableDriverModel.fromJson(data)];
+    }
+
+    dev.log('_availableDriverModel:$_availableDriverModel');
     notifyListeners();
   }
 
