@@ -1,3 +1,4 @@
+import 'package:cargo_run/providers/auth_provider.dart';
 import 'package:cargo_run/providers/auth_token_provider.dart';
 import 'package:cargo_run/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:cargo_run/screens/onboard/onboard_screen.dart';
@@ -22,7 +23,7 @@ class _AuthCheckScreenState extends State<AuthCheckScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder<Map<String, dynamic>>(
-        stream: Provider.of<AuthTokenProvider>(context, listen: false)
+        stream: Provider.of<AuthProvider>(context, listen: false)
             .validateToken()
             .asStream(),
         builder: (context, snapshot) {

@@ -42,6 +42,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
     _connectSocket();
     Provider.of<OrderProvider>(context, listen: false).getOrders();
     Provider.of<OrderProvider>(context, listen: false).getNotification();
+    Provider.of<OrderProvider>(context, listen: false).getPrice()
+  ;
     super.initState();
   }
 
@@ -125,11 +127,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
       socket!.on("location-${sharedPrefs.userId}", (data) async {
         // log("get riders in my proximity:${data}");
 
-      
         //
         try {
-          Provider.of<OrderProvider>(context, listen: false)
-            .getAvailableDrivers(data);
+          if (mounted) {
+           Future.delayed(const Duration(seconds: 1),(){
+             context.read<OrderProvider>()
+                .getAvailableDrivers(data);
+           });
+          }
         } catch (e) {
           log("get riders error:$e");
         }

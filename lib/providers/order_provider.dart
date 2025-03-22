@@ -53,6 +53,9 @@ class OrderProvider extends ChangeNotifier {
   List<NotificationData> get notificationModel => _notificationModel;
   List<NotificationData> _notificationModel = [];
 
+  String? get priceModel => _priceModel;
+  String? _priceModel;
+
   List<AvailableDriverModel> _availableDriverModel = [];
 
   List<AvailableDriverModel> get availableDriverModel => _availableDriverModel;
@@ -71,12 +74,16 @@ class OrderProvider extends ChangeNotifier {
   // List<Suggestion> suggestions = [];
   List<Suggestion> dSearchResults = [];
 
+  List availableDriverList =[];
+
   DistanceModel? distanceModel;
 
+  io.Socket? get socket => _socket;
   io.Socket? _socket;
 
   setSocketIo(socket) {
     _socket = socket;
+    dev.log("_socket:$_socket");
   }
 
   void setOrderStatus(OrderStatus status) {
@@ -121,7 +128,7 @@ class OrderProvider extends ChangeNotifier {
       );
     }
 
-    // dev.log("lat:$lat ---long:$long --userId:${sharedPrefs.userId}");
+    dev.log("lat:$lat ---long:$long --userId:${sharedPrefs.userId}");
   }
 
   void setDeliveryService(String service) {
@@ -253,16 +260,12 @@ class OrderProvider extends ChangeNotifier {
     if (response.success) {
       setOrderStatus(OrderStatus.success);
 
-      //_notificationModel
-      //NotificationData
-
       List data = response.data['data'];
       List<NotificationData> fetched =
           data.map((e) => NotificationData.fromJson(e)).toList();
       _notificationModel = fetched;
       notifyListeners();
 
-      // dev.log("notification===:${_notificationModel}");
     } else {
       setOrderStatus(OrderStatus.failed);
       log("notification  error :${response.data}");
@@ -271,22 +274,47 @@ class OrderProvider extends ChangeNotifier {
 
     notifyListeners();
   }
+Future<void> getPrice() async {
+  var response = await _ordersService.getPrice();
+  if (response.success) {
+    setOrderStatus(OrderStatus.success);
+      _priceModel =response.data['data'][0]['price'].toString();
+
+    notifyListeners();
+  } else {
+    setOrderStatus(OrderStatus.failed);
+  }
+
+  notifyListeners();
+}
+
 
   Future<void> getAvailableDrivers(dynamic data) async {
-    // dev.log("getAvailableDrivers  called==$data==");
-    try {
-      if (data is List) {
-        _availableDriverModel = data
-            .map(
-                (e) => AvailableDriverModel.fromJson(e as Map<String, dynamic>))
-            .toList();
-      } else if (data is Map<String, dynamic>) {
-        _availableDriverModel = [AvailableDriverModel.fromJson(data)];
-      }
-    } catch (e) {
-      dev.log("get drivers error here ----:$e");
-    }
-    dev.log('_availableDriverModel:$_availableDriverModel');
+
+    availableDriverList = data['data'];
+
+        // dev.log(" _availableDriverModel getAvailableDrivers  ${availableDriverList}==");
+
+        // availableDriverList.forEach((x){
+          
+        // });
+
+
+
+    // try {
+    //   if (data is List) {
+    //     _availableDriverModel = data
+    //         .map(
+    //             (e) => AvailableDriverModel.fromJson(e as Map<String, dynamic>))
+    //         .toList();
+    //   } else if (data is Map<String, dynamic>) {
+    //     _availableDriverModel = [AvailableDriverModel.fromJson(data)];
+    //   }
+    // } catch (e) {
+    //   dev.log("get drivers error here ----:$e");
+    // }
+    // dev.log(
+    //     '_availableDriverModel- locationCoord:${_availableDriverModel[0].locationCoord}');
     notifyListeners();
   }
 

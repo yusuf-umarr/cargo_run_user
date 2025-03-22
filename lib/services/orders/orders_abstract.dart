@@ -20,6 +20,7 @@ abstract class OrdersService {
     String orderId,
   );
   Future<ApiResp<dynamic>> getNotification();
+  Future<ApiResp<dynamic>> getPrice();
 
   Future<Either<ErrorResponse, ApiResponse>> initializePayment({
     required String orderId,
@@ -27,6 +28,7 @@ abstract class OrdersService {
   });
 
   Future<Either<ErrorResponse, ApiResponse>> getOrders();
+  // Future<Either<ErrorResponse, ApiResponse>> getPrice();
 
   Future<Either<ErrorResponse, ApiResponse>> deleteOrder({
     required String orderId,

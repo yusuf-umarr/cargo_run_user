@@ -137,6 +137,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         password: _passwordController.text,
                                       );
                                       sharedPrefs.email = _emailController.text;
+                                      sharedPrefs.password = _passwordController.text;
                                       if (watch.loadingState ==
                                           LoadingState.success) {
                                         navigate();

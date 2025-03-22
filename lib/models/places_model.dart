@@ -3,14 +3,14 @@ class SearchPlacesModel {
 
   SearchPlacesModel({required this.suggestions});
 
- factory SearchPlacesModel.fromJson(Map<String, dynamic> json) {
-  return SearchPlacesModel(
-    suggestions: (json['suggestions'] as List<dynamic>?)
-            ?.map((x) => Suggestion.fromJson(x))
-            .toList() ??
-        [],
-  );
-}
+  factory SearchPlacesModel.fromJson(Map<String, dynamic> json) {
+    return SearchPlacesModel(
+      suggestions: (json['suggestions'] as List<dynamic>?)
+              ?.map((x) => Suggestion.fromJson(x))
+              .toList() ??
+          [],
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -98,14 +98,15 @@ class PredictionText {
 
 class StructuredFormat {
   final MainText mainText;
-  final SecondaryText secondaryText;
+  final dynamic secondaryText;
 
   StructuredFormat({required this.mainText, required this.secondaryText});
 
   factory StructuredFormat.fromJson(Map<String, dynamic> json) {
     return StructuredFormat(
-      mainText: MainText.fromJson(json['mainText']??""),
-      secondaryText: SecondaryText.fromJson(json['secondaryText'] ??""),
+      mainText: MainText.fromJson(json['mainText'] ?? ""),
+      secondaryText:
+          json['secondaryText'],
     );
   }
 
@@ -124,16 +125,14 @@ class MainText {
   MainText({required this.text, required this.matches});
 
   factory MainText.fromJson(Map<String, dynamic> json) {
-  return MainText(
-    text: json['text'] ?? '',
-    matches: (json['matches'] as List<dynamic>?)
-            ?.map((x) => TextMatch.fromJson(x))
-            .toList() ??
-        [],
-  );
-}
-
-
+    return MainText(
+      text: json['text'] ?? '',
+      matches: (json['matches'] as List<dynamic>?)
+              ?.map((x) => TextMatch.fromJson(x))
+              .toList() ??
+          [],
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -149,15 +148,15 @@ class SecondaryText {
 
   SecondaryText({required this.text, required this.matches});
 
-factory SecondaryText.fromJson(Map<String, dynamic> json) {
-  return SecondaryText(
-    text: json['text'] ?? '',
-    matches: (json['matches'] as List<dynamic>?)
-            ?.map((x) => TextMatch.fromJson(x))
-            .toList() ??
-        [],
-  );
-}
+  factory SecondaryText.fromJson(Map<String, dynamic> json) {
+    return SecondaryText(
+      text: json['text'] ?? '',
+      matches: (json['matches'] as List<dynamic>?)
+              ?.map((x) => TextMatch.fromJson(x))
+              .toList() ??
+          [],
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {

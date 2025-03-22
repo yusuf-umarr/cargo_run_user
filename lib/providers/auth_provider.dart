@@ -8,6 +8,7 @@ import 'package:nb_utils/nb_utils.dart';
 
 import '/services/authentication/auth_abstract.dart';
 import '/services/service_locator.dart';
+import 'dart:developer' as dev;
 
 enum LoadingState { initial, loading, success, error }
 
@@ -15,6 +16,9 @@ class AuthProvider extends ChangeNotifier {
   final AuthService _authService = serviceLocator<AuthService>();
   LoadingState _loadingState = LoadingState.initial;
   String _errorMessage = '';
+
+  String? _token;
+  String? get token => _token;
 
   LoadingState get loadingState => _loadingState;
   String get errorMessage => _errorMessage;
@@ -179,6 +183,47 @@ class AuthProvider extends ChangeNotifier {
     } catch (e) {
       debugPrint("response:$e");
       return null;
+    }
+  }
+
+  Future<Map<String, dynamic>> validateToken() async {
+    try {
+      dev.log("validateToken called");
+      var response = await _authService.loginUser(
+        email: sharedPrefs.email,
+        password: sharedPrefs.password,
+      );
+
+      var res;
+      response.fold((error) {
+        setLoadingState(LoadingState.error);
+        dev.log("error login called");
+        res =false;
+
+        return {
+          "res": false,
+        };
+      }, (success) {
+        dev.log("success login called");
+
+        sharedPrefs.isLoggedIn = true;
+        setLoadingState(LoadingState.success);
+           res =true;
+        return {
+          "res": true,
+        };
+        
+      });
+      dev.log("none login called");
+
+      return {
+        "res": res,
+      };
+    } catch (e) {
+      debugPrint('Error validating token: $e');
+      return {
+        "res": false,
+      };
     }
   }
 }

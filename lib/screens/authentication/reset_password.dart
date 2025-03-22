@@ -25,7 +25,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => const SuccessScreen(
-         successRedirectRoute: SuccessRedirectRoute.forgotPass,
+          successRedirectRoute: SuccessRedirectRoute.forgotPass,
         ),
       ),
     );
@@ -45,7 +45,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(120),
-        child: appBarWidget(context, title: 'Forgot password'),
+        child:
+            appBarWidget(context, title: 'Forgot password', hasBackBtn: true),
       ),
       body: SafeArea(
         child: Padding(
@@ -86,13 +87,13 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                           backgroundColor: primaryColor1,
                           textColor: Colors.white,
                         )
-                      :  AppButton(
+                      : AppButton(
                           text: 'Continue',
                           hasIcon: true,
                           backgroundColor: primaryColor1,
                           textColor: Colors.white,
                           onPressed: () async {
-                                FocusScope.of(context).unfocus();
+                            FocusScope.of(context).unfocus();
                             if (_formKey.currentState!.validate()) {
                               await watch.resetPassword(
                                 password: _passwordController.text,

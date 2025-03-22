@@ -62,7 +62,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       backgroundColor: Colors.white,
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(120),
-        child: appBarWidget(context, title: 'Create Account'),
+        child: appBarWidget(context, title: 'Create Account', hasBackBtn: true),
       ),
       body: SafeArea(
         child: Padding(

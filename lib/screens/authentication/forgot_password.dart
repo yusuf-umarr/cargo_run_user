@@ -43,7 +43,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(120),
-        child: appBarWidget(context, title: 'Forgot password'),
+        child: appBarWidget(context, title: 'Forgot password',hasBackBtn: true),
       ),
       body: SafeArea(
         child: Padding(

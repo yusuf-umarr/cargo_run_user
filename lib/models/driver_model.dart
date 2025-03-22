@@ -12,7 +12,7 @@ class AvailableDriverModel {
   int? v;
   Vehicle? vehicle;
   Guarantors? guarantors;
-  LocationCoord? locationCoord;
+  dynamic locationCoord;
   double? distance;
 
   AvailableDriverModel({
@@ -48,7 +48,8 @@ class AvailableDriverModel {
       v: json["__v"] ?? 0,
       vehicle: json["vehicle"] != null ? Vehicle.fromJson(json["vehicle"]) : null,
       guarantors: json["guarantors"] != null ? Guarantors.fromJson(json["guarantors"]) : null,
-      locationCoord: json["locationCoord"] != null ? LocationCoord.fromJson(json["locationCoord"]) : null,
+      locationCoord: json["locationCoord"] ??{},
+      // locationCoord: json["locationCoord"] != null ? LocationCoord.fromJson(json["locationCoord"]) : null,
       distance: (json["distance"] ?? 0.0).toDouble(),
     );
   }

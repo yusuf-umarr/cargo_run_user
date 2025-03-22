@@ -11,6 +11,7 @@ class SharedPrefs {
   String get token => _sharedPrefs.getString('token') ?? "";
   String get userId => _sharedPrefs.getString('userId') ?? "";
   String get email => _sharedPrefs.getString('email') ?? "";
+  String get password => _sharedPrefs.getString('password') ?? "";
   String get phone => _sharedPrefs.getString('phone') ?? "";
   String get fullName => _sharedPrefs.getString('fullName') ?? "";
   bool get isLoggedIn => _sharedPrefs.getBool('isLoggedIn') ?? false;
@@ -32,6 +33,9 @@ class SharedPrefs {
 
   set email(String value) {
     _sharedPrefs.setString('email', value);
+  }
+  set password(String value) {
+    _sharedPrefs.setString('password', value);
   }
 
   set phone(String value) {

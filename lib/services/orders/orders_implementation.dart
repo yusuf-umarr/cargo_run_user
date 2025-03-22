@@ -16,6 +16,8 @@ import '/models/api_response.dart';
 import '/models/order.dart';
 import '/services/orders/orders_abstract.dart';
 
+import 'dart:developer' as dev;
+
 class OrdersImpl implements OrdersService {
   @override
   Future<Either<ErrorResponse, ApiResponse>> deleteOrder(
@@ -46,6 +48,7 @@ class OrdersImpl implements OrdersService {
       return Left(ErrorResponse(message: 'Error: $e'));
     }
   }
+
 
   @override
   Future<ApiResp<dynamic>> createOrder(
@@ -164,6 +167,45 @@ class OrdersImpl implements OrdersService {
         url,
         headers: headers,
       );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var jsonResponse = jsonDecode(response.body);
+        return ApiResp<dynamic>(
+          success: true,
+          data: jsonResponse,
+          message: "successful",
+        );
+      } else {
+        var jsonResponse = jsonDecode(response.body);
+        return ApiResp<dynamic>(
+          success: false,
+          data: jsonResponse,
+          message: "error",
+        );
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return ApiResp<dynamic>(
+        success: false,
+        data: "$e",
+        message: " error",
+      );
+    }
+  }
+  @override
+  Future<ApiResp<dynamic>> getPrice() async {
+    String token = sharedPrefs.token;
+   var url = Uri.parse('${Env.endpointUrl}/cargo-price');
+
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    try {
+      final response = await http.get(
+        url,
+        headers: headers,
+      );
+      // dev.log("response price:${response.body}");
       if (response.statusCode == 200 || response.statusCode == 201) {
         var jsonResponse = jsonDecode(response.body);
         return ApiResp<dynamic>(

@@ -9,7 +9,7 @@ class AppProvider {
   //The providers for dependency injection and state management will be added here
   //as the app will use MultiProvider
   static final providers = <SingleChildWidget>[
-     ChangeNotifierProvider(create: (_) => AuthTokenProvider()),
+    //  ChangeNotifierProvider(create: (_) => AuthTokenProvider()),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => OrderProvider()),
         ChangeNotifierProvider(create: (_) => BottomNavProvider()),
