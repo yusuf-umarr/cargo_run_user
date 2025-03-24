@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:developer';
 
 import 'package:cargo_run/screens/dashboard/home_screens/bulk/bulk_delivery_details_screen.dart';
@@ -105,21 +107,14 @@ class _RequestRiderState extends State<RequestRider> {
                     backgroundColor: primaryColor1,
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        watch.addAdrressDetails(
-                            _houseNoController.text,
-                            _pickupAddressController.text,
-                            _contactNumberController.text,
-                            _latController.text,
-                            _longController.text);
-                        if (widget.type == 'bulk') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  const BulkDeliveryDetailsScreen(),
-                            ),
-                          );
-                        } else {
+                        watch
+                            .addAdrressDetails(
+                                _houseNoController.text,
+                                _pickupAddressController.text,
+                                _contactNumberController.text,
+                                _latController.text,
+                                _longController.text)
+                            .then((x) {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -127,7 +122,7 @@ class _RequestRiderState extends State<RequestRider> {
                                   const DeliveryDetailsScreen(),
                             ),
                           );
-                        }
+                        });
                       }
                     },
                   );

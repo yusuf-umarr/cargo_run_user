@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:developer';
+import 'dart:developer' as dev;
 // import 'package:auto_route/auto_route.dart';
 import 'package:cargo_run/providers/order_provider.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/standard/delivery_summary.dart';
@@ -55,21 +56,30 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
     super.dispose();
   }
 
-  void navigate() async {
-    await context.read<OrderProvider>().getDistancePrice();
-    if (context.read<OrderProvider>().distanceMeters != null) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => DeliverySummary(
-            isExpressDelivery: expressDelivery,
+  void navigate(OrderProvider orderVM) async {
+    await context
+        .read<OrderProvider>()
+        .calculateDistance(
+          sourceLat: orderVM.addressDetails!.lat!.toDouble(),
+          sourceLng: orderVM.addressDetails!.lng!.toDouble(),
+          destinationLat: orderVM.receiverDetails!.lat!.toDouble(),
+          destinationLng: orderVM.receiverDetails!.lng!.toDouble(),
+        )
+        .then((x) {
+      if (context.read<OrderProvider>().distanceMeters != null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DeliverySummary(
+              isExpressDelivery: expressDelivery,
+            ),
           ),
-        ),
-      );
-    } else {
-      util.toast("Route could not be fetched! Please try again");
-      log("price could be fteched");
-    }
+        );
+      } else {
+        util.toast("Route could not be fetched! Please try again");
+        log("price could be fteched");
+      }
+    });
   }
 
   void showSnackBar(String message) {
@@ -246,7 +256,7 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                                   _longController.text,
                                 );
 
-                                navigate();
+                                navigate(watch);
                                 // await watch.placeOrder().then((value) => {
                                 //       if (watch.orderStatus ==
                                 //           OrderStatus.pending)
@@ -334,6 +344,11 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                                 _longController.text = orderVM.locationFromAddr!
                                     .results![0].geometry!.location!.lng
                                     .toString();
+
+                                dev.log(
+                                    "des _latController.text:${_latController.text}");
+                                dev.log(
+                                    "des _longController.text:${_longController.text}");
 
                                 setState(() {});
                                 if (mounted) {

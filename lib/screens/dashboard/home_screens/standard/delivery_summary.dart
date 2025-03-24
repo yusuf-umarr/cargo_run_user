@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:developer' as dev;
 import 'package:cargo_run/screens/alerts/account_creation_success.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/utils/shared_prefs.dart';
@@ -48,6 +49,9 @@ class _DeliverySummaryState extends State<DeliverySummary> {
 
   @override
   Widget build(BuildContext context) {
+    final OrderProvider _orderVM = context.watch<OrderProvider>();
+
+    dev.log("show distance in meter:${_orderVM.distanceMeters}");
     final Size size = MediaQuery.of(context).size;
     final orderVM = context.watch<OrderProvider>();
     return Scaffold(
@@ -144,6 +148,8 @@ class _DeliverySummaryState extends State<DeliverySummary> {
       required int pricePerMeters}) {
     double subTotal = 0.0;
 
+    dev.log("get---distanceInMeters${distanceInMeters}");
+
     try {
       double total =
           pricePerMeters * double.parse(removeMiSuffix(distanceInMeters));
@@ -168,7 +174,7 @@ class _DeliverySummaryState extends State<DeliverySummary> {
       required int pricePerMeters}) {
     double total = 0;
     try {
-      log("distanceInMeters:$distanceInMeters");
+      log("distanceInMeters--:$distanceInMeters");
 
       total = pricePerMeters * double.parse(removeMiSuffix(distanceInMeters));
       return formatAmount(total.toString());
@@ -215,21 +221,20 @@ class _DeliverySummaryState extends State<DeliverySummary> {
           rowItem(
               title: 'Total',
               value:
-                  '₦ ${getTotalPrice(distanceInMeters: order.distanceModel!.routes![0].distanceMeters.toString(), isExpressDelivery: widget.isExpressDelivery, pricePerMeters: int.parse(order.priceModel!))}'),
+                  '₦ ${getTotalPrice(distanceInMeters: order.distanceMeters.toString(), isExpressDelivery: widget.isExpressDelivery, pricePerMeters: int.parse(order.priceModel!))}'),
           const SizedBox(height: 10),
           widget.isExpressDelivery
               ? rowItem(
                   title: 'Express Delivery\nCharge(10%)',
                   value:
-                      '₦${getTenPercent(distanceInMeters: order.distanceModel!.routes![0].distanceMeters.toString(), pricePerMeters: int.parse(order.priceModel!))}')
+                      '₦${getTenPercent(distanceInMeters: order.distanceMeters.toString(), pricePerMeters: int.parse(order.priceModel!))}')
               : const SizedBox.shrink(),
           const SizedBox(height: 10),
 
           rowItem(
               title: 'Subtotal',
               value: '₦ ${getPrices(
-                distanceInMeters:
-                    order.distanceModel!.routes![0].distanceMeters.toString(),
+                distanceInMeters: order.distanceMeters.toString(),
                 isExpressDelivery: widget.isExpressDelivery,
                 pricePerMeters: int.parse(order.priceModel!),
               )}'),

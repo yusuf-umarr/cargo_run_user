@@ -14,6 +14,7 @@ import 'package:socket_io_client/socket_io_client.dart' as io;
 import '/services/service_locator.dart';
 import '/services/orders/orders_abstract.dart';
 import '/utils/shared_prefs.dart';
+import 'dart:math';
 
 enum OrderStatus {
   initial,
@@ -31,6 +32,7 @@ class OrderProvider extends ChangeNotifier {
   List<Order?> _orders = [];
 
   List searcheOrders = [];
+  static const double earthRadiusKm = 6371.0;
 
   // String _distancePrice = '';
   String _category = '';
@@ -77,8 +79,8 @@ class OrderProvider extends ChangeNotifier {
 
   List availableDriverList = [];
 
-  DistanceModel? distanceModel;
-  dynamic distanceMeters;
+  // DistanceModel? distanceModel;
+  double? distanceMeters;
 
   LocationFromAddressModel? locationFromAddr;
 
@@ -101,13 +103,13 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addAdrressDetails(
+  Future<void> addAdrressDetails(
     String houseNo,
     String pickupAddress,
     String contactNumber,
     String lat,
     String long,
-  ) {
+  ) async {
     _addressDetails = AddressDetails(
       // houseNumber: int.parse(houseNo),
       landMark: pickupAddress,
@@ -115,8 +117,8 @@ class OrderProvider extends ChangeNotifier {
       lat: double.parse(lat),
       lng: double.parse(long),
     );
-    // log("_addressDetails:${_addressDetails}");
-    // log("_addressDetails:${_addressDetails?.lat}");
+    log("_addressDetails:${_addressDetails}");
+    log("_addressDetails:${_addressDetails?.lat}");
     notifyListeners();
   }
 
@@ -229,57 +231,48 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getDistancePrice() async {
-    setOrderStatus(OrderStatus.loading);
-    try {
-      var response = await _ordersService.getDistance(
-        sourceLatLng: LatLng(
-            _addressDetails!.lat!.toDouble(), _addressDetails!.lng!.toDouble()),
-        destinationLatLng: LatLng(
-          _receiverDetails!.lat!.toDouble(),
-          _receiverDetails!.lng!.toDouble(),
-        ),
-      );
-      if (response.success) {
-        setOrderStatus(OrderStatus.success);
+  // Future<void> getDistancePrice() async {
+  //   setOrderStatus(OrderStatus.loading);
+  //   try {
+  //     var response = await _ordersService.getDistance(
+  //       sourceLatLng: LatLng(
+  //           _addressDetails!.lat!.toDouble(), _addressDetails!.lng!.toDouble()),
+  //       destinationLatLng: LatLng(
+  //         _receiverDetails!.lat!.toDouble(),
+  //         _receiverDetails!.lng!.toDouble(),
+  //       ),
+  //     );
+  //     if (response.success) {
+  //       setOrderStatus(OrderStatus.success);
 
-        // distanceModel = response.data;
+  //       // distanceModel = response.data;
 
-        // dev.log("distanceModel:${response.data}");
+  //       // dev.log("distanceModel:${response.data}");
 
-        distanceModel = DistanceModel.fromJson(response.data);
+  //       distanceModel = DistanceModel.fromJson(response.data);
 
-        dev.log("_distancePrice:-1--${distanceModel!.routes![0]}");
-        distanceMeters = distanceModel!.routes![0].distanceMeters;
-      } else {
-        setOrderStatus(OrderStatus.failed);
-        log("_distancePrice  error :${response.data}");
-        //
-      }
-    } catch (e) {
-      log("_distancePrice  catch error :$e");
-    }
-    notifyListeners();
-  }
+  //       dev.log("_distancePrice:-1--${distanceModel!.routes![0]}");
+  //       distanceMeters = distanceModel!.routes![0].distanceMeters;
+  //     } else {
+  //       setOrderStatus(OrderStatus.failed);
+  //       log("_distancePrice  error :${response.data}");
+  //       //
+  //     }
+  //   } catch (e) {
+  //     log("_distancePrice  catch error :$e");
+  //   }
+  //   notifyListeners();
+  // }
 
   Future<void> locationFromAddress({required String addr}) async {
     // setOrderStatus(OrderStatus.loading);
     try {
       var response = await _ordersService.locationFromAddress(address: addr);
       if (response.success) {
-        // setOrderStatus(OrderStatus.success);
-
-        // distanceModel = response.data;
-
         locationFromAddr = LocationFromAddressModel.fromJson(response.data);
 
         notifyListeners();
         dev.log("locationFromAddr:$locationFromAddr");
-
-        // dev.log(
-        //     "locationFromAddr:-lat--${locationFromAddr!.results[0].geometry.location.lat}");
-        // dev.log(
-        //     "locationFromAddr:-long--${locationFromAddr!.results[0].geometry.location.lng}");
       } else {
         log("location er  error :${response.data}");
       }
@@ -410,5 +403,45 @@ class OrderProvider extends ChangeNotifier {
 
     searcheOrders = suggestions;
     notifyListeners();
+  }
+
+  // Helper method to convert degrees to radians
+  static double _toRadians(double degree) {
+    return degree * pi / 180;
+  }
+
+  // Method to calculate the distance in meters
+  Future<void> calculateDistance({
+    required double sourceLat,
+    required double sourceLng,
+    required double destinationLat,
+    required double destinationLng,
+  }) async {
+    // Convert latitude and longitude from degrees to radians
+    final double sourceLatRad = _toRadians(sourceLat);
+    final double sourceLngRad = _toRadians(sourceLng);
+    final double destinationLatRad = _toRadians(destinationLat);
+    final double destinationLngRad = _toRadians(destinationLng);
+
+    dev.log("sourceLatRad:$sourceLatRad");
+    dev.log("sourceLngRad:$sourceLngRad");
+    dev.log("destinationLatRad:$destinationLatRad");
+    dev.log("destinationLngRad:$destinationLngRad");
+
+    // Haversine formula
+    final double dLat = destinationLatRad - sourceLatRad;
+    final double dLng = destinationLngRad - sourceLngRad;
+
+    final double a = pow(sin(dLat / 2), 2) +
+        cos(sourceLatRad) * cos(destinationLatRad) * pow(sin(dLng / 2), 2);
+    final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+
+    //Distance in meters (km * 1000)
+    distanceMeters = (earthRadiusKm * c) * 1000;
+
+    dev.log("distanceMeters here-:$distanceMeters");
+    notifyListeners();
+
+    // return totalDistanceMeters;
   }
 }
