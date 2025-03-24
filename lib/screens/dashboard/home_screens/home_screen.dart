@@ -258,13 +258,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
                           return Builder(builder: (context) {
                             return SizedBox(
-                              height: size.height * 0.4,
+                              height: size.height * 0.48,
                               child: Stack(
                                 children: [
                                   if (hasPendingOrder) ...[
-                                    MapWidget(order: orderVM.orders.first!),
+                                    SafeArea(
+                                        child: MapWidget(
+                                            order: orderVM.orders.first!)),
                                     SizedBox(
-                                      height: size.height * 0.30,
+                                      height: size.height * 0.3,
                                       width: size.width,
                                       child: Column(
                                         crossAxisAlignment:
