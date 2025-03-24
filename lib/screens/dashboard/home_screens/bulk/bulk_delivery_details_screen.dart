@@ -11,7 +11,6 @@ import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/app_textfields.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
 import 'package:group_button/group_button.dart';
 import 'package:provider/provider.dart';
 import 'package:nb_utils/nb_utils.dart' as util;
@@ -345,14 +344,14 @@ class _BulkDeliveryDetailsScreenState extends State<BulkDeliveryDetailsScreen> {
 
                                 isTypingPickUp = false;
 
-                                List<Location> locations =
-                                    await locationFromAddress(
-                                        x.placePrediction.text.text);
+                                // List<Location> locations =
+                                //     await locationFromAddress(
+                                //         x.placePrediction.text.text);
 
-                                _latController.text =
-                                    locations[0].latitude.toString();
-                                _longController.text =
-                                    locations[0].longitude.toString();
+                                // _latController.text =
+                                //     locations[0].latitude.toString();
+                                // _longController.text =
+                                //     locations[0].longitude.toString();
 
                                 setState(() {});
                                 if (mounted) {

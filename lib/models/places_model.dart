@@ -26,7 +26,7 @@ class Suggestion {
 
   factory Suggestion.fromJson(Map<String, dynamic> json) {
     return Suggestion(
-      placePrediction: PlacePrediction.fromJson(json['placePrediction']),
+      placePrediction: PlacePrediction.fromJson(json['placePrediction'] ?? {}),
     );
   }
 
@@ -54,11 +54,11 @@ class PlacePrediction {
 
   factory PlacePrediction.fromJson(Map<String, dynamic> json) {
     return PlacePrediction(
-      place: json['place'],
-      placeId: json['placeId'],
-      text: PredictionText.fromJson(json['text']),
-      structuredFormat: StructuredFormat.fromJson(json['structuredFormat']),
-      types: List<String>.from(json['types']),
+      place: json['place'] ?? '',
+      placeId: json['placeId'] ?? '',
+      text: PredictionText.fromJson(json['text'] ?? {}),
+      structuredFormat: StructuredFormat.fromJson(json['structuredFormat'] ?? {}),
+      types: (json['types'] as List<dynamic>?)?.map((e) => e.toString()).toList() ?? [],
     );
   }
 
@@ -81,10 +81,11 @@ class PredictionText {
 
   factory PredictionText.fromJson(Map<String, dynamic> json) {
     return PredictionText(
-      text: json['text'],
-      matches: List<TextMatch>.from(
-        json['matches'].map((x) => TextMatch.fromJson(x)),
-      ),
+      text: json['text'] ?? '',
+      matches: (json['matches'] as List<dynamic>?)
+              ?.map((x) => TextMatch.fromJson(x))
+              .toList() ??
+          [],
     );
   }
 
@@ -104,16 +105,15 @@ class StructuredFormat {
 
   factory StructuredFormat.fromJson(Map<String, dynamic> json) {
     return StructuredFormat(
-      mainText: MainText.fromJson(json['mainText'] ?? ""),
-      secondaryText:
-          json['secondaryText'],
+      mainText: MainText.fromJson(json['mainText'] ?? {}),
+      secondaryText: json['secondaryText'] ?? '',
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'mainText': mainText.toJson(),
-      'secondaryText': secondaryText.toJson(),
+      'secondaryText': secondaryText,
     };
   }
 }
@@ -142,30 +142,6 @@ class MainText {
   }
 }
 
-class SecondaryText {
-  final String text;
-  final List<TextMatch> matches;
-
-  SecondaryText({required this.text, required this.matches});
-
-  factory SecondaryText.fromJson(Map<String, dynamic> json) {
-    return SecondaryText(
-      text: json['text'] ?? '',
-      matches: (json['matches'] as List<dynamic>?)
-              ?.map((x) => TextMatch.fromJson(x))
-              .toList() ??
-          [],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'text': text,
-      'matches': matches.map((x) => x.toJson()).toList(),
-    };
-  }
-}
-
 class TextMatch {
   final int? startOffset;
   final int endOffset;
@@ -175,7 +151,7 @@ class TextMatch {
   factory TextMatch.fromJson(Map<String, dynamic> json) {
     return TextMatch(
       startOffset: json['startOffset'],
-      endOffset: json['endOffset'],
+      endOffset: json['endOffset'] ?? 0,
     );
   }
 

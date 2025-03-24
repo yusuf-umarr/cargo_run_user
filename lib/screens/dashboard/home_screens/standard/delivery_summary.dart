@@ -215,13 +215,13 @@ class _DeliverySummaryState extends State<DeliverySummary> {
           rowItem(
               title: 'Total',
               value:
-                  '₦ ${getTotalPrice(distanceInMeters: order.distanceModel!.routes[0].distanceMeters.toString(), isExpressDelivery: widget.isExpressDelivery, pricePerMeters: int.parse(order.priceModel!))}'),
+                  '₦ ${getTotalPrice(distanceInMeters: order.distanceModel!.routes![0].distanceMeters.toString(), isExpressDelivery: widget.isExpressDelivery, pricePerMeters: int.parse(order.priceModel!))}'),
           const SizedBox(height: 10),
           widget.isExpressDelivery
               ? rowItem(
                   title: 'Express Delivery\nCharge(10%)',
                   value:
-                      '₦${getTenPercent(distanceInMeters: order.distanceModel!.routes[0].distanceMeters.toString(), pricePerMeters: int.parse(order.priceModel!))}')
+                      '₦${getTenPercent(distanceInMeters: order.distanceModel!.routes![0].distanceMeters.toString(), pricePerMeters: int.parse(order.priceModel!))}')
               : const SizedBox.shrink(),
           const SizedBox(height: 10),
 
@@ -229,7 +229,7 @@ class _DeliverySummaryState extends State<DeliverySummary> {
               title: 'Subtotal',
               value: '₦ ${getPrices(
                 distanceInMeters:
-                    order.distanceModel!.routes[0].distanceMeters.toString(),
+                    order.distanceModel!.routes![0].distanceMeters.toString(),
                 isExpressDelivery: widget.isExpressDelivery,
                 pricePerMeters: int.parse(order.priceModel!),
               )}'),

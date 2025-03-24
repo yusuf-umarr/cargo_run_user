@@ -4,7 +4,7 @@ import 'package:cargo_run/screens/dashboard/home_screens/bulk/bulk_delivery_deta
 import 'package:cargo_run/screens/dashboard/home_screens/standard/delivery_details_screen.dart';
 import 'package:cargo_run/utils/util.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
+// import 'package:geocoding/geocoding.dart';
 import 'package:nb_utils/nb_utils.dart' as util;
 // import 'package:location_picker_text_field/open_street_location_picker.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +14,7 @@ import '../../../../widgets/app_buttons.dart';
 import '../../../../widgets/app_textfields.dart';
 import '../../../../widgets/page_widgets/appbar_widget.dart';
 import '../../../../providers/order_provider.dart';
+import 'dart:developer' as dev;
 
 class RequestRider extends StatefulWidget {
   final String type;
@@ -141,30 +142,47 @@ class _RequestRiderState extends State<RequestRider> {
   }
 
   Consumer pickUpAddressTextField() {
-    return Consumer<OrderProvider>(builder: (context, otherVM, _) {
+    return Consumer<OrderProvider>(builder: (context, orderVM, _) {
       return Column(
         children: [
           isTypingPickUp
               ? Builder(builder: (context) {
-                  if (otherVM.dSearchResults.isNotEmpty) {
+                  if (orderVM.dSearchResults.isNotEmpty) {
                     return Card(
                       child: Column(
-                        children: otherVM.dSearchResults.map<Widget>((x) {
+                        children: orderVM.dSearchResults.map<Widget>((x) {
                           return ListTile(
                             onTap: () async {
                               try {
-                                _pickupAddressController.text = x.placePrediction.text.text;
+                                _pickupAddressController.text =
+                                    x.placePrediction.text.text;
 
                                 isTypingPickUp = false;
 
-                                List<Location> locations =
-                                    await locationFromAddress(
-                                        x.placePrediction.text.text);
+                                orderVM
+                                    .locationFromAddress(
+                                        addr: x.placePrediction.text.text)
+                                    .then((x) {
+                                  _latController.text = orderVM
+                                      .locationFromAddr!
+                                      .results![0]
+                                      .geometry!
+                                      .location!
+                                      .lat
+                                      .toString();
+                                  _longController.text = orderVM
+                                      .locationFromAddr!
+                                      .results![0]
+                                      .geometry!
+                                      .location!
+                                      .lng
+                                      .toString();
 
-                                _latController.text =
-                                    locations[0].latitude.toString();
-                                _longController.text =
-                                    locations[0].longitude.toString();
+                                  dev.log(
+                                      "_latController.text:${_latController.text}");
+                                  dev.log(
+                                      "_longController.text:${_longController.text}");
+                                });
 
                                 setState(() {});
                               } catch (e) {
@@ -203,7 +221,7 @@ class _RequestRiderState extends State<RequestRider> {
                   isTypingPickUp = false;
                 });
               }
-              otherVM.getAutocompletePlaces(query);
+              orderVM.getAutocompletePlaces(query);
             },
           ),
         ],

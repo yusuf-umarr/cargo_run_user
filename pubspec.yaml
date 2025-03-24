@@ -29,7 +29,7 @@ dependencies:
   flutter_polyline_points: ^2.1.0
   google_maps_flutter: ^2.1.7
   geolocator: ^10.1.0
-  geocoding: ^3.0.0
+  # geocoding: ^3.0.0
   socket_io_client: ^2.0.3+1
   nb_utils:
     git:
@@ -42,6 +42,7 @@ dependencies:
     # packageInfo
   package_info_plus: ^8.2.1
   step_progress_indicator: ^1.0.2
+  # geocoding: ^3.0.0
 
   
 

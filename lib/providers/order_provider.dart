@@ -1,6 +1,7 @@
 import 'dart:developer' as dev;
 import 'package:cargo_run/models/distance_model.dart';
 import 'package:cargo_run/models/driver_model.dart';
+import 'package:cargo_run/models/location_from_addr.dart';
 import 'package:cargo_run/models/notification_model.dart';
 import 'package:cargo_run/models/order.dart';
 import 'package:cargo_run/models/places_model.dart';
@@ -74,9 +75,12 @@ class OrderProvider extends ChangeNotifier {
   // List<Suggestion> suggestions = [];
   List<Suggestion> dSearchResults = [];
 
-  List availableDriverList =[];
+  List availableDriverList = [];
 
   DistanceModel? distanceModel;
+  dynamic distanceMeters;
+
+  LocationFromAddressModel? locationFromAddr;
 
   io.Socket? get socket => _socket;
   io.Socket? _socket;
@@ -241,9 +245,12 @@ class OrderProvider extends ChangeNotifier {
 
         // distanceModel = response.data;
 
+        // dev.log("distanceModel:${response.data}");
+
         distanceModel = DistanceModel.fromJson(response.data);
 
-        dev.log("_distancePrice:---${distanceModel!.routes[0].distanceMeters}");
+        dev.log("_distancePrice:-1--${distanceModel!.routes![0]}");
+        distanceMeters = distanceModel!.routes![0].distanceMeters;
       } else {
         setOrderStatus(OrderStatus.failed);
         log("_distancePrice  error :${response.data}");
@@ -253,6 +260,32 @@ class OrderProvider extends ChangeNotifier {
       log("_distancePrice  catch error :$e");
     }
     notifyListeners();
+  }
+
+  Future<void> locationFromAddress({required String addr}) async {
+    // setOrderStatus(OrderStatus.loading);
+    try {
+      var response = await _ordersService.locationFromAddress(address: addr);
+      if (response.success) {
+        // setOrderStatus(OrderStatus.success);
+
+        // distanceModel = response.data;
+
+        locationFromAddr = LocationFromAddressModel.fromJson(response.data);
+
+        notifyListeners();
+        dev.log("locationFromAddr:$locationFromAddr");
+
+        // dev.log(
+        //     "locationFromAddr:-lat--${locationFromAddr!.results[0].geometry.location.lat}");
+        // dev.log(
+        //     "locationFromAddr:-long--${locationFromAddr!.results[0].geometry.location.lng}");
+      } else {
+        log("location er  error :${response.data}");
+      }
+    } catch (e) {
+      dev.log("location  catch error :$e");
+    }
   }
 
   Future<void> getNotification() async {
@@ -265,7 +298,6 @@ class OrderProvider extends ChangeNotifier {
           data.map((e) => NotificationData.fromJson(e)).toList();
       _notificationModel = fetched;
       notifyListeners();
-
     } else {
       setOrderStatus(OrderStatus.failed);
       log("notification  error :${response.data}");
@@ -274,32 +306,29 @@ class OrderProvider extends ChangeNotifier {
 
     notifyListeners();
   }
-Future<void> getPrice() async {
-  var response = await _ordersService.getPrice();
-  if (response.success) {
-    setOrderStatus(OrderStatus.success);
-      _priceModel =response.data['data'][0]['price'].toString();
+
+  Future<void> getPrice() async {
+    var response = await _ordersService.getPrice();
+    if (response.success) {
+      setOrderStatus(OrderStatus.success);
+      _priceModel = response.data['data'][0]['price'].toString();
+
+      notifyListeners();
+    } else {
+      setOrderStatus(OrderStatus.failed);
+    }
 
     notifyListeners();
-  } else {
-    setOrderStatus(OrderStatus.failed);
   }
 
-  notifyListeners();
-}
-
-
   Future<void> getAvailableDrivers(dynamic data) async {
-
     availableDriverList = data['data'];
 
-        // dev.log(" _availableDriverModel getAvailableDrivers  ${availableDriverList}==");
+    // dev.log(" _availableDriverModel getAvailableDrivers  ${availableDriverList}==");
 
-        // availableDriverList.forEach((x){
-          
-        // });
+    // availableDriverList.forEach((x){
 
-
+    // });
 
     // try {
     //   if (data is List) {

@@ -49,7 +49,6 @@ class OrdersImpl implements OrdersService {
     }
   }
 
-
   @override
   Future<ApiResp<dynamic>> createOrder(
     AddressDetails addressDetails,
@@ -191,10 +190,11 @@ class OrdersImpl implements OrdersService {
       );
     }
   }
+
   @override
   Future<ApiResp<dynamic>> getPrice() async {
     String token = sharedPrefs.token;
-   var url = Uri.parse('${Env.endpointUrl}/cargo-price');
+    var url = Uri.parse('${Env.endpointUrl}/cargo-price');
 
     var headers = {
       'Content-Type': 'application/json',
@@ -365,7 +365,6 @@ class OrdersImpl implements OrdersService {
         'X-Goog-FieldMask': '*'
       };
 
-
       var url = Uri.parse(
           'https://routes.googleapis.com/directions/v2:computeRoutes');
 
@@ -394,7 +393,7 @@ class OrdersImpl implements OrdersService {
         headers: headers,
       );
 
-      // log("response distnace :${response.body}");
+      log("response distnace  distance in mete====:${response.body}");
 
       return ApiResp<dynamic>(
         success: response.statusCode == 200,
@@ -412,37 +411,32 @@ class OrdersImpl implements OrdersService {
     }
   }
 
-  // @override
-  // Future<ApiResp<dynamic>> getAutocomplete(searchTerm) async {
-  //   try {
-  //     var url = Uri.parse(
-  //         'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$searchTerm&key=$googleApiKey');
-  //     // var url =
-  //     //     'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$searchTerm&key=$googleApiKey';
+  @override
+  Future<ApiResp<dynamic>> locationFromAddress(
+      {required String address}) async {
+    try {
+      var url = Uri.parse(
+          'https://maps.googleapis.com/maps/api/geocode/json?address=$address&key=$googleApiKey');
 
-  //     final response = await http.get(url);
+      final response = await http.get(url);
 
-  //     var jsonResponse = jsonDecode(response.body);
+      var jsonResponse = jsonDecode(response.body);
 
-  //     // log("places response:${jsonResponse}");
+      // log("places response:${jsonResponse}");
 
-  //     var jsonResults = jsonResponse['predictions'] as List;
-  //     var places =
-  //         jsonResults.map((place) => PlaceSearch.fromJson(place)).toList();
-
-  //     return ApiResp<dynamic>(
-  //       success: true,
-  //       data: places,
-  //       message: " successfull",
-  //     );
-  //   } catch (e) {
-  //     return ApiResp(
-  //       success: false,
-  //       message: "A server error occurred",
-  //       data: '',
-  //     );
-  //   }
-  // }
+      return ApiResp<dynamic>(
+        success: true,
+        data: jsonResponse,
+        message: " successfull",
+      );
+    } catch (e) {
+      return ApiResp(
+        success: false,
+        message: "A server error occurred",
+        data: '',
+      );
+    }
+  }
 
   // @override
   // Future<ApiResp<dynamic>> getDistancePrice(source, destination) async {

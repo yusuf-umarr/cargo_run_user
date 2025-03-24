@@ -194,11 +194,14 @@ class AuthProvider extends ChangeNotifier {
         password: sharedPrefs.password,
       );
 
+      dev.log("sharedPrefs.email:${sharedPrefs.email}");
+      dev.log("sharedPrefs.password:${sharedPrefs.password}");
+
       var res;
       response.fold((error) {
         setLoadingState(LoadingState.error);
         dev.log("error login called");
-        res =false;
+        res = false;
 
         return {
           "res": false,
@@ -208,11 +211,10 @@ class AuthProvider extends ChangeNotifier {
 
         sharedPrefs.isLoggedIn = true;
         setLoadingState(LoadingState.success);
-           res =true;
+        res = true;
         return {
           "res": true,
         };
-        
       });
       dev.log("none login called");
 

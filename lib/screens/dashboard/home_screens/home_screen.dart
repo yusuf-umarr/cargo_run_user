@@ -1,4 +1,3 @@
-
 import 'package:cargo_run/providers/order_provider.dart';
 import 'package:cargo_run/screens/dashboard/avatar_glow.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/notification_screen.dart';
@@ -13,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
-
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});

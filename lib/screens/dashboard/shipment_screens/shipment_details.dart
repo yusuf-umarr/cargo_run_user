@@ -211,32 +211,32 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                   ],
                 ),
               ),
-              if (widget.order!.status == "pending") ...[
-                MapWidget(order: widget.order!),
-                SizedBox(
-                  height: size.height * 0.4,
-                  width: size.width,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      AvatarGlow(
-                        glowColor: greenColor,
-                        glowRadiusFactor: 2.5,
-                        glowCount: 8,
-                        child: Padding(
-                          padding: const EdgeInsets.only(bottom: 25),
-                          child: Image.asset(
-                            'assets/images/confirmation.png',
-                            height: 30,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Text("Looking For Nearby Drivers")
-              ]
+              // if (widget.order!.status == "pending") ...[
+              //   MapWidget(order: widget.order!),
+              //   SizedBox(
+              //     height: size.height * 0.4,
+              //     width: size.width,
+              //     child: Column(
+              //       crossAxisAlignment: CrossAxisAlignment.center,
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       children: [
+              //         AvatarGlow(
+              //           glowColor: greenColor,
+              //           glowRadiusFactor: 2.5,
+              //           glowCount: 8,
+              //           child: Padding(
+              //             padding: const EdgeInsets.only(bottom: 25),
+              //             child: Image.asset(
+              //               'assets/images/confirmation.png',
+              //               height: 30,
+              //             ),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              //   Text("Looking For Nearby Drivers")
+              // ]
             ],
           ),
         ),

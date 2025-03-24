@@ -10,7 +10,7 @@ import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/app_textfields.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:geocoding/geocoding.dart';
+// import 'package:geocoding/geocoding.dart';
 import 'package:group_button/group_button.dart';
 import 'package:nb_utils/nb_utils.dart' as util;
 import 'package:provider/provider.dart';
@@ -57,7 +57,7 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
 
   void navigate() async {
     await context.read<OrderProvider>().getDistancePrice();
-    if (context.read<OrderProvider>().distanceModel != null) {
+    if (context.read<OrderProvider>().distanceMeters != null) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -67,7 +67,7 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
         ),
       );
     } else {
-      util.toast("Network error, please try again");
+      util.toast("Route could not be fetched! Please try again");
       log("price could be fteched");
     }
   }
@@ -307,16 +307,16 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
   }
 
   Consumer recipientAddressTextField() {
-    return Consumer<OrderProvider>(builder: (context, otherVM, _) {
-      // final List searchedPlaces = otherVM.dSearchResults!;
+    return Consumer<OrderProvider>(builder: (context, orderVM, _) {
+      // final List searchedPlaces = orderVM.dSearchResults!;
       return Column(
         children: [
           isTypingPickUp
               ? Builder(builder: (context) {
-                  if (otherVM.dSearchResults.isNotEmpty) {
+                  if (orderVM.dSearchResults.isNotEmpty) {
                     return Card(
                       child: Column(
-                        children: otherVM.dSearchResults.map<Widget>((x) {
+                        children: orderVM.dSearchResults.map<Widget>((x) {
                           return ListTile(
                             onTap: () async {
                               try {
@@ -325,14 +325,15 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
 
                                 isTypingPickUp = false;
 
-                                List<Location> locations =
-                                    await locationFromAddress(
-                                        x.placePrediction.text.text);
+                                orderVM.locationFromAddress(
+                                    addr: x.placePrediction.text.text);
 
-                                _latController.text =
-                                    locations[0].latitude.toString();
-                                _longController.text =
-                                    locations[0].longitude.toString();
+                                _latController.text = orderVM.locationFromAddr!
+                                    .results![0].geometry!.location!.lat
+                                    .toString();
+                                _longController.text = orderVM.locationFromAddr!
+                                    .results![0].geometry!.location!.lng
+                                    .toString();
 
                                 setState(() {});
                                 if (mounted) {
@@ -374,7 +375,7 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
                   isTypingPickUp = false;
                 });
               }
-              otherVM.getAutocompletePlaces(query);
+              orderVM.getAutocompletePlaces(query);
             },
           ),
         ],
