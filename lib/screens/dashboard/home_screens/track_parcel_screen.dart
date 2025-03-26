@@ -279,6 +279,30 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
                       );
                     }),
                   ),
+                ],
+                if (widget.order.status == "pending") ...[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child:
+                        Consumer<OrderProvider>(builder: (context, orderVM, _) {
+                      if (orderVM.orderStatus == OrderStatus.loading) {
+                        return const LoadingButton(
+                          backgroundColor: primaryColor2,
+                          textColor: Colors.white,
+                        );
+                      }
+
+                      return AppButton(
+                        text: 'Cancel order',
+                        hasIcon: false,
+                        textColor: Colors.white,
+                        backgroundColor: primaryColor2,
+                        onPressed: () {
+                          context.read<OrderProvider>().cancelOrder(widget.order.id!);
+                        },
+                      );
+                    }),
+                  ),
                 ]
               ]
             ],

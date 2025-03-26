@@ -102,6 +102,50 @@ class OrdersImpl implements OrdersService {
       );
     }
   }
+  @override
+  Future<ApiResp<dynamic>> cancelOrder(
+
+    String orderId,
+  ) async {
+    String token = sharedPrefs.token;
+    var url = Uri.parse('${Env.endpointUrl}/order/cancel/$orderId');
+
+    
+    var headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+    try {
+      final response = await http.post(
+        url,
+        headers: headers,
+        // body: jsonEncode(body),
+      );
+      log("cancel order res${response.statusCode}");
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        var jsonResponse = jsonDecode(response.body);
+        return ApiResp<dynamic>(
+          success: true,
+          data: jsonResponse,
+          message: "successful",
+        );
+      } else {
+        var jsonResponse = jsonDecode(response.body);
+        return ApiResp<dynamic>(
+          success: false,
+          data: jsonResponse,
+          message: "error",
+        );
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return ApiResp<dynamic>(
+        success: false,
+        data: "$e",
+        message: " error",
+      );
+    }
+  }
 
   @override
   Future<ApiResp<dynamic>> verify(

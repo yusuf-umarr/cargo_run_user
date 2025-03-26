@@ -15,6 +15,10 @@ abstract class OrdersService {
     String deliveryService,
     String price,
   );
+  Future<ApiResp<dynamic>> cancelOrder(
+  
+    String orderId,
+  );
   Future<ApiResp<dynamic>> verify(
     String reference,
     String orderId,

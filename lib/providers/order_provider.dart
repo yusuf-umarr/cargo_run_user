@@ -190,6 +190,19 @@ class OrderProvider extends ChangeNotifier {
       setOrderStatus(OrderStatus.failed);
     }
   }
+  Future<void> cancelOrder(String orderId) async {
+    var response = await _ordersService.cancelOrder(
+        orderId);
+
+    dev.log("orderId:$orderId");
+
+    if (response.success) {
+      getOrders();
+      _socket!.emit("order");
+    } else {
+      dev.log("order error:${response.data}");
+    }
+  }
 
   Future<void> verifyPayment(String reference, String orderId, context) async {
     // setOrderStatus(OrderStatus.loading);
