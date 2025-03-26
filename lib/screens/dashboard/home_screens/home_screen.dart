@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         backgroundColor: primaryColor2,
                         child: Center(
                           child: Text(
-                            sharedPrefs.fullName.substring(0, 1).toUpperCase(),
+                           sharedPrefs.fullName.substring(0, 1).toUpperCase(),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 25,
@@ -290,38 +290,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ],
                                       ),
                                     ),
-                                  ],
+                                  ] else ...[
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                          top: size.height * 0.15),
+                                      child: SizedBox(
+                                          height: size.height * 0.25,
+                                          child: createRequest(context)),
+                                    )
+                                  ]
                                 ],
                               ),
                             );
                           });
                         }
 
-                        return Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                context
-                                    .read<OrderProvider>()
-                                    .setDeliveryService("standard");
-
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const RequestRider(type: 'standard'),
-                                  ),
-                                );
-                              },
-                              child: const DeliveryServiceCard(
-                                image: 'ds1.png',
-                                text: 'Create request',
-                              ),
-                            ),
-                          ],
-                        );
+                        return createRequest(context);
                       },
                     ),
                   );
@@ -329,6 +313,31 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
+      ],
+    );
+  }
+
+  Row createRequest(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        GestureDetector(
+          onTap: () {
+            context.read<OrderProvider>().setDeliveryService("standard");
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const RequestRider(type: 'standard'),
+              ),
+            );
+          },
+          child: const DeliveryServiceCard(
+            image: 'ds1.png',
+            text: 'Create request',
+          ),
+        ),
       ],
     );
   }

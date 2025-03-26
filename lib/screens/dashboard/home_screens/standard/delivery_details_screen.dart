@@ -335,20 +335,30 @@ class _DeliveryDetailsScreenState extends State<DeliveryDetailsScreen> {
 
                                 isTypingPickUp = false;
 
-                                orderVM.locationFromAddress(
-                                    addr: x.placePrediction.text.text);
+                                orderVM
+                                    .locationFromAddress(
+                                        addr: x.placePrediction.text.text)
+                                    .then((x) {
+                                  _latController.text = orderVM
+                                      .locationFromAddr!
+                                      .results![0]
+                                      .geometry!
+                                      .location!
+                                      .lat
+                                      .toString();
+                                  _longController.text = orderVM
+                                      .locationFromAddr!
+                                      .results![0]
+                                      .geometry!
+                                      .location!
+                                      .lng
+                                      .toString();
 
-                                _latController.text = orderVM.locationFromAddr!
-                                    .results![0].geometry!.location!.lat
-                                    .toString();
-                                _longController.text = orderVM.locationFromAddr!
-                                    .results![0].geometry!.location!.lng
-                                    .toString();
-
-                                dev.log(
-                                    "des _latController.text:${_latController.text}");
-                                dev.log(
-                                    "des _longController.text:${_longController.text}");
+                                  dev.log(
+                                      "des _latController.text:${_latController.text}");
+                                  dev.log(
+                                      "des _longController.text:${_longController.text}");
+                                });
 
                                 setState(() {});
                                 if (mounted) {

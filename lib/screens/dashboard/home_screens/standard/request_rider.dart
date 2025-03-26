@@ -76,15 +76,6 @@ class _RequestRiderState extends State<RequestRider> {
                 ),
                 const SizedBox(height: 30.0),
 
-                // AppTextField(
-                //   noLabel: false,
-                //   labelText: 'House No',
-                //   hintText: 'House No.',
-                //   keyboardType: TextInputType.number,
-                //   controller: _houseNoController,
-                // ),
-                // const SizedBox(height: 20.0),
-
                 pickUpAddressTextField(),
 
                 const SizedBox(height: 20.0),
@@ -174,9 +165,9 @@ class _RequestRiderState extends State<RequestRider> {
                                       .toString();
 
                                   dev.log(
-                                      "_latController.text:${_latController.text}");
+                                      " source _latController.text:${_latController.text}");
                                   dev.log(
-                                      "_longController.text:${_longController.text}");
+                                      " source _longController.text:${_longController.text}");
                                 });
 
                                 setState(() {});

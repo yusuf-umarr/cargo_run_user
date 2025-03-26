@@ -1,8 +1,7 @@
 import 'package:another_stepper/another_stepper.dart';
 import 'package:cargo_run/providers/order_provider.dart';
-import 'package:cargo_run/screens/dashboard/avatar_glow.dart';
-import 'package:cargo_run/screens/dashboard/home_screens/map_widget.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/trip_route_page.dart';
+import 'package:cargo_run/screens/dashboard/widget/cancel_order.dart';
 import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
@@ -22,7 +21,7 @@ class ShipmentDetailsScreen extends StatefulWidget {
 class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
+    // final Size size = MediaQuery.of(context).size;
 
     List<StepperData> stepperData = [
       StepperData(
@@ -168,6 +167,9 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                         stepperDirection: Axis.vertical,
                       ),
                     ),
+                    if (widget.order!.status! == "pending") ...[
+                      CancelOrderWidget(order: widget.order!),
+                    ],
                     PaymentSummaryCard(
                       deliveryFee: widget.order!.price != null
                           ? widget.order!.price!.toStringAsFixed(2).toString()
@@ -211,32 +213,6 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                   ],
                 ),
               ),
-              // if (widget.order!.status == "pending") ...[
-              //   MapWidget(order: widget.order!),
-              //   SizedBox(
-              //     height: size.height * 0.4,
-              //     width: size.width,
-              //     child: Column(
-              //       crossAxisAlignment: CrossAxisAlignment.center,
-              //       mainAxisAlignment: MainAxisAlignment.center,
-              //       children: [
-              //         AvatarGlow(
-              //           glowColor: greenColor,
-              //           glowRadiusFactor: 2.5,
-              //           glowCount: 8,
-              //           child: Padding(
-              //             padding: const EdgeInsets.only(bottom: 25),
-              //             child: Image.asset(
-              //               'assets/images/confirmation.png',
-              //               height: 30,
-              //             ),
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              //   Text("Looking For Nearby Drivers")
-              // ]
             ],
           ),
         ),

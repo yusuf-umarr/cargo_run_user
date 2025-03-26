@@ -77,7 +77,7 @@ class OrdersImpl implements OrdersService {
         headers: headers,
         body: jsonEncode(body),
       );
-      log("Delivery res${response.statusCode}");
+     dev. log("Delivery res${response.body}");
       if (response.statusCode == 200 || response.statusCode == 201) {
         var jsonResponse = jsonDecode(response.body);
         return ApiResp<dynamic>(
@@ -102,21 +102,20 @@ class OrdersImpl implements OrdersService {
       );
     }
   }
+
   @override
   Future<ApiResp<dynamic>> cancelOrder(
-
     String orderId,
   ) async {
     String token = sharedPrefs.token;
     var url = Uri.parse('${Env.endpointUrl}/order/cancel/$orderId');
 
-    
     var headers = {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
     try {
-      final response = await http.post(
+      final response = await http.delete(
         url,
         headers: headers,
         // body: jsonEncode(body),

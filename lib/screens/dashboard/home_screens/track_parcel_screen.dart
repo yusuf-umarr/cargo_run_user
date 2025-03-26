@@ -2,7 +2,10 @@ import 'dart:developer';
 
 import 'package:another_stepper/another_stepper.dart';
 import 'package:cargo_run/providers/order_provider.dart';
+import 'package:cargo_run/screens/bottom_nav/bottom_nav_bar.dart';
 import 'package:cargo_run/screens/dashboard/home_screens/trip_route_page.dart';
+import 'package:cargo_run/screens/dashboard/widget/cancel_order.dart';
+import 'package:cargo_run/utils/util.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
@@ -281,28 +284,7 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
                   ),
                 ],
                 if (widget.order.status == "pending") ...[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child:
-                        Consumer<OrderProvider>(builder: (context, orderVM, _) {
-                      if (orderVM.orderStatus == OrderStatus.loading) {
-                        return const LoadingButton(
-                          backgroundColor: primaryColor2,
-                          textColor: Colors.white,
-                        );
-                      }
-
-                      return AppButton(
-                        text: 'Cancel order',
-                        hasIcon: false,
-                        textColor: Colors.white,
-                        backgroundColor: primaryColor2,
-                        onPressed: () {
-                          context.read<OrderProvider>().cancelOrder(widget.order.id!);
-                        },
-                      );
-                    }),
-                  ),
+                  CancelOrderWidget(order: widget.order),
                 ]
               ]
             ],
@@ -312,3 +294,5 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
     );
   }
 }
+
+

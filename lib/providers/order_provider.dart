@@ -92,6 +92,11 @@ class OrderProvider extends ChangeNotifier {
     dev.log("_socket:$_socket");
   }
 
+  void clearLocation() {
+    locationFromAddr = null;
+    notifyListeners();
+  }
+
   void setOrderStatus(OrderStatus status) {
     _orderStatus = status;
     sharedPrefs.orderStatus = status.toString().split('.').last;
@@ -175,8 +180,8 @@ class OrderProvider extends ChangeNotifier {
     var response = await _ordersService.createOrder(
         _addressDetails!,
         _receiverDetails!,
-        'normal', // _deliveryOption, //nornal/express
-        'standard', // _deliveryService, //standard/bulk
+        'normal', 
+        'standard',
         price);
 
     dev.log("deliveryPrice:$price");
@@ -186,20 +191,26 @@ class OrderProvider extends ChangeNotifier {
       setOrderStatus(OrderStatus.success);
       _socket!.emit("order");
     } else {
-      dev.log("order error:${response.data}");
+      dev.log("order error here:${response.data}");
       setOrderStatus(OrderStatus.failed);
     }
   }
-  Future<void> cancelOrder(String orderId) async {
-    var response = await _ordersService.cancelOrder(
-        orderId);
 
-    dev.log("orderId:$orderId");
+  Future<void> cancelOrder(String orderId) async {
+    setOrderStatus(OrderStatus.loading);
+
+    var response = await _ordersService.cancelOrder(orderId);
+
+    // dev.log("orderId:$orderId");
 
     if (response.success) {
+      setOrderStatus(OrderStatus.success);
+
       getOrders();
       _socket!.emit("order");
     } else {
+      setOrderStatus(OrderStatus.failed);
+
       dev.log("order error:${response.data}");
     }
   }
@@ -244,41 +255,8 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Future<void> getDistancePrice() async {
-  //   setOrderStatus(OrderStatus.loading);
-  //   try {
-  //     var response = await _ordersService.getDistance(
-  //       sourceLatLng: LatLng(
-  //           _addressDetails!.lat!.toDouble(), _addressDetails!.lng!.toDouble()),
-  //       destinationLatLng: LatLng(
-  //         _receiverDetails!.lat!.toDouble(),
-  //         _receiverDetails!.lng!.toDouble(),
-  //       ),
-  //     );
-  //     if (response.success) {
-  //       setOrderStatus(OrderStatus.success);
-
-  //       // distanceModel = response.data;
-
-  //       // dev.log("distanceModel:${response.data}");
-
-  //       distanceModel = DistanceModel.fromJson(response.data);
-
-  //       dev.log("_distancePrice:-1--${distanceModel!.routes![0]}");
-  //       distanceMeters = distanceModel!.routes![0].distanceMeters;
-  //     } else {
-  //       setOrderStatus(OrderStatus.failed);
-  //       log("_distancePrice  error :${response.data}");
-  //       //
-  //     }
-  //   } catch (e) {
-  //     log("_distancePrice  catch error :$e");
-  //   }
-  //   notifyListeners();
-  // }
-
   Future<void> locationFromAddress({required String addr}) async {
-    // setOrderStatus(OrderStatus.loading);
+    clearLocation();
     try {
       var response = await _ordersService.locationFromAddress(address: addr);
       if (response.success) {
@@ -430,6 +408,10 @@ class OrderProvider extends ChangeNotifier {
     required double destinationLat,
     required double destinationLng,
   }) async {
+    dev.log("sourceLat:$sourceLat");
+    dev.log("sourceLng:$sourceLng");
+    dev.log("destinationLat:$destinationLat");
+    dev.log("sourceLng:$sourceLng");
     // Convert latitude and longitude from degrees to radians
     final double sourceLatRad = _toRadians(sourceLat);
     final double sourceLngRad = _toRadians(sourceLng);

@@ -163,3 +163,12 @@ String formatAmount(String input) {
   }
 }
 
+ void showSnackBar(context, {required String message ,Color color =Colors.red}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor:color
+      ),
+    );
+  }
+
