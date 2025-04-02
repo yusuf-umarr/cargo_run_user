@@ -1,9 +1,9 @@
 import 'package:geolocator/geolocator.dart';
-
-/// Determine the current position of the device.
-///
-/// When the location services are not enabled or permissions
-/// are denied the `Future` will return an error.
+import 'dart:developer';
+// / Determine the current position of the device.
+// /
+// / When the location services are not enabled or permissions
+// / are denied the `Future` will return an error.
 Future<Position> determinePosition() async {
   bool serviceEnabled;
   LocationPermission permission;
@@ -16,7 +16,7 @@ Future<Position> determinePosition() async {
     // App to enable the location services.
     return Future.error('Location services are disabled.');
   }
-
+ 
   permission = await Geolocator.checkPermission();
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
@@ -41,3 +41,40 @@ Future<Position> determinePosition() async {
   return await Geolocator.getCurrentPosition(
       desiredAccuracy: LocationAccuracy.high);
 }
+
+
+// bool _isRequestingPermission = false;
+
+// Future<Position> determinePosition() async {
+//   if (_isRequestingPermission) {
+//     // return Future.error('A location permission request is already in progress.');
+//   log("A location permission request is already in progress.");
+//   }
+
+//   _isRequestingPermission = true;
+  
+//   try {
+//     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+//     if (!serviceEnabled) {
+//       return Future.error('Location services are disabled.');
+//     }
+
+//     LocationPermission permission = await Geolocator.checkPermission();
+//     if (permission == LocationPermission.denied) {
+//       permission = await Geolocator.requestPermission();
+//       if (permission == LocationPermission.denied) {
+//         return Future.error('Location permissions are denied.');
+//       }
+//     }
+
+//     if (permission == LocationPermission.deniedForever) {
+//       return Future.error(
+//           'Location permissions are permanently denied, we cannot request permissions.');
+//     }
+
+//     return await Geolocator.getCurrentPosition(
+//         desiredAccuracy: LocationAccuracy.high);
+//   } finally {
+//     _isRequestingPermission = false;
+//   }
+// }

@@ -2,16 +2,12 @@
 
 import 'dart:async';
 import 'package:cargo_run/models/order.dart';
-import 'package:cargo_run/providers/app_provider.dart';
 import 'package:cargo_run/providers/order_provider.dart';
 import 'package:cargo_run/screens/dashboard/widget/countdown.dart';
 import 'package:cargo_run/styles/app_colors.dart';
-import 'package:cargo_run/utils/location.dart';
-import 'package:cargo_run/utils/shared_prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'dart:developer' as dev;
 
 import 'package:provider/provider.dart';
 
@@ -26,101 +22,6 @@ class MapWidget extends StatefulWidget {
   @override
   State<MapWidget> createState() => _MapWidgetState();
 }
-
-// class _MapWidgetState extends State<MapWidget> {
-//   final Completer<GoogleMapController> _controller =
-//       Completer<GoogleMapController>();
-//   bool showPopup = true;
-
-//   bool isShowCard = true;
-
-//   BitmapDescriptor bikeIcon = BitmapDescriptor.defaultMarker;
-
-//   late LatLng _initialPosition;
-//   late GoogleMapController mapController;
-
-//   CameraPosition? cposition;
-
-//   @override
-//   void initState() {
-//     getLocation();
-//     setCustomMarkerIcon();
-//     super.initState();
-//   }
-//   void getLocation() async {
-//     Position position = await determinePosition();
-//     debugPrint('position: $position');
-//     _initialPosition = LatLng(position.latitude, position.longitude);
-//     final CameraPosition kGooglePlex = CameraPosition(
-//       target: _initialPosition,
-//       zoom: 14.4746,
-//     );
-//     setState(() {
-
-//     });
-
-//     if (mounted) {
-//       setState(() {
-//         cposition = kGooglePlex;
-//       });
-//     }
-//   }
-
-//   Future<void> setCustomMarkerIcon() async {
-//     BitmapDescriptor.fromAssetImage(
-//             ImageConfiguration.empty, "assets/images/delivery.png")
-//         .then((icon) {
-//       bikeIcon = icon;
-//        setState(() {});
-//     });
-
-//   }
-
-//   @override
-//   void dispose() {
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final Size size = MediaQuery.of(context).size;
-//     final orderProvider = context.watch<OrderProvider>();
-//     return SizedBox(
-//       child: Stack(
-//         children: [
-//           Column(
-//             children: [
-//               SizedBox(
-//                 height: size.height * 0.4,
-//                 child: GoogleMap(
-//                   myLocationButtonEnabled: false,
-//                   zoomControlsEnabled: false,
-//                   initialCameraPosition: CameraPosition(
-//                     target: LatLng(
-//                     _initialPosition.latitude,
-//                      _initialPosition.longitude,
-//                     ),
-//                     zoom: 13.5,
-//                   ),
-// markers:orderProvider.availableDriverModel.map((LatLng position) {
-//   return Marker(
-//     markerId: MarkerId(position.toString()),
-//     position: position,
-//     icon: bikeIcon,
-//   );
-// }).toSet(),
-//                   onMapCreated: (mapController) {
-//                     _controller.complete(mapController);
-//                   },
-//                 ),
-//               ),
-//             ],
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
 
 class _MapWidgetState extends State<MapWidget> {
   final Completer<GoogleMapController> _controller = Completer();
@@ -137,38 +38,31 @@ class _MapWidgetState extends State<MapWidget> {
   @override
   void initState() {
     super.initState();
-    getLocation();
+    // getLocation();
     setCustomMarkerIcon();
   }
 
   void getLocation() async {
-    Position position = await determinePosition();
-    debugPrint('position: $position');
-    getAvailableDrivers(position);
-    setState(() {
-      _initialPosition = LatLng(position.latitude, position.longitude);
-      cposition = CameraPosition(target: _initialPosition!, zoom: 14.4746);
-    });
-
-    // Future.delayed(Duration(seconds: 1),(){
-    //     Provider.of<OrderProvider>(context, listen: false).   socket!.emit(
-    //     'location',
-    //     {
-    //       "lat": position.latitude,
-    //       "lng": position.longitude,
-    //       "userId": sharedPrefs.userId,
-    //     },
-    //   );
-    // });
+    final OrderProvider orderVM = context.read<OrderProvider>();
+    if (orderVM.currentLat != null) {
+      setState(() {
+        _initialPosition = LatLng(orderVM.currentLat!, orderVM.currentLong!);
+        cposition = CameraPosition(target: _initialPosition!, zoom: 14.4746);
+      });
+        // dev.log("_initialPosition:$_initialPosition");
+        // dev.log("orderVM.currentLat:${orderVM.currentLat!}");
+        // dev.log("orderVM.currentLat:${ orderVM.currentLong!}");
+    }
+  
   }
 
   getAvailableDrivers(Position position) {
-  if (mounted) {
+    if (mounted) {
       context.read<OrderProvider>().setLocationCoordinate(
-          lat: position.latitude,
-          long: position.longitude,
-        );
-  }
+            lat: position.latitude,
+            long: position.longitude,
+          );
+    }
   }
 
   Future<void> setCustomMarkerIcon() async {
@@ -185,6 +79,7 @@ class _MapWidgetState extends State<MapWidget> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     final orderProvider = context.watch<OrderProvider>();
+    getLocation() ;
 
     return SizedBox(
       child: Stack(

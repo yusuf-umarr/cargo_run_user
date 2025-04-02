@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       greeting = switch (now.hour) {
         >= 6 && < 12 => 'Good Morning,',
-        >= 12 && < 18 => 'Good Afternoon,',
+        >= 12 && < 18 => 'Good Afternoon,', 
         _ => 'Good Evening,',
       };
     });

@@ -126,6 +126,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
       //get available rider in user's coordinate
       socket!.on("location-${sharedPrefs.userId}", (data) async {
         // log("get riders in my proximity:${data}");
+        //get riders in my proximity:ing 
 
         //
         try {

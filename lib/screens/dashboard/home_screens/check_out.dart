@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'package:webview_flutter/webview_flutter.dart';
+import 'dart:developer' as dev;
 
 class CheckoutScreen extends StatefulWidget {
   final String paymentUrl;
@@ -43,7 +44,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
               context
                   .read<OrderProvider>()
-                  .verifyPayment(widget.reference,  widget.orderId, context);
+                  .verifyPayment(widget.reference, widget.orderId, context);
 
               return NavigationDecision.prevent;
             } else {}

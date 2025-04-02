@@ -35,7 +35,9 @@ class PaymentSummaryCard extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20.0),
-          rowItem(title: 'Delivery Fee', value: '₦ $deliveryFee'),
+          rowItem(
+              title: 'Delivery Fee',
+              value: (double.parse(deliveryFee)).toStringAsFixed(2)),
           const SizedBox(height: 10.0),
           // rowItem(title: 'Delivery Fee', value: '₦ 2000.00'),
           const Divider(

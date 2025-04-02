@@ -59,6 +59,12 @@ class OrderProvider extends ChangeNotifier {
   String? get priceModel => _priceModel;
   String? _priceModel;
 
+  double? get currentLat => _currentLat;
+  double? _currentLat;
+
+  double? get currentLong => _currentLong;
+  double? _currentLong;
+
   List<AvailableDriverModel> _availableDriverModel = [];
 
   List<AvailableDriverModel> get availableDriverModel => _availableDriverModel;
@@ -138,8 +144,12 @@ class OrderProvider extends ChangeNotifier {
         },
       );
     }
+    _currentLat = lat;
+    _currentLong = long;
+    notifyListeners();
 
-    dev.log("lat:$lat ---long:$long --userId:${sharedPrefs.userId}");
+    dev.log(
+        "lat:$_currentLat ---long:$_currentLong --userId:${sharedPrefs.userId}");
   }
 
   void setDeliveryService(String service) {
@@ -178,11 +188,7 @@ class OrderProvider extends ChangeNotifier {
   Future<void> placeOrder(String price) async {
     setOrderStatus(OrderStatus.loading);
     var response = await _ordersService.createOrder(
-        _addressDetails!,
-        _receiverDetails!,
-        'normal', 
-        'standard',
-        price);
+        _addressDetails!, _receiverDetails!, 'normal', 'standard', price);
 
     dev.log("deliveryPrice:$price");
 
@@ -306,7 +312,9 @@ class OrderProvider extends ChangeNotifier {
   }
 
   Future<void> getAvailableDrivers(dynamic data) async {
-    availableDriverList = data['data'];
+    if (data['data'] != null) {
+      availableDriverList = data['data'];
+    }
 
     // dev.log(" _availableDriverModel getAvailableDrivers  ${availableDriverList}==");
 
@@ -345,7 +353,9 @@ class OrderProvider extends ChangeNotifier {
       final url = success.data['data']['authorizationUrl'];
       final ref = success.data['data']['reference'];
 
-      dev.log("success.data['data']:${success.data['data']}");
+      dev.log("authrize url:${success.data['data']['authorizationUrl']}");
+
+      dev.log("initiatePayment:${success.data}");
       Navigator.push(
         context,
         MaterialPageRoute(

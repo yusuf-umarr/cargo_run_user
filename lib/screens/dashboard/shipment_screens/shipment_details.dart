@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../models/order.dart';
 
+import 'dart:developer' as dev;
+
 class ShipmentDetailsScreen extends StatefulWidget {
   final Order? order;
   const ShipmentDetailsScreen({super.key, required this.order});
@@ -178,17 +180,20 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                     ),
                     if (widget.order!.paymentStatus!.toLowerCase() ==
                         "pending") ...[
+                   
+                   
                       if (widget.order!.status! == "picked" ||
                           widget.order!.status! == "successful" ||
                           widget.order!.status! == "delivered" ||
                           widget.order!.status! == "arrived") ...[
                         Consumer<OrderProvider>(builder: (context, orderVM, _) {
+                        
                           return Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 25.0),
                             child: orderVM.orderStatus == OrderStatus.loading
                                 ? const LoadingButton(
-                                    textColor: Colors.white,
+                                    textColor: Color.fromARGB(255, 34, 18, 18),
                                     backgroundColor: primaryColor2,
                                   )
                                 : AppButton(

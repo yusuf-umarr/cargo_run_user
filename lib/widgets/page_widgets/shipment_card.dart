@@ -56,7 +56,8 @@ class ShipmentCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 5.0),
                   Text(
-                    DateFormat.yMMMMd().format(DateTime.parse(order.createdAt!)),
+                    DateFormat.yMMMMd()
+                        .format(DateTime.parse(order.createdAt!)),
                     style: const TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.w500,
@@ -95,7 +96,8 @@ class ShipmentCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 5.0),
                 Text(
-                  "₦${order.price ?? "0"}",
+                  order.price!=null?
+                  "₦${order.price!.toStringAsFixed(2)}":"0",
                   style: GoogleFonts.roboto(
                     fontSize: 15,
                     fontWeight: FontWeight.w500,

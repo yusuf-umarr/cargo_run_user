@@ -1,8 +1,10 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cargo_run/config/config.dart';
+import 'package:cargo_run/providers/order_provider.dart';
 
 import 'package:cargo_run/utils/shared_prefs.dart';
 import 'package:dartz/dartz.dart';
@@ -77,7 +79,7 @@ class OrdersImpl implements OrdersService {
         headers: headers,
         body: jsonEncode(body),
       );
-     dev. log("Delivery res${response.body}");
+      dev.log("Delivery res${response.body}");
       if (response.statusCode == 200 || response.statusCode == 201) {
         var jsonResponse = jsonDecode(response.body);
         return ApiResp<dynamic>(
@@ -120,7 +122,7 @@ class OrdersImpl implements OrdersService {
         headers: headers,
         // body: jsonEncode(body),
       );
-      log("cancel order res${response.statusCode}");
+      dev.log("cancel order res${response.statusCode}");
       if (response.statusCode == 200 || response.statusCode == 201) {
         var jsonResponse = jsonDecode(response.body);
         return ApiResp<dynamic>(
@@ -274,16 +276,26 @@ class OrdersImpl implements OrdersService {
     }
   }
 
+  double roundOffNumber(double number, {int decimalPlaces = 0}) {
+    double mod = pow(10.0, decimalPlaces).toDouble();
+    return (number * mod).round() / mod;
+  }
+
   @override
   Future<Either<ErrorResponse, ApiResponse>> initializePayment(
       {required String orderId, required String amount}) async {
     var url = Uri.parse('${Env.endpointUrl}/transaction/initiate');
     Map<String, dynamic> body = {
       'orderId': orderId,
-      'amount': amount,
+      'amount': roundOffNumber(double.parse(amount)),
       'userId': sharedPrefs.userId,
       'email': sharedPrefs.email,
     };
+
+    dev.log("orderId:$orderId");
+    dev.log("amount:$amount");
+    dev.log("userId:${sharedPrefs.userId}");
+    dev.log("email:${sharedPrefs.email}");
 
     var headers = {
       'Content-Type': 'application/json',
@@ -298,7 +310,7 @@ class OrdersImpl implements OrdersService {
       );
       debugPrint(response.body);
 
-      // log("payment res:${response.body}");
+      dev.log("payment res:${response.body}");
       var jsonResponse = jsonDecode(response.body);
 
       return Right(ApiResponse.fromJson(jsonResponse));
@@ -379,7 +391,7 @@ class OrdersImpl implements OrdersService {
         message: response.statusCode == 200 ? "Successful" : "Failed",
       );
     } catch (e) {
-      log(e.toString());
+      dev.log(e.toString());
 
       return ApiResp<dynamic>(
         success: false,
@@ -436,7 +448,7 @@ class OrdersImpl implements OrdersService {
         headers: headers,
       );
 
-      log("response distnace  distance in mete====:${response.body}");
+      dev.log("response distnace  distance in mete====:${response.body}");
 
       return ApiResp<dynamic>(
         success: response.statusCode == 200,
@@ -444,7 +456,7 @@ class OrdersImpl implements OrdersService {
         message: response.statusCode == 200 ? "Successful" : "Failed",
       );
     } catch (e) {
-      log(e.toString());
+      dev.log(e.toString());
 
       return ApiResp<dynamic>(
         success: false,
