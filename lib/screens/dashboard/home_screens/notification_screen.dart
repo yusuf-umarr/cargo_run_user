@@ -1,5 +1,6 @@
 import 'package:cargo_run/models/notification_model.dart';
 import 'package:cargo_run/providers/order_provider.dart';
+import 'package:cargo_run/styles/app_colors.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -40,6 +41,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       appBar: appBarWidget(context, title: 'Notifications', hasBackBtn: true),
       body: Center(
           child: ListView.builder(
+            padding:const  EdgeInsets.symmetric(horizontal: 10).copyWith(top: 20),
         itemCount: orderVM.notificationModel.length,
         itemBuilder: (context, index) {
           if (orderVM.notificationModel.isNotEmpty) {
@@ -50,6 +52,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
             final NotificationData notification =
                 orderVM.notificationModel[index];
             return Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color:primaryColor1.withOpacity(0.2,),),
               margin: const EdgeInsets.only(bottom: 5),
               child: ListTile(
                 leading: Image.asset(
