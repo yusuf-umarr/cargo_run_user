@@ -172,3 +172,14 @@ String formatAmount(String input) {
     );
   }
 
+  String formatDate(String dateTime) {
+    DateTime parsedDate = DateTime.parse(dateTime);
+    DateFormat formatter = DateFormat('d MMM. yyyy');
+    return formatter.format(parsedDate);
+  }
+
+  String formatTime(String dateTime) {
+    DateTime parsedDate = DateTime.parse(dateTime);
+    DateFormat formatter = DateFormat('HH:mm');
+    return formatter.format(parsedDate);
+  }
