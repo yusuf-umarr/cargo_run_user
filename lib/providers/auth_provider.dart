@@ -188,26 +188,25 @@ class AuthProvider extends ChangeNotifier {
 
   Future<Map<String, dynamic>> validateToken() async {
     try {
-      dev.log("validateToken called");
+      // dev.log("validateToken called");
       var response = await _authService.loginUser(
         email: sharedPrefs.email,
         password: sharedPrefs.password,
       );
 
-      dev.log("sharedPrefs.email:${sharedPrefs.email}");
-      dev.log("sharedPrefs.password:${sharedPrefs.password}");
+   
 
-      var res;
+      dynamic res;
       response.fold((error) {
         setLoadingState(LoadingState.error);
-        dev.log("error login called");
+        // dev.log("error login called");
         res = false;
 
         return {
           "res": false,
         };
       }, (success) {
-        dev.log("success login called");
+        dev.log("success login ");
 
         sharedPrefs.isLoggedIn = true;
         setLoadingState(LoadingState.success);
@@ -216,7 +215,7 @@ class AuthProvider extends ChangeNotifier {
           "res": true,
         };
       });
-      dev.log("none login called");
+      // dev.log("none login called");
 
       return {
         "res": res,

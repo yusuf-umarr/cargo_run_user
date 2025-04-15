@@ -7,10 +7,16 @@ import 'package:cargo_run/utils/util.dart';
 import 'package:cargo_run/widgets/app_buttons.dart';
 import 'package:cargo_run/widgets/page_widgets/appbar_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:nb_utils/nb_utils.dart' as util;
 import 'package:provider/provider.dart';
 import '../../../../providers/order_provider.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:path_provider/path_provider.dart';
+import 'dart:io';
+import 'dart:typed_data';
 
 class DeliverySummary extends StatefulWidget {
   final bool isExpressDelivery;
@@ -23,8 +29,25 @@ class DeliverySummary extends StatefulWidget {
 class _DeliverySummaryState extends State<DeliverySummary> {
   bool getPrice = false;
   bool pickedCash = false;
+  ScreenshotController screenshotController = ScreenshotController();
+  Uint8List? imageFile;
 
   String deliveryPrice = '';
+
+  void saveImageD(Uint8List image) async {
+    try {
+      if (image != null) {
+        final directory = await getTemporaryDirectory();
+
+        final file = File('${directory.path}/shared_image.png');
+        await file.writeAsBytes(image);
+
+        await Share.shareXFiles([XFile(file.path)], text: 'Receipt');
+      }
+    } catch (e) {
+      log("Error: $e");
+    }
+  }
 
   @override
   void initState() {
@@ -49,14 +72,72 @@ class _DeliverySummaryState extends State<DeliverySummary> {
 
   @override
   Widget build(BuildContext context) {
-    final OrderProvider _orderVM = context.watch<OrderProvider>();
+    // final OrderProvider _orderVM = context.watch<OrderProvider>();
 
-    dev.log("show distance in meter:${_orderVM.distanceMeters}");
     final Size size = MediaQuery.of(context).size;
     final orderVM = context.watch<OrderProvider>();
     return Scaffold(
       backgroundColor: const Color(0xffF3F3F3),
-      appBar: appBarWidget(context, title: 'Summary', hasBackBtn: true),
+      appBar: AppBar(
+        toolbarHeight: 120, // default is 56
+        toolbarOpacity: 0.5,
+        backgroundColor: primaryColor1,
+        elevation: 0,
+        leadingWidth: double.infinity,
+        centerTitle: false,
+        leading: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: SvgPicture.asset(
+                  'assets/images/arrow-left.svg',
+                  width: 30,
+                ),
+              ),
+              const Spacer(),
+              const Text(
+                "Summary",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: InkWell(
+              onTap: () {
+                screenshotController.capture().then((Uint8List? image) {
+                  //Capture Done
+                  setState(() {
+                    image;
+                  });
+                  // log("image:$image");
+                  saveImageD(image!);
+                }).catchError((onError) {
+                  log(onError);
+                });
+              },
+              child: Container(
+                padding: const EdgeInsets.all(5),
+                decoration: const BoxDecoration(
+                    shape: BoxShape.circle, color: Colors.white),
+                child: const Icon(
+                  Icons.share,
+                  color: primaryColor1,
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
@@ -80,25 +161,32 @@ class _DeliverySummaryState extends State<DeliverySummary> {
                 )
               : Column(
                   children: [
-                    const SizedBox(height: 10),
-                    _paymentSummary(size),
-                    const SizedBox(height: 20),
-                    detailCard(
-                      size,
-                      title: "Sender",
-                      name: sharedPrefs.fullName,
-                      phone: "${orderVM.addressDetails!.contactNumber}",
-                      address: "${orderVM.addressDetails!.landMark}",
+                    Screenshot(
+                      controller: screenshotController,
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 10),
+                          _paymentSummary(size),
+                          const SizedBox(height: 20),
+                          detailCard(
+                            size,
+                            title: "Sender",
+                            name: sharedPrefs.fullName,
+                            phone: "${orderVM.addressDetails!.contactNumber}",
+                            address: "${orderVM.addressDetails!.landMark}",
+                          ),
+                          const SizedBox(height: 20),
+                          detailCard(
+                            size,
+                            title: "Recipient",
+                            name: "${orderVM.receiverDetails!.name}",
+                            phone: "${orderVM.receiverDetails!.phone}",
+                            address: "${orderVM.receiverDetails!.address}",
+                          ),
+                          const SizedBox(height: 40),
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 20),
-                    detailCard(
-                      size,
-                      title: "Recipient",
-                      name: "${orderVM.receiverDetails!.name}",
-                      phone: "${orderVM.receiverDetails!.phone}",
-                      address: "${orderVM.receiverDetails!.address}",
-                    ),
-                    const SizedBox(height: 40),
                     Consumer<OrderProvider>(
                       builder: (context, watch, _) {
                         return (watch.orderStatus == OrderStatus.loading)
@@ -198,7 +286,7 @@ class _DeliverySummaryState extends State<DeliverySummary> {
     }
   }
 
-  Widget _paymentSummary(size) {
+  Widget _paymentSummary(Size size) {
     final order = context.read<OrderProvider>();
     return Container(
       width: size.width,
@@ -209,12 +297,23 @@ class _DeliverySummaryState extends State<DeliverySummary> {
       ),
       child: Column(
         children: [
-          const Text(
-            'Payment details',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
+          Row(
+            children: [
+              Image.asset(
+                "assets/images/logo.png",
+                height: size.height * 0.04,
+              ),
+              const Padding(
+                padding: EdgeInsets.only(left: 8.0),
+                child: Text(
+                  'Details',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ],
           ),
           const Divider(),
           const SizedBox(height: 20),

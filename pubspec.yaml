@@ -43,6 +43,11 @@ dependencies:
   package_info_plus: ^8.2.1
   step_progress_indicator: ^1.0.2
   # geocoding: ^3.0.0
+  share_plus: ^10.1.2
+  screenshot: ^3.0.0
+  # image_gallery_saver_plus: ^4.0.1
+  permission_handler: ^11.3.1
+
 
   
 

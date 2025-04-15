@@ -1,5 +1,6 @@
-package com.cargorun.cargorun_user
+package com.cargorun.app
 
 import io.flutter.embedding.android.FlutterActivity
 
 class MainActivity: FlutterActivity()
+  

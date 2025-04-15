@@ -23,7 +23,7 @@ class ShipmentDetailsScreen extends StatefulWidget {
 class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
   @override
   Widget build(BuildContext context) {
-    // final Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
 
     List<StepperData> stepperData = [
       StepperData(
@@ -84,53 +84,105 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                   children: [
                     const SizedBox(height: 20),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: RichText(
-                        text: TextSpan(
-                          text: 'Order Id: ',
-                          style: const TextStyle(
-                            color: blackText,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: widget.order!.orderId,
-                              style: const TextStyle(
-                                color: primaryColor1,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                      padding: const EdgeInsets.only(left: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              RichText(
+                                text: TextSpan(
+                                  text: 'Order Id: ',
+                                  style: const TextStyle(
+                                    color: blackText,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: widget.order!.orderId,
+                                      style: const TextStyle(
+                                        color: primaryColor1,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                      child: RichText(
-                        text: TextSpan(
-                          text: 'Order Status: ',
-                          style: const TextStyle(
-                            color: blackText,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: widget.order!.status!.toLowerCase() ==
-                                      "picked"
-                                  ? "ON GOING"
-                                  : widget.order!.status!.toUpperCase(),
-                              style: const TextStyle(
-                                color: primaryColor1,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
+                              const SizedBox(height: 10),
+                              RichText(
+                                text: TextSpan(
+                                  text: 'Order Status: ',
+                                  style: const TextStyle(
+                                    color: blackText,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: widget.order!.status!
+                                                  .toLowerCase() ==
+                                              "picked"
+                                          ? "ON GOING"
+                                          : widget.order!.status!.toUpperCase(),
+                                      style: const TextStyle(
+                                        color: primaryColor1,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
+                          if (widget.order!.paymentStatus!.toLowerCase() ==
+                              "pending") ...[
+                            if (widget.order!.status! == "picked" ||
+                                widget.order!.status! == "accepted" ||
+                                widget.order!.status! == "successful" ||
+                                widget.order!.status! == "delivered" ||
+                                widget.order!.status! == "arrived") ...[
+                              Consumer<OrderProvider>(
+                                  builder: (context, orderVM, _) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 25.0),
+                                  child: orderVM.orderStatus ==
+                                          OrderStatus.loading
+                                      ? SizedBox(
+                                          width: size.width * 0.25,
+                                          child: const LoadingButton(
+                                            textColor:
+                                                Color.fromARGB(255, 34, 18, 18),
+                                            backgroundColor: primaryColor2,
+                                          ),
+                                        )
+                                      : AppButton(
+                                          width: size.width * 0.25,
+                                          text: 'Pay now',
+                                          textSize: 12,
+                                          hasIcon: false,
+                                          textColor: Colors.white,
+                                          backgroundColor: primaryColor2,
+                                          onPressed: () {
+                                            context
+                                                .read<OrderProvider>()
+                                                .initiatePayment(
+                                                  widget.order!.id!,
+                                                  widget.order!.price
+                                                      .toString(),
+                                                  context,
+                                                );
+                                          },
+                                        ),
+                                );
+                              }),
+                            ]
+                          ]
+                        ],
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -178,43 +230,6 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                           : "0",
                       paymentStatus: widget.order!.paymentStatus!,
                     ),
-                    if (widget.order!.paymentStatus!.toLowerCase() ==
-                        "pending") ...[
-                   
-                   
-                      if (widget.order!.status! == "picked" ||
-                          widget.order!.status! == "successful" ||
-                          widget.order!.status! == "delivered" ||
-                          widget.order!.status! == "arrived") ...[
-                        Consumer<OrderProvider>(builder: (context, orderVM, _) {
-                        
-                          return Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 25.0),
-                            child: orderVM.orderStatus == OrderStatus.loading
-                                ? const LoadingButton(
-                                    textColor: Color.fromARGB(255, 34, 18, 18),
-                                    backgroundColor: primaryColor2,
-                                  )
-                                : AppButton(
-                                    text: 'Pay now',
-                                    hasIcon: false,
-                                    textColor: Colors.white,
-                                    backgroundColor: primaryColor2,
-                                    onPressed: () {
-                                      context
-                                          .read<OrderProvider>()
-                                          .initiatePayment(
-                                            widget.order!.id!,
-                                            widget.order!.price.toString(),
-                                            context,
-                                          );
-                                    },
-                                  ),
-                          );
-                        }),
-                      ]
-                    ]
                   ],
                 ),
               ),

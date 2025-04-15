@@ -95,7 +95,6 @@ class OrderProvider extends ChangeNotifier {
 
   setSocketIo(socket) {
     _socket = socket;
-    dev.log("_socket:$_socket");
   }
 
   void clearLocation() {
@@ -148,8 +147,7 @@ class OrderProvider extends ChangeNotifier {
     _currentLong = long;
     notifyListeners();
 
-    dev.log(
-        "lat:$_currentLat ---long:$_currentLong --userId:${sharedPrefs.userId}");
+ 
   }
 
   void setDeliveryService(String service) {
@@ -190,7 +188,6 @@ class OrderProvider extends ChangeNotifier {
     var response = await _ordersService.createOrder(
         _addressDetails!, _receiverDetails!, 'normal', 'standard', price);
 
-    dev.log("deliveryPrice:$price");
 
     if (response.success) {
       getOrders();
@@ -207,7 +204,6 @@ class OrderProvider extends ChangeNotifier {
 
     var response = await _ordersService.cancelOrder(orderId);
 
-    // dev.log("orderId:$orderId");
 
     if (response.success) {
       setOrderStatus(OrderStatus.success);
@@ -269,7 +265,6 @@ class OrderProvider extends ChangeNotifier {
         locationFromAddr = LocationFromAddressModel.fromJson(response.data);
 
         notifyListeners();
-        dev.log("locationFromAddr:$locationFromAddr");
       } else {
         log("location er  error :${response.data}");
       }
@@ -316,26 +311,7 @@ class OrderProvider extends ChangeNotifier {
       availableDriverList = data['data'];
     }
 
-    // dev.log(" _availableDriverModel getAvailableDrivers  ${availableDriverList}==");
-
-    // availableDriverList.forEach((x){
-
-    // });
-
-    // try {
-    //   if (data is List) {
-    //     _availableDriverModel = data
-    //         .map(
-    //             (e) => AvailableDriverModel.fromJson(e as Map<String, dynamic>))
-    //         .toList();
-    //   } else if (data is Map<String, dynamic>) {
-    //     _availableDriverModel = [AvailableDriverModel.fromJson(data)];
-    //   }
-    // } catch (e) {
-    //   dev.log("get drivers error here ----:$e");
-    // }
-    // dev.log(
-    //     '_availableDriverModel- locationCoord:${_availableDriverModel[0].locationCoord}');
+  
     notifyListeners();
   }
 
@@ -353,9 +329,7 @@ class OrderProvider extends ChangeNotifier {
       final url = success.data['data']['authorizationUrl'];
       final ref = success.data['data']['reference'];
 
-      dev.log("authrize url:${success.data['data']['authorizationUrl']}");
-
-      dev.log("initiatePayment:${success.data}");
+   
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -418,20 +392,14 @@ class OrderProvider extends ChangeNotifier {
     required double destinationLat,
     required double destinationLng,
   }) async {
-    dev.log("sourceLat:$sourceLat");
-    dev.log("sourceLng:$sourceLng");
-    dev.log("destinationLat:$destinationLat");
-    dev.log("sourceLng:$sourceLng");
+
     // Convert latitude and longitude from degrees to radians
     final double sourceLatRad = _toRadians(sourceLat);
     final double sourceLngRad = _toRadians(sourceLng);
     final double destinationLatRad = _toRadians(destinationLat);
     final double destinationLngRad = _toRadians(destinationLng);
 
-    dev.log("sourceLatRad:$sourceLatRad");
-    dev.log("sourceLngRad:$sourceLngRad");
-    dev.log("destinationLatRad:$destinationLatRad");
-    dev.log("destinationLngRad:$destinationLngRad");
+
 
     // Haversine formula
     final double dLat = destinationLatRad - sourceLatRad;
@@ -444,7 +412,6 @@ class OrderProvider extends ChangeNotifier {
     //Distance in meters (km * 1000)
     distanceMeters = (earthRadiusKm * c) * 1000;
 
-    dev.log("distanceMeters here-:$distanceMeters");
     notifyListeners();
 
     // return totalDistanceMeters;
