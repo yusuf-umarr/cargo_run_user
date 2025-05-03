@@ -56,8 +56,8 @@ class OrderProvider extends ChangeNotifier {
   List<NotificationData> get notificationModel => _notificationModel;
   List<NotificationData> _notificationModel = [];
 
-  String? get priceModel => _priceModel;
-  String? _priceModel;
+  dynamic get priceModel => _priceModel;
+  dynamic _priceModel;
 
   double? get currentLat => _currentLat;
   double? _currentLat;
@@ -146,8 +146,6 @@ class OrderProvider extends ChangeNotifier {
     _currentLat = lat;
     _currentLong = long;
     notifyListeners();
-
- 
   }
 
   void setDeliveryService(String service) {
@@ -188,7 +186,6 @@ class OrderProvider extends ChangeNotifier {
     var response = await _ordersService.createOrder(
         _addressDetails!, _receiverDetails!, 'normal', 'standard', price);
 
-
     if (response.success) {
       getOrders();
       setOrderStatus(OrderStatus.success);
@@ -203,7 +200,6 @@ class OrderProvider extends ChangeNotifier {
     setOrderStatus(OrderStatus.loading);
 
     var response = await _ordersService.cancelOrder(orderId);
-
 
     if (response.success) {
       setOrderStatus(OrderStatus.success);
@@ -296,7 +292,7 @@ class OrderProvider extends ChangeNotifier {
     var response = await _ordersService.getPrice();
     if (response.success) {
       setOrderStatus(OrderStatus.success);
-      _priceModel = response.data['data'][0]['price'].toString();
+      _priceModel = response.data['data'][0]['price'];
 
       notifyListeners();
     } else {
@@ -311,7 +307,6 @@ class OrderProvider extends ChangeNotifier {
       availableDriverList = data['data'];
     }
 
-  
     notifyListeners();
   }
 
@@ -329,7 +324,6 @@ class OrderProvider extends ChangeNotifier {
       final url = success.data['data']['authorizationUrl'];
       final ref = success.data['data']['reference'];
 
-   
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -392,14 +386,11 @@ class OrderProvider extends ChangeNotifier {
     required double destinationLat,
     required double destinationLng,
   }) async {
-
     // Convert latitude and longitude from degrees to radians
     final double sourceLatRad = _toRadians(sourceLat);
     final double sourceLngRad = _toRadians(sourceLng);
     final double destinationLatRad = _toRadians(destinationLat);
     final double destinationLngRad = _toRadians(destinationLng);
-
-
 
     // Haversine formula
     final double dLat = destinationLatRad - sourceLatRad;
@@ -410,7 +401,7 @@ class OrderProvider extends ChangeNotifier {
     final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
 
     //Distance in meters (km * 1000)
-    distanceMeters = (earthRadiusKm * c) * 1000;
+    distanceMeters = (earthRadiusKm * c); //distance in KM
 
     notifyListeners();
 

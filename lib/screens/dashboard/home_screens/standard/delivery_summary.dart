@@ -233,7 +233,7 @@ class _DeliverySummaryState extends State<DeliverySummary> {
   String getPrices(
       {required String distanceInMeters,
       bool isExpressDelivery = false,
-      required int pricePerMeters}) {
+      required dynamic pricePerMeters}) {
     double subTotal = 0.0;
 
     dev.log("get---distanceInMeters${distanceInMeters}");
@@ -259,7 +259,7 @@ class _DeliverySummaryState extends State<DeliverySummary> {
   String getTotalPrice(
       {required String distanceInMeters,
       bool isExpressDelivery = false,
-      required int pricePerMeters}) {
+      required dynamic pricePerMeters}) {
     double total = 0;
     try {
       log("distanceInMeters--:$distanceInMeters");
@@ -320,13 +320,13 @@ class _DeliverySummaryState extends State<DeliverySummary> {
           rowItem(
               title: 'Total',
               value:
-                  '₦ ${getTotalPrice(distanceInMeters: order.distanceMeters.toString(), isExpressDelivery: widget.isExpressDelivery, pricePerMeters: int.parse(order.priceModel!))}'),
+                  '₦ ${getTotalPrice(distanceInMeters: order.distanceMeters.toString(), isExpressDelivery: widget.isExpressDelivery, pricePerMeters: order.priceModel)}'),
           const SizedBox(height: 10),
           widget.isExpressDelivery
               ? rowItem(
                   title: 'Express Delivery\nCharge(10%)',
                   value:
-                      '₦${getTenPercent(distanceInMeters: order.distanceMeters.toString(), pricePerMeters: int.parse(order.priceModel!))}')
+                      '₦${getTenPercent(distanceInMeters: order.distanceMeters.toString(), pricePerMeters: order.priceModel)}')
               : const SizedBox.shrink(),
           const SizedBox(height: 10),
 
@@ -335,7 +335,7 @@ class _DeliverySummaryState extends State<DeliverySummary> {
               value: '₦ ${getPrices(
                 distanceInMeters: order.distanceMeters.toString(),
                 isExpressDelivery: widget.isExpressDelivery,
-                pricePerMeters: int.parse(order.priceModel!),
+                pricePerMeters: order.priceModel,
               )}'),
 
           // rowItem(title: 'Total', value: '₦${order.distancePrice + 2000.00}'),
