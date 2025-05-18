@@ -12,7 +12,6 @@ class AppTextField extends StatefulWidget {
   final String labelText;
   final bool? isSuffix;
   final String? hintText;
-    final FocusNode? focusNode; // <-- Add this
     final bool? enabled;
   const AppTextField({
     super.key,
@@ -26,7 +25,6 @@ class AppTextField extends StatefulWidget {
     this.hintText,
     this.isNumber,
     this.keyboardType,
-        this.focusNode,
         this.enabled,
 
   });
@@ -56,7 +54,6 @@ class _AppTextFieldState extends State<AppTextField> {
           height: 65,
           child: TextFormField(
             enabled: widget.enabled ?? true,
-             focusNode: widget.focusNode, 
             controller: widget.controller,
             obscureText: widget.isPassword == true ? obscure : false,
             keyboardType: widget.keyboardType,
