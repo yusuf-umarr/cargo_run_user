@@ -1,0 +1,2 @@
+/Users/mac/Desktop/soft/cargo_run_user/android/app/.cxx/Debug/2m6i23r1/x86_64/CMakeFiles/edit_cache.dir
+/Users/mac/Desktop/soft/cargo_run_user/android/app/.cxx/Debug/2m6i23r1/x86_64/CMakeFiles/rebuild_cache.dir

@@ -26,11 +26,13 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+
     return InkWell(
       onTap: onPressed,
       child: Container(
         height: height ?? 55,
-        width: width ?? double.infinity,
+        width: width ?? size.width,
         padding: const EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: backgroundColor ?? Colors.white,
@@ -75,9 +77,10 @@ class LoadingButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
     return Container(
       height: 55,
-      width: double.infinity,
+      width: size.width,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         color: backgroundColor ?? Colors.white,

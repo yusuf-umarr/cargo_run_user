@@ -84,108 +84,188 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                   children: [
                     const SizedBox(height: 20),
                     Padding(
-                      padding: const EdgeInsets.only(left: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 20)
+                          .copyWith(bottom: 20),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              RichText(
-                                text: TextSpan(
-                                  text: 'Order Id: ',
-                                  style: const TextStyle(
-                                    color: blackText,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: widget.order!.orderId,
-                                      style: const TextStyle(
-                                        color: primaryColor1,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
+                              Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(color: primaryColor1),
                                 ),
-                              ),
-                              const SizedBox(height: 10),
-                              RichText(
-                                text: TextSpan(
-                                  text: 'Order Status: ',
-                                  style: const TextStyle(
-                                    color: blackText,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: widget.order!.status!
-                                                  .toLowerCase() ==
-                                              "picked"
-                                          ? "ON GOING"
-                                          : widget.order!.status!.toUpperCase(),
-                                      style: const TextStyle(
-                                        color: primaryColor1,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: widget.order!.riderId?.profileImage !=
+                                          null
+                                      ? Image.network(
+                                          widget.order!.riderId!.profileImage!,
+                                          height: 60,
+                                          width: 60,
+                                          fit: BoxFit.cover,
+                                        )
+                                      : Image.asset(
+                                          'assets/images/profile-icon.png',
+                                          height: 60,
+                                          width: 60,
+                                        ),
                                 ),
                               ),
                             ],
                           ),
-                          if (widget.order!.paymentStatus!.toLowerCase() ==
-                              "pending") ...[
-                            if (widget.order!.status! == "picked" ||
-                                widget.order!.status! == "accepted" ||
-                                widget.order!.status! == "successful" ||
-                                widget.order!.status! == "delivered" ||
-                                widget.order!.status! == "arrived") ...[
-                              Consumer<OrderProvider>(
-                                  builder: (context, orderVM, _) {
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 25.0),
-                                  child: orderVM.orderStatus ==
-                                          OrderStatus.loading
-                                      ? SizedBox(
-                                          width: size.width * 0.25,
-                                          child: const LoadingButton(
-                                            textColor:
-                                                Color.fromARGB(255, 34, 18, 18),
-                                            backgroundColor: primaryColor2,
-                                          ),
-                                        )
-                                      : AppButton(
-                                          width: size.width * 0.25,
-                                          text: 'Pay now',
-                                          textSize: 12,
-                                          hasIcon: false,
-                                          textColor: Colors.white,
-                                          backgroundColor: primaryColor2,
-                                          onPressed: () {
-                                            context
-                                                .read<OrderProvider>()
-                                                .initiatePayment(
-                                                  widget.order!.id!,
-                                                  widget.order!.price
-                                                      .toString(),
-                                                  context,
-                                                );
-                                          },
-                                        ),
-                                );
-                              }),
-                            ]
-                          ]
+                          const SizedBox(width: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.order!.riderId?.fullName ?? "NIL ",
+                                style: const TextStyle(
+                                  fontSize: 15.0,
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor1,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                widget.order!.riderId?.phone! ?? "NIL",
+                                style: const TextStyle(
+                                  fontSize: 12.0,
+                                  color: greyText,
+                                ),
+                              ),
+                              Container(
+                                margin: const EdgeInsets.only(top: 2),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 4, vertical: 2),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: primaryColor1),
+                                  borderRadius: BorderRadius.circular(5.0),
+                                ),
+                                child: Text(
+                                  widget.order!.riderId?.vehicle?.plateNumber ??
+                                      "NIL NIL NIL",
+                                  style: const TextStyle(
+                                    color: primaryColor1,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          RichText(
+                            text: TextSpan(
+                              text: 'Order Id: ',
+                              style: const TextStyle(
+                                color: blackText,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: widget.order!.orderId,
+                                  style: const TextStyle(
+                                    color: primaryColor1,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          RichText(
+                            text: TextSpan(
+                              text: 'Order Status: ',
+                              style: const TextStyle(
+                                color: blackText,
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                              children: [
+                                TextSpan(
+                                  text: widget.order!.status!.toLowerCase() ==
+                                          "picked"
+                                      ? "ON GOING"
+                                      : widget.order!.status!.toUpperCase(),
+                                  style: const TextStyle(
+                                    color: primaryColor1,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    // const SizedBox(height: 20),
+                    PaymentSummaryCard(
+                      deliveryFee: widget.order!.price != null
+                          ? widget.order!.price!.toStringAsFixed(2).toString()
+                          : "0",
+                      paymentStatus: widget.order!.paymentStatus!,
+                    ),
+
+                    if (widget.order!.paymentStatus!.toLowerCase() ==
+                        "pending") ...[
+                      if (widget.order!.status! == "picked" ||
+                          widget.order!.status! == "accepted" ||
+                          widget.order!.status! == "successful" ||
+                          widget.order!.status! == "delivered" ||
+                          widget.order!.status! == "arrived") ...[
+                        Consumer<OrderProvider>(builder: (context, orderVM, _) {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 25.0),
+                            child: orderVM.orderStatus == OrderStatus.loading
+                                ? const SizedBox(
+                                    child: LoadingButton(
+                                      textColor:
+                                          Color.fromARGB(255, 34, 18, 18),
+                                      backgroundColor: primaryColor2,
+                                    ),
+                                  )
+                                : AppButton(
+                                    text: 'Pay now',
+                                    hasIcon: false,
+                                    textColor: Colors.white,
+                                    backgroundColor: primaryColor2,
+                                    onPressed: () {
+                                      context
+                                          .read<OrderProvider>()
+                                          .initiatePayment(
+                                            widget.order!.id!,
+                                            widget.order!.price.toString(),
+                                            context,
+                                          );
+                                    },
+                                  ),
+                          );
+                        }),
+                      ]
+                    ],
                     const SizedBox(height: 10),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 25.0,
+                        vertical: 5,
+                      ),
+                      child: AnotherStepper(
+                        stepperList: stepperData,
+                        stepperDirection: Axis.vertical,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                     if (widget.order!.status!.toLowerCase() == "picked") ...[
                       if (widget.order!.riderLocation != null)
                         Padding(
@@ -210,26 +290,9 @@ class _ShipmentDetailsScreenState extends State<ShipmentDetailsScreen> {
                           ),
                         ),
                     ],
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 25.0,
-                        vertical: 5,
-                      ),
-                      child: AnotherStepper(
-                        stepperList: stepperData,
-                        stepperDirection: Axis.vertical,
-                      ),
-                    ),
                     if (widget.order!.status! == "pending") ...[
                       CancelOrderWidget(order: widget.order!),
                     ],
-                    PaymentSummaryCard(
-                      deliveryFee: widget.order!.price != null
-                          ? widget.order!.price!.toStringAsFixed(2).toString()
-                          : "0",
-                      paymentStatus: widget.order!.paymentStatus!,
-                    ),
                   ],
                 ),
               ),

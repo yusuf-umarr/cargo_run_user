@@ -30,11 +30,11 @@ class PaymentSummaryCard extends StatelessWidget {
           const Text(
             'Payment Summary',
             style: TextStyle(
-              fontSize: 18.0,
+              fontSize: 16.0,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 20.0),
+          const SizedBox(height: 10.0),
           rowItem(
               title: 'Delivery Fee',
               value: (double.parse(deliveryFee)).toStringAsFixed(2)),
@@ -68,14 +68,14 @@ class PaymentSummaryCard extends StatelessWidget {
         Text(
           title,
           style: const TextStyle(
-            fontSize: 15.0,
+            fontSize: 13.0,
             fontWeight: FontWeight.w500,
           ),
         ),
         Text(
           value,
           style: GoogleFonts.roboto(
-            fontSize: 17.0,
+            fontSize: 14.0,
             fontWeight: FontWeight.w600,
             color: textColor ?? blackText,
           ),

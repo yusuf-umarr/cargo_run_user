@@ -349,6 +349,7 @@ class OrderProvider extends ChangeNotifier {
               _orders = [];
             }, (sucess) {
               setOrderStatus(OrderStatus.success);
+              // dev.log("get order sucess.data:${sucess.data}");
               List<dynamic> data = sucess.data;
               List<Order?> fetched =
                   data.map((e) => Order.fromJson(e)).toList();

@@ -1,181 +1,281 @@
+
 // class Order {
+//   final String id;
+//   final String orderId;
+//   final String trackingId;
+//   final double amount;
+//   final double price;
+//   final String status;
+//   final String paymentStatus;
+//   final String deliveryService;
+//   final String deliveryOption;
+//   final double averageRating;
+//   final double deliveryFee;
+//   final bool isDelete;
+//   final DateTime createdAt;
+//   final DateTime updatedAt;
+//   final AddressDetails addressDetails;
+//   final ReceiverDetails receiverDetails;
+//   final LocationCoord locationCoord;
+//   final RiderLocation riderLocation;
+//   final User userId;
+//   final Rider riderId;
+
 //   Order({
-//     required this.addressDetails,
-//     required this.receiverDetails,
-//     required this.locationCoord,
 //     required this.id,
 //     required this.orderId,
 //     required this.trackingId,
-//     required this.userId,
+//     required this.amount,
+//     required this.price,
 //     required this.status,
 //     required this.paymentStatus,
 //     required this.deliveryService,
 //     required this.deliveryOption,
 //     required this.averageRating,
 //     required this.deliveryFee,
-//     required this.price,
 //     required this.isDelete,
-//     required this.ratings,
 //     required this.createdAt,
 //     required this.updatedAt,
-//     required this.v,
-//     required this.amount,
+//     required this.addressDetails,
+//     required this.receiverDetails,
+//     required this.locationCoord,
+//     required this.riderLocation,
+//     required this.userId,
+//     required this.riderId,
 //   });
-
-//   final AddressDetails? addressDetails;
-//   final ReceiverDetails? receiverDetails;
-//   final LocationCoord? locationCoord;
-//   final String? id;
-//   final String? orderId;
-//   final String? trackingId;
-//   final UserId? userId;
-//   final String? status;
-//   final String? paymentStatus;
-//   final String? deliveryService;
-//   final String? deliveryOption;
-//   final num? averageRating;
-//   final num? deliveryFee;
-//   final num? price;
-//   final bool? isDelete;
-//   final List<Rating> ratings;
-//   final DateTime? createdAt;
-//   final DateTime? updatedAt;
-//   final num? v;
-//   final num? amount;
 
 //   factory Order.fromJson(Map<String, dynamic> json) {
 //     return Order(
-//       addressDetails: json["addressDetails"] == null
-//           ? null
-//           : AddressDetails.fromJson(json["addressDetails"]),
-
-//       receiverDetails: json["receiverDetails"] == null
-//           ? null
-//           : ReceiverDetails.fromJson(json["receiverDetails"]),
-//       locationCoord: json["locationCoord"] == null
-//           ? null
-//           : LocationCoord.fromJson(json["locationCoord"]),
-
-//       id: json["_id"],
-//       orderId: json["orderId"],
-//       trackingId: json["trackingId"],
-//       userId: json["userId"] == null ? null : UserId.fromJson(json["userId"]),
-//       status: json["status"],
-//       paymentStatus: json["paymentStatus"],
-//       deliveryService: json["deliveryService"],
-//       deliveryOption: json["deliveryOption"],
-//       averageRating: json["averageRating"],
-//       deliveryFee: json["deliveryFee"],
-//       price: json["price"],
-//       isDelete: json["isDelete"],
-//       ratings: json["ratings"] == null
-//           ? []
-//           : List<Rating>.from(json["ratings"]!.map((x) => Rating.fromJson(x))),
-//       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
-//       updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
-//       v: json["__v"],
-//       amount: json["amount"],
+//       id: json['_id'],
+//       orderId: json['orderId'],
+//       trackingId: json['trackingId'],
+//       amount: (json['amount'] ?? 0).toDouble(),
+//       price: (json['price'] ?? 0).toDouble(),
+//       status: json['status'],
+//       paymentStatus: json['paymentStatus'],
+//       deliveryService: json['deliveryService'],
+//       deliveryOption: json['deliveryOption'],
+//       averageRating: (json['averageRating'] ?? 0).toDouble(),
+//       deliveryFee: (json['deliveryFee'] ?? 0).toDouble(),
+//       isDelete: json['isDelete'],
+//       createdAt: DateTime.parse(json['createdAt']),
+//       updatedAt: DateTime.parse(json['updatedAt']),
+//       addressDetails: AddressDetails.fromJson(json['addressDetails']),
+//       receiverDetails: ReceiverDetails.fromJson(json['receiverDetails']),
+//       locationCoord: LocationCoord.fromJson(json['locationCoord']),
+//       riderLocation: RiderLocation.fromJson(json['riderLocation']),
+//       userId: User.fromJson(json['userId']),
+//       riderId: Rider.fromJson(json['riderId']),
 //     );
 //   }
-
-//   Map<String, dynamic> toJson() => {
-//         "addressDetails": addressDetails?.toJson(),
-//         "receiverDetails": receiverDetails?.toJson(),
-//         "locationCoord": locationCoord?.toJson(),
-//         "_id": id,
-//         "orderId": orderId,
-//         "trackingId": trackingId,
-//         "userId": userId?.toJson(),
-//         "status": status,
-//         "paymentStatus": paymentStatus,
-//         "deliveryService": deliveryService,
-//         "deliveryOption": deliveryOption,
-//         "averageRating": averageRating,
-//         "deliveryFee": deliveryFee,
-//         "price": price,
-//         "isDelete": isDelete,
-//         "ratings": ratings.map((x) => x.toJson()).toList(),
-//         "createdAt": createdAt?.toIso8601String(),
-//         "updatedAt": updatedAt?.toIso8601String(),
-//         "__v": v,
-//         "amount": amount,
-//       };
 // }
 
-// class LocationCoord{
-//   LocationCoord({ required this.lat, required this.lng});
+// class AddressDetails {
+//   final String? houseNumber;
+//   final String landMark;
+//   final String contactNumber;
+//   final double lat;
+//   final double lng;
 
-//   final num? lng;
-//   final num? lat;
-
-//   factory LocationCoord.fromJson(Map<String, dynamic> json){
-//     return LocationCoord(lat: json['lat'], lng: json['lng']);
-//   }
-
-//   Map<String, dynamic> toJson() =>{
-//     "lat":lat,
-//     "lng":lng
-//   };
-// }
-
-
-
-// class Rating {
-//   Rating({
-//     required this.rate,
-//     required this.review,
-//     required this.ratedBy,
-//     required this.id,
+//   AddressDetails({
+//     this.houseNumber,
+//     required this.landMark,
+//     required this.contactNumber,
+//     required this.lat,
+//     required this.lng,
 //   });
 
-//   final num? rate;
-//   final String? review;
-//   final RatedBy? ratedBy;
-//   final String? id;
-
-//   factory Rating.fromJson(Map<String, dynamic> json) {
-//     return Rating(
-//       rate: json["rate"],
-//       review: json["review"],
-//       ratedBy:
-//           json["ratedBy"] == null ? null : RatedBy.fromJson(json["ratedBy"]),
-//       id: json["_id"],
+//   factory AddressDetails.fromJson(Map<String, dynamic> json) {
+//     return AddressDetails(
+//       houseNumber: json['houseNumber'],
+//       landMark: json['landMark'],
+//       contactNumber: json['contactNumber'],
+//       lat: (json['lat'] ?? 0).toDouble(),
+//       lng: (json['lng'] ?? 0).toDouble(),
 //     );
 //   }
 
-//   Map<String, dynamic> toJson() => {
-//         "rate": rate,
-//         "review": review,
-//         "ratedBy": ratedBy?.toJson(),
-//         "_id": id,
-//       };
+    // Map<String, dynamic> toJson() => {
+    //     "houseNumber": houseNumber,
+    //     "landMark": landMark,
+    //     "contactNumber": contactNumber,
+    //     "lng": lng,
+    //     "lat": lat,
+    //   };
+
 // }
 
-// class RatedBy {
-//   RatedBy({
+// class ReceiverDetails {
+//   final String name;
+//   final String phone;
+//   final String address;
+//   final double lat;
+//   final double lng;
+
+//   ReceiverDetails({
+//     required this.name,
+//     required this.phone,
+//     required this.address,
+//     required this.lat,
+//     required this.lng,
+//   });
+
+//   factory ReceiverDetails.fromJson(Map<String, dynamic> json) {
+//     return ReceiverDetails(
+//       name: json['name'],
+//       phone: json['phone'],
+//       address: json['address'],
+//       lat: (json['lat'] ?? 0).toDouble(),
+//       lng: (json['lng'] ?? 0).toDouble(),
+//     );
+//   }
+
+    // Map<String, dynamic> toJson() => {
+    //     "name": name,
+    //     "phone": phone,
+    //     "address": address,
+    //     "lng": lng,
+    //     "lat": lat,
+    //   };
+// }
+
+// class LocationCoord {
+//   final String type;
+//   final List<double> coordinates;
+
+//   LocationCoord({
+//     required this.type,
+//     required this.coordinates,
+//   });
+
+//   factory LocationCoord.fromJson(Map<String, dynamic> json) {
+//     return LocationCoord(
+//       type: json['type'],
+//       coordinates:
+//           List<double>.from(json['coordinates'].map((x) => x.toDouble())),
+//     );
+//   }
+// }
+
+// class RiderLocation {
+//   final double lat;
+//   final double lng;
+
+//   RiderLocation({
+//     required this.lat,
+//     required this.lng,
+//   });
+
+//   factory RiderLocation.fromJson(Map<String, dynamic> json) {
+//     return RiderLocation(
+//       lat: (json['lat'] ?? 0).toDouble(),
+//       lng: (json['lng'] ?? 0).toDouble(),
+//     );
+//   }
+// }
+
+// class User {
+//   final String id;
+//   final String fullName;
+//   final String phone;
+//   final String email;
+//   final bool isDelete;
+//   final bool isVerified;
+
+//   User({
 //     required this.id,
 //     required this.fullName,
 //     required this.phone,
+//     required this.email,
+//     required this.isDelete,
+//     required this.isVerified,
 //   });
 
-//   final String? id;
-//   final String? fullName;
-//   final String? phone;
+//   factory User.fromJson(Map<String, dynamic> json) {
+//     return User(
+//       id: json['_id']??0,
+//       fullName: json['fullName']??"",
+//       phone: json['phone']??0,
+//       email: json['email']??"",
+//       isDelete: json['isDelete']??false,
+//       isVerified: json['isVerified']??false,
+//     );
+//   }
+// }
 
-//   factory RatedBy.fromJson(Map<String, dynamic> json) {
-//     return RatedBy(
-//       id: json["_id"],
-//       fullName: json["fullName"],
-//       phone: json["phone"],
+// class Rider {
+//   final String id;
+//   final String fullName;
+//   final String phone;
+//   final String profileImage;
+//   final dynamic vehicle;
+
+//   Rider({
+//     required this.id,
+//     required this.fullName,
+//     required this.phone,
+//     required this.profileImage,
+//     required this.vehicle,
+//   });
+
+//   factory Rider.fromJson(Map<String, dynamic> json) {
+//     return Rider(
+//       id: json['_id']??0,
+//       fullName: json['fullName']??"",
+//       phone: json['phone']??0,
+//       profileImage: json['profileImage']??"",
+//       vehicle:json['vehicle']??"", 
+//     );
+//   }
+
+//   //Vehicle.fromJson(json['vehicle']?? Vehicle(brand: "", plateNumber: "",image: "",vehicleType: "")
+// }
+
+// class Vehicle {
+//   final String brand;
+//   final String image;
+//   final String plateNumber;
+//   final String vehicleType;
+
+//   Vehicle({
+//     required this.brand,
+//     required this.image,
+//     required this.plateNumber,
+//     required this.vehicleType,
+//   });
+
+//   factory Vehicle.fromJson(Map<String, dynamic> json) {
+//     return Vehicle(
+//       brand: json['brand']??"",
+//       image: json['image']??"",
+//       plateNumber: json['plateNumber']??"",
+//       vehicleType: json['vehicleType']??"",
+//     );
+//   }
+// }
+
+
+// /*
+
+//   factory AddressDetails.fromJson(Map<String, dynamic> json) {
+//     return AddressDetails(
+//       houseNumber: json["houseNumber"],
+//       landMark: json["landMark"],
+//       contactNumber: json["contactNumber"],
+//       lng: json["lng"],
+//       lat: json["lat"],
 //     );
 //   }
 
 //   Map<String, dynamic> toJson() => {
-//         "_id": id,
-//         "fullName": fullName,
-//         "phone": phone,
+//         "houseNumber": houseNumber,
+//         "landMark": landMark,
+//         "contactNumber": contactNumber,
+//         "lng": lng,
+//         "lat": lat,
 //       };
 // }
+
 
 // class ReceiverDetails {
 //   ReceiverDetails({
@@ -201,125 +301,32 @@
 //       lat: json["lat"],
 //     );
 //   }
+// */
 
-//   Map<String, dynamic> toJson() => {
-//         "name": name,
-//         "phone": phone,
-//         "address": address,
-//         "lng": lng,
-//         "lat": lat,
-//       };
-// }
-
-// class UserId {
-//   UserId({
-//     required this.id,
-//     required this.fullName,
-//     required this.phone,
-//     required this.wallet,
-//     required this.password,
-//     required this.isDelete,
-//     required this.isVerified,
-//     required this.verified,
-//     required this.createdAt,
-//     required this.updatedAt,
-//     required this.v,
-//     required this.email,
-//     required this.verificationOtp,
-//   });
-
-//   final String? id;
-//   final String? fullName;
-//   final String? phone;
-//   final num? wallet;
-//   final String? password;
-//   final bool? isDelete;
-//   final bool? isVerified;
-//   final DateTime? verified;
-//   final DateTime? createdAt;
-//   final DateTime? updatedAt;
-//   final num? v;
-//   final String? email;
-//   final String? verificationOtp;
-
-//   factory UserId.fromJson(Map<String, dynamic> json) {
-//     return UserId(
-//       id: json["_id"],
-//       fullName: json["fullName"],
-//       phone: json["phone"],
-//       wallet: json["wallet"],
-//       password: json["password"],
-//       isDelete: json["isDelete"],
-//       isVerified: json["isVerified"],
-//       verified: DateTime.tryParse(json["verified"] ?? ""),
-//       createdAt: DateTime.tryParse(json["createdAt"] ?? ""),
-//       updatedAt: DateTime.tryParse(json["updatedAt"] ?? ""),
-//       v: json["__v"],
-//       email: json["email"],
-//       verificationOtp: json["verificationOtp"],
-//     );
-//   }
-
-//   Map<String, dynamic> toJson() => {
-//         "_id": id,
-//         "fullName": fullName,
-//         "phone": phone,
-//         "wallet": wallet,
-//         "password": password,
-//         "isDelete": isDelete,
-//         "isVerified": isVerified,
-//         "verified": verified?.toIso8601String(),
-//         "createdAt": createdAt?.toIso8601String(),
-//         "updatedAt": updatedAt?.toIso8601String(),
-//         "__v": v,
-//         "email": email,
-//         "verificationOtp": verificationOtp,
-//       };
-// }
-
-
-
-// class Order {
-//   bool? success;
-//   String? msg;
-//   List<Order>? data;
-
-//   Order({this.success, this.msg, this.data});
-
-//   factory Order.fromJson(Map<String, dynamic> json) {
-//     return Order(
-//       success: json['success'],
-//       msg: json['msg'],
-//       data: json['data'] != null
-//           ? List<Order>.from(json['data'].map((x) => Order.fromJson(x)))
-//           : null,
-//     );
-//   }
-// }
 
 class Order {
-  AddressDetails? addressDetails;
-  ReceiverDetails? receiverDetails;
-  LocationCoord? locationCoord;
-  RiderLocation? riderLocation;
-  String? id;
-  String? orderId;
-  String? trackingId;
-  double? amount;
-  double? price;
-  UserId? userId;
-  String? status;
-  String? paymentStatus;
-  String? deliveryService;
-  String? deliveryOption;
-  double? averageRating;
-  double? deliveryFee;
-  bool? isDelete;
-  List<dynamic>? ratings;
-  String? createdAt;
-  String? updatedAt;
-  int? v;
-  String? riderId;
+  final AddressDetails? addressDetails;
+  final ReceiverDetails? receiverDetails;
+  final LocationCoord? locationCoord;
+  final RiderLocation? riderLocation;
+  final String? id;
+  final String? orderId;
+  final String? trackingId;
+  final num? amount;
+  final num? price;
+  final UserId? userId;
+  final String? status;
+  final String? paymentStatus;
+  final String? deliveryService;
+  final String? deliveryOption;
+  final num? averageRating;
+  final num? deliveryFee;
+  final bool? isDelete;
+  final List<dynamic>? ratings;
+  final String? createdAt;
+  final String? updatedAt;
+  final int? v;
+  final RiderId? riderId;
 
   Order({
     this.addressDetails,
@@ -360,54 +367,55 @@ class Order {
       riderLocation: json['riderLocation'] != null
           ? RiderLocation.fromJson(json['riderLocation'])
           : null,
-      id: json['_id'],
-      orderId: json['orderId'],
-      trackingId: json['trackingId'],
-      amount: (json['amount'] as num?)?.toDouble(),
-      price: (json['price'] as num?)?.toDouble(),
+      id: json['_id'] as String?,
+      orderId: json['orderId'] as String?,
+      trackingId: json['trackingId'] as String?,
+      amount: json['amount'],
+      price: json['price'],
       userId: json['userId'] != null ? UserId.fromJson(json['userId']) : null,
-      status: json['status'],
-      paymentStatus: json['paymentStatus'],
-      deliveryService: json['deliveryService'],
-      deliveryOption: json['deliveryOption'],
-      averageRating: (json['averageRating'] as num?)?.toDouble(),
-      deliveryFee: (json['deliveryFee'] as num?)?.toDouble(),
-      isDelete: json['isDelete'],
-      ratings: json['ratings'] ?? [],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
-      v: json['__v'],
-      riderId: json['riderId'],
+      status: json['status'] as String?,
+      paymentStatus: json['paymentStatus'] as String?,
+      deliveryService: json['deliveryService'] as String?,
+      deliveryOption: json['deliveryOption'] as String?,
+      averageRating: json['averageRating'],
+      deliveryFee: json['deliveryFee'],
+      isDelete: json['isDelete'] as bool?,
+      ratings: json['ratings'] as List<dynamic>?,
+      createdAt: json['createdAt'] as String?,
+      updatedAt: json['updatedAt'] as String?,
+      v: json['__v'] as int?,
+      riderId:
+          json['riderId'] != null ? RiderId.fromJson(json['riderId']) : null,
     );
   }
 }
 
 class AddressDetails {
-  AddressDetails({
-     this.houseNumber,
-    required this.landMark,
-    required this.contactNumber,
-    required this.lng,
-    required this.lat,
-  });
-
-  final num? houseNumber;
+  final String? houseNumber;
   final String? landMark;
   final String? contactNumber;
-  final num? lng;
-  final num? lat;
+  final double? lng;
+  final double? lat;
+
+  AddressDetails({
+    this.houseNumber,
+    this.landMark,
+    this.contactNumber,
+    this.lng,
+    this.lat,
+  });
 
   factory AddressDetails.fromJson(Map<String, dynamic> json) {
     return AddressDetails(
-      houseNumber: json["houseNumber"],
-      landMark: json["landMark"],
-      contactNumber: json["contactNumber"],
-      lng: json["lng"],
-      lat: json["lat"],
+      houseNumber: json['houseNumber'] as String?,
+      landMark: json['landMark'] as String?,
+      contactNumber: json['contactNumber'] as String?,
+      lng: (json['lng'] as num?)?.toDouble(),
+      lat: (json['lat'] as num?)?.toDouble(),
     );
   }
 
-  Map<String, dynamic> toJson() => {
+      Map<String, dynamic> toJson() => {
         "houseNumber": houseNumber,
         "landMark": landMark,
         "contactNumber": contactNumber,
@@ -416,33 +424,31 @@ class AddressDetails {
       };
 }
 
-
 class ReceiverDetails {
-  ReceiverDetails({
-    required this.name,
-    required this.phone,
-    required this.address,
-    required this.lng,
-    required this.lat,
-  });
-
   final String? name;
   final String? phone;
   final String? address;
-  final num? lng;
-  final num? lat;
+  final double? lng;
+  final double? lat;
+
+  ReceiverDetails({
+    this.name,
+    this.phone,
+    this.address,
+    this.lng,
+    this.lat,
+  });
 
   factory ReceiverDetails.fromJson(Map<String, dynamic> json) {
     return ReceiverDetails(
-      name: json["name"],
-      phone: json["phone"],
-      address: json["address"],
-      lng: json["lng"],
-      lat: json["lat"],
+      name: json['name'] as String?,
+      phone: json['phone'] as String?,
+      address: json['address'] as String?,
+      lng: (json['lng'] as num?)?.toDouble(),
+      lat: (json['lat'] as num?)?.toDouble(),
     );
   }
-
-  Map<String, dynamic> toJson() => {
+   Map<String, dynamic> toJson() => {
         "name": name,
         "phone": phone,
         "address": address,
@@ -451,28 +457,31 @@ class ReceiverDetails {
       };
 }
 
-
 class LocationCoord {
-  String? type;
-  List<double>? coordinates;
+  final String? type;
+  final List<dynamic>? coordinates;
 
-  LocationCoord({this.type, this.coordinates});
+  LocationCoord({
+    this.type,
+    this.coordinates,
+  });
 
   factory LocationCoord.fromJson(Map<String, dynamic> json) {
     return LocationCoord(
-      type: json['type'],
-      coordinates: json['coordinates'] != null
-          ? List<double>.from(json['coordinates'].map((x) => (x as num).toDouble()))
-          : [],
+      type: json['type'] as String?,
+      coordinates: json['coordinates'] as List<dynamic>?,
     );
   }
 }
 
 class RiderLocation {
-  double? lat;
-  double? lng;
+  final double? lat;
+  final double? lng;
 
-  RiderLocation({this.lat, this.lng});
+  RiderLocation({
+    this.lat,
+    this.lng,
+  });
 
   factory RiderLocation.fromJson(Map<String, dynamic> json) {
     return RiderLocation(
@@ -483,19 +492,19 @@ class RiderLocation {
 }
 
 class UserId {
-  String? id;
-  String? fullName;
-  String? phone;
-  double? wallet;
-  String? email;
-  String? password;
-  bool? isDelete;
-  bool? isVerified;
-  String? verified;
-  String? createdAt;
-  String? updatedAt;
-  int? v;
-  String? verificationOtp;
+  final String? id;
+  final String? fullName;
+  final String? phone;
+  final num? wallet;
+  final String? email;
+  final String? password;
+  final bool? isDelete;
+  final bool? isVerified;
+  final String? verified;
+  final String? createdAt;
+  final String? updatedAt;
+  final int? v;
+  final String? verificationOtp;
 
   UserId({
     this.id,
@@ -515,19 +524,69 @@ class UserId {
 
   factory UserId.fromJson(Map<String, dynamic> json) {
     return UserId(
-      id: json['_id'],
-      fullName: json['fullName'],
-      phone: json['phone'],
-      wallet: (json['wallet'] as num?)?.toDouble(),
-      email: json['email'],
-      password: json['password'],
-      isDelete: json['isDelete'],
-      isVerified: json['isVerified'],
-      verified: json['verified'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
-      v: json['__v'],
-      verificationOtp: json['verificationOtp'],
+      id: json['_id'] as String?,
+      fullName: json['fullName'] as String?,
+      phone: json['phone'] as String?,
+      wallet: json['wallet'],
+      email: json['email'] as String?,
+      password: json['password'] as String?,
+      isDelete: json['isDelete'] as bool?,
+      isVerified: json['isVerified'] as bool?,
+      verified: json['verified'] as String?,
+      createdAt: json['createdAt'] as String?,
+      updatedAt: json['updatedAt'] as String?,
+      v: json['__v'] as int?,
+      verificationOtp: json['verificationOtp'] as String?,
+    );
+  }
+}
+
+class RiderId {
+  final Vehicle? vehicle;
+  final String? id;
+  final String? fullName;
+  final String? phone;
+  final String? profileImage;
+
+  RiderId({
+    this.vehicle,
+    this.id,
+    this.fullName,
+    this.phone,
+    this.profileImage,
+  });
+
+  factory RiderId.fromJson(Map<String, dynamic> json) {
+    return RiderId(
+      vehicle:
+          json['vehicle'] != null ? Vehicle.fromJson(json['vehicle']) : null,
+      id: json['_id'] as String?,
+      fullName: json['fullName'] as String?,
+      phone: json['phone'] as String?,
+      profileImage: json['profileImage'] as String?,
+    );
+  }
+}
+
+class Vehicle {
+  final String? brand;
+  final String? image;
+  final String? plateNumber;
+  final String? vehicleType;
+
+  Vehicle({
+    this.brand,
+    this.image,
+    this.plateNumber,
+    this.vehicleType,
+  });
+
+  factory Vehicle.fromJson(Map<String, dynamic> json) {
+    return Vehicle(
+      brand: json['brand'] as String?,
+      image: json['image'] as String?,
+      plateNumber: json['plateNumber'] as String?,
+      vehicleType: json['vehicleType'] as String?,
     );
   }
 }

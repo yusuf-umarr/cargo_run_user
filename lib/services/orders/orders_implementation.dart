@@ -327,6 +327,8 @@ class OrdersImpl implements OrdersService {
       'Authorization': 'Bearer ${sharedPrefs.token}',
     };
 
+    dev.log("sharedPrefs.token:${sharedPrefs.token}");
+
     try {
       final response = await http.get(
         url,
@@ -531,7 +533,5 @@ class ApiResp<T> {
     required this.message,
   });
 }
-
-
 
 //AIzaSyAec2eFqVYW4pqBNakXG9eLE6xId1TXFK8

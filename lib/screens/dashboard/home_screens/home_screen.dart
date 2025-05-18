@@ -40,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       greeting = switch (now.hour) {
         >= 6 && < 12 => 'Good Morning,',
-        >= 12 && < 18 => 'Good Afternoon,', 
+        >= 12 && < 18 => 'Good Afternoon,',
         _ => 'Good Evening,',
       };
     });
@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         backgroundColor: primaryColor2,
                         child: Center(
                           child: Text(
-                           sharedPrefs.fullName.substring(0, 1).toUpperCase(),
+                            sharedPrefs.fullName.substring(0, 1).toUpperCase(),
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 25,
@@ -140,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 60.0),
+                  const SizedBox(height: 30.0),
                   trackingTextField(),
                   const SizedBox(height: 20.0),
                 ],
