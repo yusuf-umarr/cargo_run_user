@@ -258,7 +258,9 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
             filled: true,
             fillColor: Colors.white,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
+              borderRadius: BorderRadius.circular(
+                8.0,
+              ),
             ),
           ),
         ),
