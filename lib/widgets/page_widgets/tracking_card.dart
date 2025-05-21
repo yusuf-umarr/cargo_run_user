@@ -2,7 +2,6 @@ import 'package:cargo_run/screens/dashboard/home_screens/track_parcel_screen.dar
 import 'package:flutter/material.dart';
 import '../../styles/app_colors.dart';
 import '../../models/order.dart';
-import 'dart:developer';
 
 class TrackingCard extends StatefulWidget {
   final Order order;
@@ -41,11 +40,38 @@ class _TrackingCardState extends State<TrackingCard> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(100),
                 child: widget.order.riderId?.profileImage != null
-                    ? Image.network(
-                        widget.order.riderId!.profileImage!,
-                        height: 40,
-                        width: 40,
-                        fit: BoxFit.cover,
+                    ? InkWell(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (_) => Dialog(
+                              backgroundColor: Colors.transparent,
+                              insetPadding: const EdgeInsets.all(20),
+                              child: GestureDetector(
+                                onTap: () => Navigator.pop(context),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(12),
+                                    color: Colors.white,
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: InteractiveViewer(
+                                    child: Image.network(
+                                      widget.order.riderId!.profileImage!,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                        child: Image.network(
+                          widget.order.riderId!.profileImage!,
+                          height: 40,
+                          width: 40,
+                          fit: BoxFit.cover,
+                        ),
                       )
                     : Image.asset(
                         'assets/images/profile-icon.png',

@@ -172,11 +172,40 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(100),
                           child: widget.order.riderId?.profileImage != null
-                              ? Image.network(
-                                  widget.order.riderId!.profileImage!,
-                                  height: 60,
-                                  width: 60,
-                                  fit: BoxFit.cover,
+                              ? InkWell(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (_) => Dialog(
+                                        backgroundColor: Colors.transparent,
+                                        insetPadding: const EdgeInsets.all(20),
+                                        child: GestureDetector(
+                                          onTap: () => Navigator.pop(context),
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              color: Colors.white,
+                                            ),
+                                            padding: const EdgeInsets.all(10),
+                                            child: InteractiveViewer(
+                                              child: Image.network(
+                                                widget.order.riderId!
+                                                    .profileImage!,
+                                                fit: BoxFit.contain,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  child: Image.network(
+                                    widget.order.riderId!.profileImage!,
+                                    height: 60,
+                                    width: 60,
+                                    fit: BoxFit.cover,
+                                  ),
                                 )
                               : Image.asset(
                                   'assets/images/profile-icon.png',
@@ -184,7 +213,34 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
                                   width: 60,
                                 ),
                         ),
-                      ),
+                      )
+
+                      // Container(
+                      //   decoration: BoxDecoration(
+                      //     shape: BoxShape.circle,
+                      //     border: Border.all(color: primaryColor1),
+                      //   ),
+                      //   child: ClipRRect(
+                      //     borderRadius: BorderRadius.circular(100),
+                      //     child: widget.order.riderId?.profileImage != null
+                      //         ? InkWell(
+                      //           onTap:(){
+                      //             //add a popup dialog and show the image
+                      //           },
+                      //           child: Image.network(
+                      //               widget.order.riderId!.profileImage!,
+                      //               height: 60,
+                      //               width: 60,
+                      //               fit: BoxFit.cover,
+                      //             ),
+                      //         )
+                      //         : Image.asset(
+                      //             'assets/images/profile-icon.png',
+                      //             height: 60,
+                      //             width: 60,
+                      //           ),
+                      //   ),
+                      // ),
                     ],
                   ),
                   const SizedBox(width: 10),
