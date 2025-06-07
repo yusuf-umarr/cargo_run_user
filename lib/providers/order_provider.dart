@@ -310,6 +310,11 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void getOngoingRiderCoordinate({required double lat, required double lng}) {
+    dev.log("rider ---lat:$lat");
+    dev.log("rider ---lng:$lng");
+  }
+
   Future<void> initiatePayment(String orderId, String price, context) async {
     setOrderStatus(OrderStatus.loading);
     var response = await _ordersService.initializePayment(

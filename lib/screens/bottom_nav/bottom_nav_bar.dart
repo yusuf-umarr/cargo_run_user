@@ -42,8 +42,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
     _connectSocket();
     Provider.of<OrderProvider>(context, listen: false).getOrders();
     Provider.of<OrderProvider>(context, listen: false).getNotification();
-    Provider.of<OrderProvider>(context, listen: false).getPrice()
-  ;
+    Provider.of<OrderProvider>(context, listen: false).getPrice();
     super.initState();
   }
 
@@ -73,6 +72,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
         socket!.emit('order');
         socket!.on('join', (data) {
           log("on join=====:$data");
+          log("on join=userId from user app====:${sharedPrefs.userId}"); //673b1ed9495935e124162eb6
         });
       });
 
@@ -100,6 +100,22 @@ class _BottomNavBarState extends State<BottomNavBar> {
           log("notifications error:$e");
         }
       });
+      //fetch ongoing ride rider's loaction
+      if (mounted) {
+        socket!.on("${sharedPrefs.userId}-location", (data) async {
+          // log("rider-location:${data['data']['lat']}");
+
+          try {
+            // var res = data['data'];
+            context.read<OrderProvider>().getOngoingRiderCoordinate(
+                  lat: data['data']['lat'],
+                  lng: data['data']['lng'],
+                );
+          } catch (e) {
+            log(" get coordinate error:$e");
+          }
+        });
+      }
       socket!.on("payment-${sharedPrefs.userId}", (data) async {
         try {
           context.read<OrderProvider>().getOrders();
@@ -126,15 +142,14 @@ class _BottomNavBarState extends State<BottomNavBar> {
       //get available rider in user's coordinate
       socket!.on("location-${sharedPrefs.userId}", (data) async {
         // log("get riders in my proximity:${data}");
-        //get riders in my proximity:ing 
+        //get riders in my proximity:ing
 
         //
         try {
           if (mounted) {
-           Future.delayed(const Duration(seconds: 1),(){
-             context.read<OrderProvider>()
-                .getAvailableDrivers(data);
-           });
+            Future.delayed(const Duration(seconds: 1), () {
+              context.read<OrderProvider>().getAvailableDrivers(data);
+            });
           }
         } catch (e) {
           log("get riders error:$e");
