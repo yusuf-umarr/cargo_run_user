@@ -53,6 +53,12 @@ class OrderProvider extends ChangeNotifier {
 
   List<Order?> get orders => _orders;
 
+  double? _riderLat;
+  double? _riderLng;
+
+  double? get riderLat => _riderLat;
+  double? get riderLng => _riderLng;
+
   List<NotificationData> get notificationModel => _notificationModel;
   List<NotificationData> _notificationModel = [];
 
@@ -311,8 +317,12 @@ class OrderProvider extends ChangeNotifier {
   }
 
   void getOngoingRiderCoordinate({required double lat, required double lng}) {
-    dev.log("rider ---lat:$lat");
-    dev.log("rider ---lng:$lng");
+    _riderLat = lat;
+    _riderLng = lng;
+
+    log("_riderLat:${lat}");
+    log("_riderLng:${lng}");
+    notifyListeners();
   }
 
   Future<void> initiatePayment(String orderId, String price, context) async {

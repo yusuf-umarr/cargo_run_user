@@ -13,6 +13,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
+import 'dart:developer' as dev;
 
 class TripRoutePage extends StatefulWidget {
   final Order order;
@@ -36,9 +37,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
 
   BitmapDescriptor sourceIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor destinationIcon = BitmapDescriptor.defaultMarker;
-  BitmapDescriptor currentLocationIcon = BitmapDescriptor.defaultMarker;
-  double riderLat = 6.64638;
-  double riderLong = 3.517462;
+  BitmapDescriptor riderLocationIcon = BitmapDescriptor.defaultMarker;
 
   late LatLng _initialPosition;
   late GoogleMapController mapController;
@@ -46,7 +45,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
   CameraPosition? cposition;
 
   void getLocation() async {
-    Position position = await determinePosition();  
+    Position position = await determinePosition();
     debugPrint('position: $position');
     _initialPosition = LatLng(position.latitude, position.longitude);
     final CameraPosition kGooglePlex = CameraPosition(
@@ -57,41 +56,43 @@ class _TripRoutePageState extends State<TripRoutePage> {
     if (mounted) {
       setState(() {
         cposition = kGooglePlex;
-        riderLat = position.latitude;
-        riderLong = position.latitude;
       });
     }
+    getPolyPoints();
   }
 
   void getPolyPoints() async {
     PolylinePoints polylinePoints = PolylinePoints();
-
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      request: PolylineRequest(
-        origin: PointLatLng(
-          //source
-          widget.order.addressDetails!.lat!.toDouble(),
-          widget.order.addressDetails!.lng!.toDouble(),
-        ),
-        destination: PointLatLng(
-          widget.order.receiverDetails!.lat!.toDouble(),
-          widget.order.receiverDetails!.lng!.toDouble(),
-        ),
-        mode: TravelMode.driving,
-      ),
-      googleApiKey: googleApiKey,
-    );
-
-    if (result.points.isNotEmpty) {
-      for (var point in result.points) {
-        polylineCoordinates.add(
-          LatLng(
-            point.latitude,
-            point.longitude,
+    try {
+      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        request: PolylineRequest(
+          origin: PointLatLng(
+            //source
+            widget.order.addressDetails!.lat!.toDouble(),
+            widget.order.addressDetails!.lng!.toDouble(),
           ),
-        );
+          destination: PointLatLng(
+            widget.order.receiverDetails!.lat!.toDouble(),
+            widget.order.receiverDetails!.lng!.toDouble(),
+          ),
+          mode: TravelMode.driving,
+        ),
+        googleApiKey: googleApiKey,
+      );
+
+      if (result.points.isNotEmpty) {
+        for (var point in result.points) {
+          polylineCoordinates.add(
+            LatLng(
+              point.latitude,
+              point.longitude,
+            ),
+          );
+        }
+        setState(() {});
       }
-      setState(() {});
+    } catch (e) {
+      dev.log("get polytine error:$e");
     }
   }
 
@@ -109,7 +110,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
     BitmapDescriptor.fromAssetImage(
             ImageConfiguration.empty, "assets/images/delivery.png")
         .then((icon) {
-      currentLocationIcon = icon;
+      riderLocationIcon = icon;
     });
   }
 
@@ -118,7 +119,6 @@ class _TripRoutePageState extends State<TripRoutePage> {
     // getLocation();
     setCustomMarkerIcon();
 
-    // getPolyPoints();
     super.initState();
   }
 
@@ -130,63 +130,142 @@ class _TripRoutePageState extends State<TripRoutePage> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    // final provider = ref.watch(requestController);
     return Scaffold(
       body: Stack(
         children: [
           Column(
             children: [
               Expanded(
-                child: SizedBox(
-                  height: size.height * 0.65,
-                  child: GoogleMap(
-                    myLocationButtonEnabled: false,
-                    zoomControlsEnabled: false,
-                    initialCameraPosition: CameraPosition(
-                      target: LatLng(
-                        widget.order.addressDetails!.lat!.toDouble(),
-                        widget.order.addressDetails!.lng!.toDouble(),
-                      ),
-                      zoom: 13.5,
+                child: Consumer<OrderProvider>(builder: (context, orderVM, _) {
+                  dev.log("rider lat:${orderVM.riderLat}");
+                  dev.log("rider lng:${orderVM.riderLng}");
+
+                  return SizedBox(
+                    height: size.height * 0.65,
+                    child: Consumer<OrderProvider>(
+                      builder: (context, orderVM, _) {
+                        Set<Marker> markers = {
+                          Marker(
+                            markerId: const MarkerId('source'),
+                            position: LatLng(
+                              widget.order.addressDetails!.lat!.toDouble(),
+                              widget.order.addressDetails!.lng!.toDouble(),
+                            ),
+                            icon: sourceIcon,
+                          ),
+                          Marker(
+                            markerId: const MarkerId('destination'),
+                            position: LatLng(
+                              widget.order.receiverDetails!.lat!.toDouble(),
+                              widget.order.receiverDetails!.lng!.toDouble(),
+                            ),
+                            icon: destinationIcon,
+                          ),
+                        };
+
+                        if (orderVM.riderLat != null &&
+                            orderVM.riderLng != null) {
+                          final riderPosition =
+                              LatLng(orderVM.riderLat!, orderVM.riderLng!);
+
+                          markers.add(
+                            Marker(
+                              markerId: const MarkerId('rider'),
+                              position: riderPosition,
+                              icon: riderLocationIcon,
+                            ),
+                          );
+
+                          WidgetsBinding.instance
+                              .addPostFrameCallback((_) async {
+                            final controller = await _controller.future;
+                            controller.animateCamera(
+                              CameraUpdate.newLatLng(riderPosition),
+                            );
+                          });
+                        }
+
+                        return GoogleMap(
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(
+                              widget.order.addressDetails!.lat!.toDouble(),
+                              widget.order.addressDetails!.lng!.toDouble(),
+                            ),
+                            zoom: 13.5,
+                          ),
+                          onMapCreated: (controller) {
+                            _controller.complete(controller);
+                            mapController = controller;
+                          },
+                          polylines: {
+                            Polyline(
+                              polylineId: const PolylineId("route"),
+                              points: polylineCoordinates,
+                              color: primaryColor1,
+                              width: 6,
+                            )
+                          },
+                          markers: markers,
+                          myLocationButtonEnabled: false,
+                          zoomControlsEnabled: false,
+                        );
+                      },
                     ),
-                    polylines: {
-                      Polyline(
-                        polylineId: const PolylineId("route"),
-                        points: polylineCoordinates,
-                        color: primaryColor1,
-                        width: 6,
-                      )
-                    },
-                    markers: {
-                      Marker(
-                        markerId: const MarkerId("riderLocation"),
-                        icon: currentLocationIcon,
-                        position: LatLng(
-                          widget.order.riderLocation!.lat!,
-                          widget.order.riderLocation!.lng!,
-                        ),
-                      ),
-                      Marker(
-                        markerId: const MarkerId("source"),
-                        position: LatLng(
+
+                    /*  GoogleMap(
+                      myLocationButtonEnabled: false,
+                      zoomControlsEnabled: false,
+                      initialCameraPosition: CameraPosition(
+                        target: LatLng(
                           widget.order.addressDetails!.lat!.toDouble(),
                           widget.order.addressDetails!.lng!.toDouble(),
                         ),
-                        icon: sourceIcon,
+                        zoom: 13.5,
                       ),
-                      Marker(
-                          markerId: const MarkerId("destination"),
-                          position: LatLng(
-                            widget.order.receiverDetails!.lat!.toDouble(),
-                            widget.order.receiverDetails!.lng!.toDouble(),
+                      polylines: {
+                        Polyline(
+                          polylineId: const PolylineId("route"),
+                          points: polylineCoordinates,
+                          color: primaryColor1,
+                          width: 6,
+                        )
+                      },
+                      markers: {
+                        if (orderVM.riderLat != null)
+                          Marker(
+                            markerId: const MarkerId("riderLocation"),
+                            icon: riderLocationIcon,
+                            position: LatLng(
+                              orderVM.riderLat!,
+                              orderVM.riderLng!,
+                            ),
                           ),
-                          icon: destinationIcon),
-                    },
-                    onMapCreated: (mapController) {
-                      _controller.complete(mapController);
-                    },
-                  ),
-                ),
+                        Marker(
+                          markerId: const MarkerId("source"),
+                          position: LatLng(
+                            widget.order.addressDetails!.lat!.toDouble(),
+                            widget.order.addressDetails!.lng!.toDouble(),
+                          ),
+                          icon: sourceIcon,
+                        ),
+                        Marker(
+                            markerId: const MarkerId("destination"),
+                            position: LatLng(
+                              widget.order.receiverDetails!.lat!.toDouble(),
+                              widget.order.receiverDetails!.lng!.toDouble(),
+                            ),
+                            icon: destinationIcon),
+                      },
+                      onMapCreated: (mapController) {
+                        // _controller.complete(mapController);
+                          _controller.complete(mapController);
+                        mapController = mapController;
+                      },
+                    ),
+
+                    */
+                  );
+                }),
               ),
             ],
           ),

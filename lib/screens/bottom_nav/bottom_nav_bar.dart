@@ -46,8 +46,19 @@ class _BottomNavBarState extends State<BottomNavBar> {
     super.initState();
   }
 
+  @override
+  void dispose() {
+   disposeSocket();
+    super.dispose();
+  }
+
+   void disposeSocket() {
+    socket!.disconnect();
+  }
+
   //connecting websocket
   void _connectSocket() async {
+          final orderVM = Provider.of<OrderProvider>(context, listen: false);
     log("_connectSocket() started....");
 
     try {
@@ -100,22 +111,25 @@ class _BottomNavBarState extends State<BottomNavBar> {
           log("notifications error:$e");
         }
       });
-      //fetch ongoing ride rider's loaction
-      if (mounted) {
-        socket!.on("${sharedPrefs.userId}-location", (data) async {
-          // log("rider-location:${data['data']['lat']}");
 
-          try {
-            // var res = data['data'];
-            context.read<OrderProvider>().getOngoingRiderCoordinate(
-                  lat: data['data']['lat'],
-                  lng: data['data']['lng'],
-                );
-          } catch (e) {
-            log(" get coordinate error:$e");
-          }
-        });
-      }
+      //fetch ongoing ride rider's loaction
+      // if (mounted) {
+      socket!.on("${sharedPrefs.userId}-location", (data) async {
+
+  
+        // log("rider-location:${data['data']['lat']}");
+
+        try {
+          // var res = data['data'];
+        orderVM.getOngoingRiderCoordinate(
+                lat: data['data']['lat'],
+                lng: data['data']['lng'],
+              );
+        } catch (e) {
+          log(" get coordinate error:$e");
+        }
+      });
+      // }
       socket!.on("payment-${sharedPrefs.userId}", (data) async {
         try {
           context.read<OrderProvider>().getOrders();
