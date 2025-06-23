@@ -263,6 +263,8 @@ class OrderProvider extends ChangeNotifier {
     clearLocation();
     try {
       var response = await _ordersService.locationFromAddress(address: addr);
+
+      // dev.log("response.data:${response.data}");
       if (response.success) {
         locationFromAddr = LocationFromAddressModel.fromJson(response.data);
 

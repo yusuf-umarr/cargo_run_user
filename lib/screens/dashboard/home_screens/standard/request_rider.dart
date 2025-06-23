@@ -149,20 +149,24 @@ class _RequestRiderState extends State<RequestRider> {
                                     .locationFromAddress(
                                         addr: x.placePrediction.text.text)
                                     .then((x) {
-                                  _latController.text = orderVM
-                                      .locationFromAddr!
-                                      .results![0]
-                                      .geometry!
-                                      .location!
-                                      .lat
-                                      .toString();
-                                  _longController.text = orderVM
-                                      .locationFromAddr!
-                                      .results![0]
-                                      .geometry!
-                                      .location!
-                                      .lng
-                                      .toString();
+                                  try {
+                                    _latController.text = orderVM
+                                        .locationFromAddr!
+                                        .results![0]
+                                        .geometry!
+                                        .location!
+                                        .lat
+                                        .toString();
+                                    _longController.text = orderVM
+                                        .locationFromAddr!
+                                        .results![0]
+                                        .geometry!
+                                        .location!
+                                        .lng
+                                        .toString();
+                                  } catch (e) {
+                                    dev.log("address error:$e");
+                                  }
 
                                   dev.log(
                                       " source _latController.text:${_latController.text}");

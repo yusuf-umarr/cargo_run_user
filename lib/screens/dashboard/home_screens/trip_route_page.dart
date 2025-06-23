@@ -108,7 +108,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
       destinationIcon = icon;
     });
     BitmapDescriptor.fromAssetImage(
-            ImageConfiguration.empty, "assets/images/delivery.png")
+            ImageConfiguration.empty, "assets/images/riderIcon.png")
         .then((icon) {
       riderLocationIcon = icon;
     });
@@ -116,6 +116,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
 
   @override
   void initState() {
+    getPolyPoints();
     // getLocation();
     setCustomMarkerIcon();
 
@@ -137,8 +138,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
             children: [
               Expanded(
                 child: Consumer<OrderProvider>(builder: (context, orderVM, _) {
-                  dev.log("rider lat:${orderVM.riderLat}");
-                  dev.log("rider lng:${orderVM.riderLng}");
+                
 
                   return SizedBox(
                     height: size.height * 0.65,
@@ -261,7 +261,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
                           _controller.complete(mapController);
                         mapController = mapController;
                       },
-                    ),
+                   ),
 
                     */
                   );
@@ -373,6 +373,13 @@ class _TripRoutePageState extends State<TripRoutePage> {
               ),
             ),
           ],
+          // Consumer<OrderProvider>(builder: (context, orderVM, _) {
+          //   return Positioned(
+          //       child: Center(
+          //     child: Text(
+          //         "rider lat:${orderVM.riderLat} , long:${orderVM.riderLng}"),
+          //   ));
+          // })
         ],
       ),
     );

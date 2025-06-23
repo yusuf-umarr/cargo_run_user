@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../models/order.dart';
 import '../../../styles/app_colors.dart';
+import 'dart:developer' as dev;
 
 class TrackParcelScreen extends StatefulWidget {
   final Order order;
@@ -151,6 +152,7 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
 
   @override
   Widget build(BuildContext context) {
+    dev.log("widget.order.riderLocation:${widget.order.riderLocation}");
     return Scaffold(
       appBar:
           appBarWidget(context, title: 'Track Your Parcel', hasBackBtn: true),
@@ -461,27 +463,27 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
                 stepperList: stepperData,
               ),
               const SizedBox(height: 20),
-              if (widget.order.riderLocation != null) ...[
-                if (activeStep >= 1 && activeStep <= 3) ...[
-                  AppButton(
-                    text: 'Preview',
-                    hasIcon: false,
-                    backgroundColor: primaryColor1,
-                    textColor: Colors.white,
-                    onPressed: () async {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TripRoutePage(
-                            order: widget.order,
-                          ),
+              // if (widget.order.riderLocation != null) ...[
+              if (activeStep >= 1 && activeStep <= 3) ...[
+                AppButton(
+                  text: 'Preview',
+                  hasIcon: false,
+                  backgroundColor: primaryColor1,
+                  textColor: Colors.white,
+                  onPressed: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TripRoutePage(
+                          order: widget.order,
                         ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 30),
-                ],
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 30),
               ],
+              // ],
             ],
           ),
         ),
