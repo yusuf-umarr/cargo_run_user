@@ -28,6 +28,9 @@ abstract class AuthService {
     required String phone,
     required String email,
   });
+  Future<Either<ErrorResponse, ApiResponse>> deleteAccount(
+
+  );
 
   Future<Either<ErrorResponse, ApiResponse>> forgotPassword({
     required String email,

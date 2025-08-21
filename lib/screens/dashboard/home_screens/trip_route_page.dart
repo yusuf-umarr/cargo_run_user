@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:async';
+import 'dart:developer';
 import 'package:cargo_run/config/config.dart';
 import 'package:cargo_run/models/order.dart';
 import 'package:cargo_run/providers/order_provider.dart';
@@ -62,18 +63,22 @@ class _TripRoutePageState extends State<TripRoutePage> {
   }
 
   void getPolyPoints() async {
+    log("widget.order.status:${widget.order.status}");
+    final orderVM = Provider.of<OrderProvider>(context, listen: false);
     PolylinePoints polylinePoints = PolylinePoints();
-    try {
+    if (widget.order.status == "accepted" &&
+        orderVM.riderLat != null &&
+        orderVM.riderLng != null) {
       PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
         request: PolylineRequest(
           origin: PointLatLng(
             //source
-            widget.order.addressDetails!.lat!.toDouble(),
-            widget.order.addressDetails!.lng!.toDouble(),
+            orderVM.riderLat!.toDouble(),
+            orderVM.riderLng!.toDouble(),
           ),
           destination: PointLatLng(
-            widget.order.receiverDetails!.lat!.toDouble(),
-            widget.order.receiverDetails!.lng!.toDouble(),
+            widget.order.addressDetails!.lat!.toDouble(),
+            widget.order.addressDetails!.lng!.toDouble(),
           ),
           mode: TravelMode.driving,
         ),
@@ -91,24 +96,57 @@ class _TripRoutePageState extends State<TripRoutePage> {
         }
         setState(() {});
       }
-    } catch (e) {
-      dev.log("get polytine error:$e");
+    } else {
+      if (orderVM.riderLat != null && orderVM.riderLng != null) {
+        try {
+          PolylineResult result =
+              await polylinePoints.getRouteBetweenCoordinates(
+            request: PolylineRequest(
+              origin: PointLatLng(
+                //source
+                widget.order.receiverDetails!.lat!.toDouble(),
+                widget.order.receiverDetails!.lng!.toDouble(),
+              ),
+              destination: PointLatLng(
+                orderVM.riderLat!.toDouble(),
+                orderVM.riderLng!.toDouble(),
+              ),
+              mode: TravelMode.driving,
+            ),
+            googleApiKey: googleApiKey,
+          );
+
+          if (result.points.isNotEmpty) {
+            for (var point in result.points) {
+              polylineCoordinates.add(
+                LatLng(
+                  point.latitude,
+                  point.longitude,
+                ),
+              );
+            }
+            setState(() {});
+          }
+        } catch (e) {
+          dev.log("get polytine error:$e");
+        }
+      }
     }
   }
 
   Future<void> setCustomMarkerIcon() async {
     BitmapDescriptor.fromAssetImage(
-            ImageConfiguration.empty, "assets/images/sourceIcon.png")
+            ImageConfiguration.empty, "assets/images/Pickuppp.png")
         .then((icon) {
       sourceIcon = icon;
     });
     BitmapDescriptor.fromAssetImage(
-            ImageConfiguration.empty, "assets/images/destinationIcon.png")
+            ImageConfiguration.empty, "assets/images/dropOffhere.png")
         .then((icon) {
       destinationIcon = icon;
     });
     BitmapDescriptor.fromAssetImage(
-            ImageConfiguration.empty, "assets/images/riderIcon.png")
+            ImageConfiguration.empty, "assets/images/rider.png")
         .then((icon) {
       riderLocationIcon = icon;
     });
@@ -138,8 +176,6 @@ class _TripRoutePageState extends State<TripRoutePage> {
             children: [
               Expanded(
                 child: Consumer<OrderProvider>(builder: (context, orderVM, _) {
-                
-
                   return SizedBox(
                     height: size.height * 0.65,
                     child: Consumer<OrderProvider>(
@@ -202,7 +238,7 @@ class _TripRoutePageState extends State<TripRoutePage> {
                               polylineId: const PolylineId("route"),
                               points: polylineCoordinates,
                               color: primaryColor1,
-                              width: 6,
+                              width: 4,
                             )
                           },
                           markers: markers,

@@ -1,4 +1,4 @@
-package com.cargorun.app
+package com.cargo_run.app
 
 import io.flutter.embedding.android.FlutterActivity
 

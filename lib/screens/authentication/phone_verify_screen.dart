@@ -28,7 +28,7 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       context,
       MaterialPageRoute(
         builder: (context) => const SuccessScreen(
-         successRedirectRoute: SuccessRedirectRoute.verifyPage,
+          successRedirectRoute: SuccessRedirectRoute.verifyPage,
         ),
       ),
     );
@@ -54,107 +54,109 @@ class _PhoneVerifyScreenState extends State<PhoneVerifyScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0, vertical: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              const Text(
-                'Please enter the verification code sent to your email address',
-                style: TextStyle(
-                  fontSize: 17.0,
-                  color: greyText,
-                  fontWeight: FontWeight.w500,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                const Text(
+                  'Please enter the verification code sent to your email address',
+                  style: TextStyle(
+                    fontSize: 17.0,
+                    color: greyText,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 100.0),
-              Form(
-                key: _formKey,
-                child: Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
+                const SizedBox(height: 30.0),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      OTPTextField(
+                        length: 5,
+                        width: MediaQuery.of(context).size.width,
+                        fieldWidth: size.width * 0.13,
+                        controller: _otpController,
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                          horizontal: 10,
+                        ),
+                        style: const TextStyle(fontSize: 20),
+                        textFieldAlignment: MainAxisAlignment.spaceAround,
+                        fieldStyle: FieldStyle.box,
+                        onCompleted: (pin) {
+                          setState(() {
+                            otp = pin;
+                          });
+                        },
+                        onChanged: (val) {},
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 100.0),
+                Consumer<AuthProvider>(
+                  builder: (context, watch, _) {
+                    return (watch.loadingState == LoadingState.loading)
+                        ? const LoadingButton(
+                            backgroundColor: primaryColor1,
+                            textColor: Colors.white,
+                          )
+                        : AppButton(
+                            text: 'Continue',
+                            hasIcon: true,
+                            backgroundColor: primaryColor1,
+                            textColor: Colors.white,
+                            onPressed: () async {
+                              if (_formKey.currentState!.validate()) {
+                                await watch.verifyOTP(
+                                    otp: otp, email: sharedPrefs.email);
+                                if (watch.loadingState ==
+                                    LoadingState.success) {
+                                  navigate();
+                                } else {
+                                  showSnackBar(watch.errorMessage);
+                                }
+                              }
+                            },
+                          );
+                  },
+                ),
+                const SizedBox(height: 25.0),
+                Align(
+                  alignment: Alignment.center,
+                  child: RichText(
+                    text: TextSpan(
+                      text: 'Didn\'t receive the code? ',
+                      style: const TextStyle(
+                        color: greyText,
+                        fontSize: 17.0,
+                        fontWeight: FontWeight.w500,
+                      ),
                       children: [
-                        OTPTextField(
-                          length: 5,
-                          width: MediaQuery.of(context).size.width,
-                          fieldWidth: size.width * 0.13,
-                          controller: _otpController,
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 20,
-                            horizontal: 10,
+                        TextSpan(
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () async {
+                              await context
+                                  .read<AuthProvider>()
+                                  .getOTP(
+                                    email: sharedPrefs.email,
+                                  )
+                                  .then((v) => showSnackBar("Otp sent"));
+                            },
+                          text: 'Resend',
+                          style: const TextStyle(
+                            color: primaryColor2,
+                            fontSize: 17.0,
+                            fontWeight: FontWeight.w500,
                           ),
-                          style: const TextStyle(fontSize: 20),
-                          textFieldAlignment: MainAxisAlignment.spaceAround,
-                          fieldStyle: FieldStyle.box,
-                          onCompleted: (pin) {
-                            setState(() {
-                              otp = pin;
-                            });
-                          },
-                          onChanged: (val) {},
                         ),
                       ],
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20.0),
-              Consumer<AuthProvider>(
-                builder: (context, watch, _) {
-                  return (watch.loadingState == LoadingState.loading)
-                      ? const LoadingButton(
-                          backgroundColor: primaryColor1,
-                          textColor: Colors.white,
-                        )
-                      : AppButton(
-                          text: 'Continue',
-                          hasIcon: true,
-                          backgroundColor: primaryColor1,
-                          textColor: Colors.white,
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              await watch.verifyOTP(
-                                  otp: otp, email: sharedPrefs.email);
-                              if (watch.loadingState == LoadingState.success) {
-                                navigate();
-                              } else {
-                                showSnackBar(watch.errorMessage);
-                              }
-                            }
-                          },
-                        );
-                },
-              ),
-              const SizedBox(height: 25.0),
-              Align(
-                alignment: Alignment.center,
-                child: RichText(
-                  text: TextSpan(
-                    text: 'Didn\'t receive the code? ',
-                    style: const TextStyle(
-                      color: greyText,
-                      fontSize: 17.0,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    children: [
-                      TextSpan(
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () async {
-                            await context.read<AuthProvider>().getOTP(
-                                  email: sharedPrefs.email,
-                                ).then((v)=>  showSnackBar("Otp sent"));
-                          },
-                        text: 'Resend',
-                        style: const TextStyle(
-                          color: primaryColor2,
-                          fontSize: 17.0,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

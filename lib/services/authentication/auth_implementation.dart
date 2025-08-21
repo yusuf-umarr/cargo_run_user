@@ -245,4 +245,29 @@ class AuthImpl implements AuthService {
       return Left(ErrorResponse(message: 'Network error'));
     }
   }
+  @override
+  Future<Either<ErrorResponse, ApiResponse>> deleteAccount(
+
+  ) async {
+   
+    final Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ${sharedPrefs.token}'
+    };
+    try {
+      var response = await http.delete(
+        Uri.parse('${Env.endpointUrl}/user/delete'),
+        headers: headers,
+      );
+      var jsonResponse = jsonDecode(response.body);
+     log('update Response: $jsonResponse');
+      if (jsonResponse['success'] == true) {
+        return Right(ApiResponse.fromJson(jsonResponse));
+      } else {
+        return Left(ErrorResponse(message: jsonResponse['errors']['msg']));
+      }
+    } catch (e) {
+      return Left(ErrorResponse(message: 'Network error'));
+    }
+  }
 }

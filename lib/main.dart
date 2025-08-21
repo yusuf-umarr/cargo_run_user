@@ -13,13 +13,16 @@ void main() async {
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
   ]).then((_) {
-    runApp(CargoRun(usedApp: sharedPrefs.usedApp,token:sharedPrefs.token, ));
+    runApp(CargoRun(
+      usedApp: sharedPrefs.usedApp,
+      token: sharedPrefs.token,
+    ));
   });
 }
 
 
-//com.cargorun.app
+//com.cargo_run.app
 
 //com.cargorun.user..app 
 
-//com.cargorun.app
+//com.cargo_run.app

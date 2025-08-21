@@ -46,13 +46,13 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>NextBud needs to be able to access photo library so you can select images to upload.</string>
+	<string>Caego run needs to be able to access photo library so you can select images to upload.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Used to collect location data.</string>
+	<string>We use your location to detect your pickup address and calculate the distance to nearby riders for accurate ride matching and ETA updates.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Used to collect location data in the background.</string>
+	<string>We use your location to detect your pickup address and calculate the distance to nearby riders for accurate ride matching and ETA updates.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Used to collect location data in the background.</string>
+	<string>We use your location to track your ride in real-time and keep you updated with accurate trip information, even when the app is in the background</string>
 	<key>NSLocationUsageDescription</key>
 	<string>Cargo run needs access to your location to provide you with the best possible experience.</string>
 

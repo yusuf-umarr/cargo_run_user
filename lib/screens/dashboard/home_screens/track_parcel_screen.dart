@@ -332,7 +332,7 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
               // SizedBox(
               //   height: 10,
               // ),
-              if (widget.order.riderLocation != null) ...[
+              // if (widget.order.riderLocation != null) ...[
                 if (widget.order.paymentStatus == "pending") ...[
                   if (widget.order.status!.toLowerCase() == "accepted" ||
                       widget.order.status!.toLowerCase() == "picked" ||
@@ -390,7 +390,7 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
                 //     );
                 //   }),
                 // ],
-              ],
+              // ],
               if (widget.order.status == "pending") ...[
                 Consumer<OrderProvider>(builder: (context, orderVM, _) {
                   if (orderVM.orderStatus == OrderStatus.loading) {
@@ -463,7 +463,7 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
                 stepperList: stepperData,
               ),
               const SizedBox(height: 20),
-              // if (widget.order.riderLocation != null) ...[
+         if (widget.order.status!.toLowerCase() != "delivered") ...[
               if (activeStep >= 1 && activeStep <= 3) ...[
                 AppButton(
                   text: 'Preview',
@@ -483,7 +483,7 @@ class _TrackParcelScreenState extends State<TrackParcelScreen> {
                 ),
                 const SizedBox(height: 30),
               ],
-              // ],
+              ],
             ],
           ),
         ),

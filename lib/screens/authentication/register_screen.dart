@@ -1,3 +1,4 @@
+import 'package:cargo_run/providers/bottom_nav_provider.dart';
 import 'package:cargo_run/screens/alerts/account_creation_success.dart';
 import 'package:cargo_run/screens/authentication/login_screen.dart';
 import 'package:cargo_run/styles/app_colors.dart';
@@ -133,6 +134,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           backgroundColor: primaryColor1,
                           textColor: Colors.white,
                           onPressed: () async {
+                            context.read<BottomNavProvider>().setNavbarIndex(0);
                             if (_formKey.currentState!.validate()) {
                               try {
                                 await watch.registerUser(

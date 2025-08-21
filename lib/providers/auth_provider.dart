@@ -144,6 +144,21 @@ class AuthProvider extends ChangeNotifier {
       setLoadingState(LoadingState.success);
     });
   }
+  Future<void> deleteAccount(
+ 
+  ) async {
+    setLoadingState(LoadingState.loading);
+    var response = await _authService.deleteAccount(
+   
+    );
+    response.fold((error) {
+      setLoadingState(LoadingState.error);
+      setErrorMessage(error.message);
+    }, (success) {
+      toast("Successful");
+      setLoadingState(LoadingState.success);
+    });
+  }
 
   Future<void> selectImages() async {
     imageUpload = await myUploadImage();
