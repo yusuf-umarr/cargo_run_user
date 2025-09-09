@@ -10,6 +10,7 @@ import 'package:cargo_run/widgets/app_textfields.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ViewProfileScreen extends StatefulWidget {
   const ViewProfileScreen({super.key});
@@ -115,10 +116,7 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     GestureDetector(
-                      onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const GetHelpScreen())),
+                      onTap: () =>   whatsApp(),
                       child: const Text(
                         'Get Help',
                         style: TextStyle(fontSize: 20.0, color: blackText),
@@ -268,6 +266,14 @@ class _ViewProfileScreenState extends State<ViewProfileScreen> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+   whatsApp() {
+    return launchUrl(
+      Uri.parse(
+        'whatsapp://send?phone=',
       ),
     );
   }
